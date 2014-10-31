@@ -1,0 +1,437 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5164A1FF1A042DE8003BAB76 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5164A1FE1A042DE8003BAB76 /* AppDelegate.swift */; };
+		5164A2021A042DE8003BAB76 /* DreamRight.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5164A2001A042DE8003BAB76 /* DreamRight.xcdatamodeld */; };
+		5164A2041A042DE8003BAB76 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5164A2031A042DE8003BAB76 /* ViewController.swift */; };
+		5164A2071A042DE8003BAB76 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5164A2051A042DE8003BAB76 /* Main.storyboard */; };
+		5164A2091A042DE8003BAB76 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5164A2081A042DE8003BAB76 /* Images.xcassets */; };
+		5164A20C1A042DE8003BAB76 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5164A20A1A042DE8003BAB76 /* LaunchScreen.xib */; };
+		5164A2181A042DE8003BAB76 /* DreamRightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5164A2171A042DE8003BAB76 /* DreamRightTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5164A2121A042DE8003BAB76 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5164A1F11A042DE8003BAB76 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5164A1F81A042DE8003BAB76;
+			remoteInfo = DreamRight;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		5164A1F91A042DE8003BAB76 /* DreamRight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DreamRight.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5164A1FD1A042DE8003BAB76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5164A1FE1A042DE8003BAB76 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		5164A2011A042DE8003BAB76 /* DreamRight.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DreamRight.xcdatamodel; sourceTree = "<group>"; };
+		5164A2031A042DE8003BAB76 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		5164A2061A042DE8003BAB76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5164A2081A042DE8003BAB76 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		5164A20B1A042DE8003BAB76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		5164A2111A042DE8003BAB76 /* DreamRightTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DreamRightTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5164A2161A042DE8003BAB76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5164A2171A042DE8003BAB76 /* DreamRightTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamRightTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5164A1F61A042DE8003BAB76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5164A20E1A042DE8003BAB76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5164A1F01A042DE8003BAB76 = {
+			isa = PBXGroup;
+			children = (
+				5164A1FB1A042DE8003BAB76 /* DreamRight */,
+				5164A2141A042DE8003BAB76 /* DreamRightTests */,
+				5164A1FA1A042DE8003BAB76 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5164A1FA1A042DE8003BAB76 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5164A1F91A042DE8003BAB76 /* DreamRight.app */,
+				5164A2111A042DE8003BAB76 /* DreamRightTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5164A1FB1A042DE8003BAB76 /* DreamRight */ = {
+			isa = PBXGroup;
+			children = (
+				5164A1FE1A042DE8003BAB76 /* AppDelegate.swift */,
+				5164A2031A042DE8003BAB76 /* ViewController.swift */,
+				5164A2051A042DE8003BAB76 /* Main.storyboard */,
+				5164A2081A042DE8003BAB76 /* Images.xcassets */,
+				5164A20A1A042DE8003BAB76 /* LaunchScreen.xib */,
+				5164A2001A042DE8003BAB76 /* DreamRight.xcdatamodeld */,
+				5164A1FC1A042DE8003BAB76 /* Supporting Files */,
+			);
+			path = DreamRight;
+			sourceTree = "<group>";
+		};
+		5164A1FC1A042DE8003BAB76 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5164A1FD1A042DE8003BAB76 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5164A2141A042DE8003BAB76 /* DreamRightTests */ = {
+			isa = PBXGroup;
+			children = (
+				5164A2171A042DE8003BAB76 /* DreamRightTests.swift */,
+				5164A2151A042DE8003BAB76 /* Supporting Files */,
+			);
+			path = DreamRightTests;
+			sourceTree = "<group>";
+		};
+		5164A2151A042DE8003BAB76 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5164A2161A042DE8003BAB76 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5164A1F81A042DE8003BAB76 /* DreamRight */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5164A21B1A042DE8003BAB76 /* Build configuration list for PBXNativeTarget "DreamRight" */;
+			buildPhases = (
+				5164A1F51A042DE8003BAB76 /* Sources */,
+				5164A1F61A042DE8003BAB76 /* Frameworks */,
+				5164A1F71A042DE8003BAB76 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DreamRight;
+			productName = DreamRight;
+			productReference = 5164A1F91A042DE8003BAB76 /* DreamRight.app */;
+			productType = "com.apple.product-type.application";
+		};
+		5164A2101A042DE8003BAB76 /* DreamRightTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5164A21E1A042DE8003BAB76 /* Build configuration list for PBXNativeTarget "DreamRightTests" */;
+			buildPhases = (
+				5164A20D1A042DE8003BAB76 /* Sources */,
+				5164A20E1A042DE8003BAB76 /* Frameworks */,
+				5164A20F1A042DE8003BAB76 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5164A2131A042DE8003BAB76 /* PBXTargetDependency */,
+			);
+			name = DreamRightTests;
+			productName = DreamRightTests;
+			productReference = 5164A2111A042DE8003BAB76 /* DreamRightTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5164A1F11A042DE8003BAB76 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = SideApps;
+				TargetAttributes = {
+					5164A1F81A042DE8003BAB76 = {
+						CreatedOnToolsVersion = 6.1;
+					};
+					5164A2101A042DE8003BAB76 = {
+						CreatedOnToolsVersion = 6.1;
+						TestTargetID = 5164A1F81A042DE8003BAB76;
+					};
+				};
+			};
+			buildConfigurationList = 5164A1F41A042DE8003BAB76 /* Build configuration list for PBXProject "DreamRight" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5164A1F01A042DE8003BAB76;
+			productRefGroup = 5164A1FA1A042DE8003BAB76 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5164A1F81A042DE8003BAB76 /* DreamRight */,
+				5164A2101A042DE8003BAB76 /* DreamRightTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5164A1F71A042DE8003BAB76 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5164A2071A042DE8003BAB76 /* Main.storyboard in Resources */,
+				5164A20C1A042DE8003BAB76 /* LaunchScreen.xib in Resources */,
+				5164A2091A042DE8003BAB76 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5164A20F1A042DE8003BAB76 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5164A1F51A042DE8003BAB76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5164A2041A042DE8003BAB76 /* ViewController.swift in Sources */,
+				5164A2021A042DE8003BAB76 /* DreamRight.xcdatamodeld in Sources */,
+				5164A1FF1A042DE8003BAB76 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5164A20D1A042DE8003BAB76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5164A2181A042DE8003BAB76 /* DreamRightTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5164A2131A042DE8003BAB76 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5164A1F81A042DE8003BAB76 /* DreamRight */;
+			targetProxy = 5164A2121A042DE8003BAB76 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		5164A2051A042DE8003BAB76 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5164A2061A042DE8003BAB76 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		5164A20A1A042DE8003BAB76 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5164A20B1A042DE8003BAB76 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5164A2191A042DE8003BAB76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5164A21A1A042DE8003BAB76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5164A21C1A042DE8003BAB76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = DreamRight/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5164A21D1A042DE8003BAB76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = DreamRight/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		5164A21F1A042DE8003BAB76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = DreamRightTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DreamRight.app/DreamRight";
+			};
+			name = Debug;
+		};
+		5164A2201A042DE8003BAB76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = DreamRightTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DreamRight.app/DreamRight";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5164A1F41A042DE8003BAB76 /* Build configuration list for PBXProject "DreamRight" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5164A2191A042DE8003BAB76 /* Debug */,
+				5164A21A1A042DE8003BAB76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5164A21B1A042DE8003BAB76 /* Build configuration list for PBXNativeTarget "DreamRight" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5164A21C1A042DE8003BAB76 /* Debug */,
+				5164A21D1A042DE8003BAB76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		5164A21E1A042DE8003BAB76 /* Build configuration list for PBXNativeTarget "DreamRightTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5164A21F1A042DE8003BAB76 /* Debug */,
+				5164A2201A042DE8003BAB76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		5164A2001A042DE8003BAB76 /* DreamRight.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				5164A2011A042DE8003BAB76 /* DreamRight.xcdatamodel */,
+			);
+			currentVersion = 5164A2011A042DE8003BAB76 /* DreamRight.xcdatamodel */;
+			path = DreamRight.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 5164A1F11A042DE8003BAB76 /* Project object */;
+}
