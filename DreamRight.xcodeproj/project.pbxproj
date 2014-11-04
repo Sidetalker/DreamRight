@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		510C30CB1A091307005D92E3 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C30CA1A091307005D92E3 /* HomeViewController.swift */; };
+		510C30D01A091991005D92E3 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C30CF1A091991005D92E3 /* TestViewController.swift */; };
+		510C30D21A091A3C005D92E3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 510C30D11A091A3C005D92E3 /* AVFoundation.framework */; };
 		5164A1FF1A042DE8003BAB76 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5164A1FE1A042DE8003BAB76 /* AppDelegate.swift */; };
 		5164A2021A042DE8003BAB76 /* DreamRight.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5164A2001A042DE8003BAB76 /* DreamRight.xcdatamodeld */; };
-		5164A2041A042DE8003BAB76 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5164A2031A042DE8003BAB76 /* HomeViewController.swift */; };
 		5164A2071A042DE8003BAB76 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5164A2051A042DE8003BAB76 /* Main.storyboard */; };
 		5164A2091A042DE8003BAB76 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5164A2081A042DE8003BAB76 /* Images.xcassets */; };
 		5164A2181A042DE8003BAB76 /* DreamRightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5164A2171A042DE8003BAB76 /* DreamRightTests.swift */; };
@@ -17,6 +19,7 @@
 		5164A2251A043EBA003BAB76 /* totallyMyMoon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 5164A2241A043EBA003BAB76 /* totallyMyMoon.pdf */; };
 		5164A2291A044169003BAB76 /* hugeMoonNavy.png in Resources */ = {isa = PBXBuildFile; fileRef = 5164A2281A044169003BAB76 /* hugeMoonNavy.png */; };
 		5164A2301A045FF3003BAB76 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5164A22E1A045FF3003BAB76 /* LaunchScreen.xib */; };
+		51E491ED1A06C0E500C39495 /* DreamRightSK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E491EC1A06C0E500C39495 /* DreamRightSK.swift */; };
 		76A53CAE86B48511CE9ADB1F /* libPods-DreamRight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B12A6DE5A51D4A929EC50410 /* libPods-DreamRight.a */; };
 /* End PBXBuildFile section */
 
@@ -32,11 +35,14 @@
 
 /* Begin PBXFileReference section */
 		2ED8EA416B0D4CFC988E3C33 /* Pods-DreamRight.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DreamRight.release.xcconfig"; path = "Pods/Target Support Files/Pods-DreamRight/Pods-DreamRight.release.xcconfig"; sourceTree = "<group>"; };
+		510C30CA1A091307005D92E3 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		510C30CC1A0915B1005D92E3 /* BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
+		510C30CF1A091991005D92E3 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		510C30D11A091A3C005D92E3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		5164A1F91A042DE8003BAB76 /* DreamRight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DreamRight.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5164A1FD1A042DE8003BAB76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5164A1FE1A042DE8003BAB76 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5164A2011A042DE8003BAB76 /* DreamRight.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DreamRight.xcdatamodel; sourceTree = "<group>"; };
-		5164A2031A042DE8003BAB76 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		5164A2061A042DE8003BAB76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5164A2081A042DE8003BAB76 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5164A2111A042DE8003BAB76 /* DreamRightTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DreamRightTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,7 +52,7 @@
 		5164A2241A043EBA003BAB76 /* totallyMyMoon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = totallyMyMoon.pdf; sourceTree = "<group>"; };
 		5164A2281A044169003BAB76 /* hugeMoonNavy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hugeMoonNavy.png; sourceTree = "<group>"; };
 		5164A22F1A045FF3003BAB76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		5164A2311A0460A7003BAB76 /* BridingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridingHeader.h; sourceTree = "<group>"; };
+		51E491EC1A06C0E500C39495 /* DreamRightSK.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DreamRightSK.swift; sourceTree = "<group>"; };
 		877BB26B861D23D2A8D6E3BA /* Pods-DreamRight.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DreamRight.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DreamRight/Pods-DreamRight.debug.xcconfig"; sourceTree = "<group>"; };
 		B12A6DE5A51D4A929EC50410 /* libPods-DreamRight.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DreamRight.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -56,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				510C30D21A091A3C005D92E3 /* AVFoundation.framework in Frameworks */,
 				76A53CAE86B48511CE9ADB1F /* libPods-DreamRight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -73,6 +80,7 @@
 		2967C3977CFB1DFA0DB32496 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				510C30D11A091A3C005D92E3 /* AVFoundation.framework */,
 				B12A6DE5A51D4A929EC50410 /* libPods-DreamRight.a */,
 			);
 			name = Frameworks;
@@ -101,10 +109,10 @@
 		5164A1FB1A042DE8003BAB76 /* DreamRight */ = {
 			isa = PBXGroup;
 			children = (
+				510C30CF1A091991005D92E3 /* TestViewController.swift */,
 				5164A22E1A045FF3003BAB76 /* LaunchScreen.xib */,
 				5164A1FE1A042DE8003BAB76 /* AppDelegate.swift */,
-				5164A2031A042DE8003BAB76 /* HomeViewController.swift */,
-				5164A2321A0460AC003BAB76 /* Helper Files */,
+				510C30CA1A091307005D92E3 /* HomeViewController.swift */,
 				5164A2051A042DE8003BAB76 /* Main.storyboard */,
 				5164A2081A042DE8003BAB76 /* Images.xcassets */,
 				5164A2231A04334F003BAB76 /* Images */,
@@ -117,7 +125,9 @@
 		5164A1FC1A042DE8003BAB76 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				51E491EC1A06C0E500C39495 /* DreamRightSK.swift */,
 				5164A1FD1A042DE8003BAB76 /* Info.plist */,
+				510C30CC1A0915B1005D92E3 /* BridgingHeader.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -147,14 +157,6 @@
 				5164A2211A04334C003BAB76 /* MoonTransparent.png */,
 			);
 			name = Images;
-			sourceTree = "<group>";
-		};
-		5164A2321A0460AC003BAB76 /* Helper Files */ = {
-			isa = PBXGroup;
-			children = (
-				5164A2311A0460A7003BAB76 /* BridingHeader.h */,
-			);
-			name = "Helper Files";
 			sourceTree = "<group>";
 		};
 		E072760F9FBD31960DF241BD /* Pods */ = {
@@ -304,9 +306,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5164A2041A042DE8003BAB76 /* HomeViewController.swift in Sources */,
+				510C30D01A091991005D92E3 /* TestViewController.swift in Sources */,
 				5164A2021A042DE8003BAB76 /* DreamRight.xcdatamodeld in Sources */,
+				51E491ED1A06C0E500C39495 /* DreamRightSK.swift in Sources */,
 				5164A1FF1A042DE8003BAB76 /* AppDelegate.swift in Sources */,
+				510C30CB1A091307005D92E3 /* HomeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,6 +437,7 @@
 				INFOPLIST_FILE = DreamRight/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = DreamRight/BridgingHeader.h;
 			};
 			name = Debug;
 		};
@@ -444,6 +449,7 @@
 				INFOPLIST_FILE = DreamRight/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = DreamRight/BridgingHeader.h;
 			};
 			name = Release;
 		};
