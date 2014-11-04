@@ -8,6 +8,12 @@
 
 import UIKit
 
+struct Star {
+    var view: UIImageView?
+    var baseFrame: CGRect
+    var finalFrame: CGRect
+}
+
 class HomeViewController: UIViewController, EZMicrophoneDelegate {
     
     // MARK: - IBOutlets
@@ -25,16 +31,22 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
     var moonCounter = 0.0
     var moonAnim = 1.5
     
-    // MARK: - Main animation variables
+    // MARK: - Decibel animation variables
     var decibelDisplay: ZLSinusWaveView?
     var decibelTimer: NSTimer?
     var decibelCounter: CGFloat = 0
     var microphone: EZMicrophone?
     
+    // MARK: - Start animation variables
+    var stars: Array<UIImageView>?
+    
     // MARK: - UIViewController overrides
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Define start + end frames for our pretty little stars
+        
         
         // Draw our moon icon in several sizes
         moon128 = DreamRightSK.imageOfIconCanvas(CGRect(x: 0, y: 0, width: 128, height: 128))
@@ -64,8 +76,6 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
     
     // Start our animation once the view has been presented
     override func viewDidAppear(animated: Bool) {
-        NSLog("viewDidAppear")
-        
         // This timer is used to transition between higher resolution images as the moon zooms in
         moonTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("moonTick"), userInfo: nil, repeats: true)
         
@@ -141,6 +151,53 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
                 display.frame = CGRect(x: newX, y: newY, width: newWidth, height: newHeight)
             }
         }
+    }
+    
+    // MARK: - Helpers
+    
+    // This takes a list of star frames... the origin of each frame corresponds to the
+    // center of the resulting star. The width and height correspond respectively to the min and
+    // max possible values of the resulting star. An array of star objects is returned
+    func getStars(starFrames: [[CGRect]]) -> [Star] {
+        var stars = [Star]()
+        
+        for star in starFrames {
+            let startFrame = star[0]
+            let endFrame = star[1]
+            
+            let starSizeMax = startFrame.width
+            let starSizeMin = startFrame.height
+            let origin = startFrame.origin
+            
+            var newSize = CGFloat(arc4random_uniform(UInt32(starSizeMin)) + UInt32(starSizeMax))
+            var newX = origin.x
+            var newY = origin.y
+            
+            if newSize > 0 {
+                newX -= newSize / 2
+                newY -= newSize / 2
+            }
+            
+            if newX < 0 {
+                newX = 0
+            }
+            if newY < 0 {
+                newY = 0
+            }
+            if newX > self.view.frame.width {
+                newX = self.view.frame.width - newSize
+            }
+            if newY > self.view.frame.height {
+                newY = self.view.frame.height - newSize
+            }
+            
+            let imageContainer = UIImageView(frame: CGRect(x: newX, y: newY, width: CGFloat(newSize), height: CGFloat(newSize)))
+            imageContainer.image = DreamRightSK.imageOfLoneStar(CGRect(x: 0, y: 0, width: CGFloat(newSize), height: CGFloat(newSize)))
+            
+            stars.append(Star(view: imageContainer, baseFrame: startFrame, finalFrame: endFrame))
+        }
+        
+        return stars
     }
     
     // MARK: - EZMicrophone Delegate Function
