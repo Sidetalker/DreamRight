@@ -13,28 +13,28 @@
 import UIKit
 
 public class DreamRightSK : NSObject {
-
+    
     //// Cache
-
+    
     private struct Cache {
         static var color: UIColor = UIColor(red: 0.055, green: 0.114, blue: 0.290, alpha: 1.000)
         static var color2: UIColor = UIColor(red: 0.992, green: 0.902, blue: 0.239, alpha: 1.000)
     }
-
+    
     //// Colors
-
+    
     public class var color: UIColor { return Cache.color }
     public class var color2: UIColor { return Cache.color2 }
-
+    
     //// Drawing Methods
-
+    
     public class func drawIconCanvas(frame: CGRect) {
-
-
+        
+        
         //// Subframes
         let group: CGRect = CGRectMake(frame.minX + floor(frame.width * 0.02830 + 0.5), frame.minY + floor(frame.height * 0.02830 - 0.36) + 0.86, floor(frame.width * 0.96713 - 0.02) - floor(frame.width * 0.02830 + 0.5) + 0.52, floor(frame.height * 0.97302 + 0.5) - floor(frame.height * 0.02830 - 0.36) - 0.86)
-
-
+        
+        
         //// Group
         //// Moon Drawing
         var moonPath = UIBezierPath()
@@ -55,8 +55,8 @@ public class DreamRightSK : NSObject {
         DreamRightSK.color2.setStroke()
         moonPath.lineWidth = 1
         moonPath.stroke()
-
-
+        
+        
         //// StarBig Drawing
         var starBigPath = UIBezierPath()
         starBigPath.moveToPoint(CGPointMake(group.minX + 0.17301 * group.width, group.minY + 0.24078 * group.height))
@@ -70,16 +70,16 @@ public class DreamRightSK : NSObject {
         starBigPath.addCurveToPoint(CGPointMake(group.minX + 0.17301 * group.width, group.minY + 0.24078 * group.height), controlPoint1: CGPointMake(group.minX + 0.17301 * group.width, group.minY + 0.27748 * group.height), controlPoint2: CGPointMake(group.minX + 0.17301 * group.width, group.minY + 0.24078 * group.height))
         starBigPath.closePath()
         starBigPath.lineCapStyle = kCGLineCapRound;
-
+        
         starBigPath.lineJoinStyle = kCGLineJoinBevel;
-
+        
         DreamRightSK.color.setFill()
         starBigPath.fill()
         DreamRightSK.color.setStroke()
         starBigPath.lineWidth = 1
         starBigPath.stroke()
-
-
+        
+        
         //// StarMedium Drawing
         var starMediumPath = UIBezierPath()
         starMediumPath.moveToPoint(CGPointMake(group.minX + 0.23838 * group.width, group.minY + 0.39347 * group.height))
@@ -93,16 +93,16 @@ public class DreamRightSK : NSObject {
         starMediumPath.addCurveToPoint(CGPointMake(group.minX + 0.23838 * group.width, group.minY + 0.39347 * group.height), controlPoint1: CGPointMake(group.minX + 0.23838 * group.width, group.minY + 0.42136 * group.height), controlPoint2: CGPointMake(group.minX + 0.23838 * group.width, group.minY + 0.39347 * group.height))
         starMediumPath.closePath()
         starMediumPath.lineCapStyle = kCGLineCapRound;
-
+        
         starMediumPath.lineJoinStyle = kCGLineJoinBevel;
-
+        
         DreamRightSK.color.setFill()
         starMediumPath.fill()
         DreamRightSK.color.setStroke()
         starMediumPath.lineWidth = 1
         starMediumPath.stroke()
-
-
+        
+        
         //// StarSmall Drawing
         var starSmallPath = UIBezierPath()
         starSmallPath.moveToPoint(CGPointMake(group.minX + 0.10171 * group.width, group.minY + 0.38172 * group.height))
@@ -116,27 +116,27 @@ public class DreamRightSK : NSObject {
         starSmallPath.addCurveToPoint(CGPointMake(group.minX + 0.10171 * group.width, group.minY + 0.38172 * group.height), controlPoint1: CGPointMake(group.minX + 0.10171 * group.width, group.minY + 0.40081 * group.height), controlPoint2: CGPointMake(group.minX + 0.10171 * group.width, group.minY + 0.38172 * group.height))
         starSmallPath.closePath()
         starSmallPath.lineCapStyle = kCGLineCapRound;
-
+        
         starSmallPath.lineJoinStyle = kCGLineJoinBevel;
-
+        
         DreamRightSK.color.setFill()
         starSmallPath.fill()
         DreamRightSK.color.setStroke()
         starSmallPath.lineWidth = 1
         starSmallPath.stroke()
     }
-
+    
     //// Generated Images
-
+    
     public class func imageOfIconCanvas(frame: CGRect) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(frame.width, frame.height), false, 0)
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(110, 110), false, 0)
         DreamRightSK.drawIconCanvas(frame)
         var imageOfIconCanvas = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-
+        
         return imageOfIconCanvas!
     }
-
+    
 }
 
 @objc protocol StyleKitSettableImage {

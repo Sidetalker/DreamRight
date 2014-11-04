@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, EZMicrophoneDelegate {
     
     // MARK: - IBOutlets
     
@@ -26,7 +26,10 @@ class HomeViewController: UIViewController {
     var moonAnim = 1.5
     
     // MARK: - Main animation variables
-    let decibelDisplay = ZLSinusWaveView()
+    var decibelDisplay: ZLSinusWaveView?
+    var decibelTimer: NSTimer?
+    var decibelCounter: CGFloat = 0
+    var microphone: EZMicrophone?
     
     // MARK: - UIViewController overrides
     
@@ -43,13 +46,32 @@ class HomeViewController: UIViewController {
         moonContainer = UIImageView(image: moon128!)
         moonContainer?.frame = CGRect(x: self.view.frame.width / 2 - 64, y: self.view.frame.height / 2 - 64, width: 128, height: 128)
         
+        // Configure the sinus wave view
+        decibelDisplay = ZLSinusWaveView(frame: CGRect(x: self.view.frame.width / 2, y: 100, width: 0, height: 0))
+        decibelDisplay?.backgroundColor = self.view.backgroundColor
+        decibelDisplay?.color = UIColor.greenColor()
+        decibelDisplay?.plotType = EZPlotType.Buffer
+        decibelDisplay?.shouldFill = true
+        decibelDisplay?.shouldMirror = true
+        
+        // Configure the microphone
+        microphone = EZMicrophone(delegate: self, startsImmediately: true)
+        
         // Add everything to the view
         self.view.addSubview(moonContainer!)
+        self.view.addSubview(decibelDisplay!)
     }
     
+    // Start our animation once the view has been presented
     override func viewDidAppear(animated: Bool) {
-        // The timer is used to transition between higher resolution images as the moon zooms in
+        NSLog("viewDidAppear")
+        
+        // This timer is used to transition between higher resolution images as the moon zooms in
         moonTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("moonTick"), userInfo: nil, repeats: true)
+        
+        // This timer is used to grow the ZLSinusWaveView on ticks rather than a block so it can still be updated
+        // TODO: The decible tick function could be made into a Helper function taking dictionary of object + frames in userInfo
+        decibelTimer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: Selector("decibelTick"), userInfo: nil, repeats: true)
 
         // The modifiers keep the moon centered on the big star at all sizes
         let size = 13000.0
@@ -57,22 +79,9 @@ class HomeViewController: UIViewController {
         let yMod = 0.3254 * size
         
         UIView.animateWithDuration(1.0, delay: 0.25, options: UIViewAnimationOptions.CurveEaseIn, animations: {
-            print("Swift bugfix code line")
-            
-            self.moonContainer?.frame = CGRect(x: Double(self.view.frame.width / 2.0) - xMod, y: Double(self.view.frame.height / 2.0) - yMod, width: size, height: size)
-            }, completion: {
-                (Bool) in
-        })
-        
-        UIView.animateWithDuration(0.15, delay: 0.88, options: UIViewAnimationOptions.CurveEaseIn, animations: {
-            print("wtf")
-            self.testButton?.alpha = 1.0
-            }, completion: nil)
-        
-        UIView.animateWithDuration(0.4, delay: 0.89, options: UIViewAnimationOptions.CurveEaseIn, animations: {
-            print("wtf")
-            self.testButton?.frame = CGRect(x: 0, y: 100, width: self.view.frame.width , height: 1)
-            }, completion: nil)
+            if let view = self.moonContainer? {
+                view.frame = CGRect(x: Double(self.view.frame.width / 2.0) - xMod, y: Double(self.view.frame.height / 2.0) - yMod, width: size, height: size)
+            }}, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -83,6 +92,7 @@ class HomeViewController: UIViewController {
         return true
     }
     
+    // Adjusts the moon icon's resolution
     func moonTick() {
         if moonCounter > 15 {
             moonTimer?.invalidate()
@@ -101,30 +111,46 @@ class HomeViewController: UIViewController {
             moonContainer?.image = moon3000
         }
     }
-}
-
-class moonView: UIView {
     
-    // MARK: - Init functions
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.setup()
+    // Update the frame of the ZLSinusWaveView
+    func decibelTick() {
+        let start: CGFloat = 90
+        let end: CGFloat = 130
+        let total: CGFloat = end - start
+        
+        if decibelCounter == end {
+            decibelTimer?.invalidate()
+            microphone?.startFetchingAudio()
+            return
+        }
+        else {
+            decibelCounter++
+        }
+        
+        if decibelCounter <= start {
+            return
+        }
+        
+        let newX: CGFloat = decibelDisplay!.frame.origin.x - self.view.frame.width / 2 / total
+        let newY: CGFloat = decibelDisplay!.frame.origin.y - 75 / total
+        let newWidth: CGFloat = decibelDisplay!.frame.width + self.view.frame.width / total
+        let newHeight: CGFloat = decibelDisplay!.frame.height + 150 / total
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            if let display = self.decibelDisplay? {
+                display.frame = CGRect(x: newX, y: newY, width: newWidth, height: newHeight)
+            }
+        }
     }
     
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.setup()
-    }
+    // MARK: - EZMicrophone Delegate Function
     
-    func setup() {
-        backgroundColor = UIColor.clearColor()
-        contentMode = UIViewContentMode.Redraw
-    }
-    
-    // MARK: - Drawing overrides
-    
-    override func drawRect(rect: CGRect) {
-        DreamRightSK.drawIconCanvas(rect)
+    func microphone(microphone: EZMicrophone!, hasAudioReceived buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
+        dispatch_async(dispatch_get_main_queue()) {
+            // Update the main buffer
+            if let display = self.decibelDisplay? {
+                display.updateBuffer(buffer[0], withBufferSize: bufferSize)
+            }
+        }
     }
 }
