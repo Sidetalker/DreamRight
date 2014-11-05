@@ -9,9 +9,27 @@
 import UIKit
 
 struct Star {
-    var view: UIImageView?
+    var view: UIImageView
+    var baseImage: UIImage
+    var finalImage: UIImage
+    var delay: NSTimeInterval
+    var time: NSTimeInterval
+    var animationOptions: UIViewAnimationOptions
     var baseFrame: CGRect
     var finalFrame: CGRect
+    
+    func transition(forward: Bool) {
+        if forward {
+            UIView.animateWithDuration(time, delay: delay, options: animationOptions, animations: {
+                self.view.frame = self.finalFrame
+                }, completion: nil)
+        }
+        else {
+            UIView.animateWithDuration(time, delay: delay, options: animationOptions, animations: {
+                self.view.frame = self.baseFrame
+                }, completion: nil)
+        }
+    }
 }
 
 class HomeViewController: UIViewController, EZMicrophoneDelegate {
@@ -37,8 +55,10 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
     var decibelCounter: CGFloat = 0
     var microphone: EZMicrophone?
     
-    // MARK: - Start animation variables
-    var stars: Array<UIImageView>?
+    // MARK: - Star animation variables
+    var stars = [Star]()
+    var starTimer: NSTimer?
+    var starCounter: CGFloat = 0
     
     // MARK: - UIViewController overrides
     
@@ -46,7 +66,29 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         super.viewDidLoad()
         
         // Define start + end frames for our pretty little stars
+        var startFrames = [CGRect]()
+        var endFrames = [CGRect]()
+        var frames = [[CGRect]]()
+        var delays = [NSTimeInterval]()
+        var times = [NSTimeInterval]()
+        var options = [UIViewAnimationOptions]()
         
+        startFrames.append(CGRect(x: self.view.frame.width / 2, y: self.view.frame.height / 2, width: 0, height: 0))
+        endFrames.append(CGRect(x: self.view.frame.width / 2, y: self.view.frame.height / 2, width: 25, height: 25))
+        delays.append(0)
+        times.append(1.5)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        
+        for x in 0...startFrames.count - 1 {
+            var curGroup = [CGRect]()
+            curGroup.append(startFrames[x])
+            curGroup.append(endFrames[x])
+            
+            frames.append(curGroup)
+        }
+        
+        // Get our star objects
+        stars = getStars(frames, animationDelays: delays, animationLengths: times, animationOptions: options)
         
         // Draw our moon icon in several sizes
         moon128 = DreamRightSK.imageOfIconCanvas(CGRect(x: 0, y: 0, width: 128, height: 128))
@@ -71,7 +113,11 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         
         // Add everything to the view
         self.view.addSubview(moonContainer!)
-        self.view.addSubview(decibelDisplay!)
+//        self.view.addSubview(decibelDisplay!)
+        
+        for star in stars {
+            self.view.addSubview(star.view)
+        }
     }
     
     // Start our animation once the view has been presented
@@ -82,16 +128,25 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         // This timer is used to grow the ZLSinusWaveView on ticks rather than a block so it can still be updated
         // TODO: The decible tick function could be made into a Helper function taking dictionary of object + frames in userInfo
         decibelTimer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: Selector("decibelTick"), userInfo: nil, repeats: true)
+        
+        // This timer is used to animate the stars completing the init animation
+        starTimer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: Selector("starTick"), userInfo: nil, repeats: true)
 
         // The modifiers keep the moon centered on the big star at all sizes
         let size = 13000.0
         let xMod = 0.19069 * size
         let yMod = 0.3254 * size
         
+        // Blow up the moon and destroy it when you're done
         UIView.animateWithDuration(1.0, delay: 0.25, options: UIViewAnimationOptions.CurveEaseIn, animations: {
             if let view = self.moonContainer? {
                 view.frame = CGRect(x: Double(self.view.frame.width / 2.0) - xMod, y: Double(self.view.frame.height / 2.0) - yMod, width: size, height: size)
-            }}, completion: nil)
+            }}, completion: {
+                (value: Bool) in
+                if value {
+                    self.moonContainer?.removeFromSuperview()
+                }
+        })
     }
     
     override func didReceiveMemoryWarning() {
@@ -153,48 +208,82 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         }
     }
     
+    // Display the dynamic stars
+    func starTick() {
+        let start: CGFloat = 150
+        let end: CGFloat = 200
+        
+        if starCounter == end {
+            starTimer?.invalidate()
+            return
+        }
+        else {
+            starCounter++
+        }
+        
+        if starCounter <= start {
+            return
+        }
+        
+        switch starCounter {
+        case 160:
+            stars[0].transition(true)
+        default: ()
+        }
+    }
+    
     // MARK: - Helpers
     
     // This takes a list of star frames... the origin of each frame corresponds to the
     // center of the resulting star. The width and height correspond respectively to the min and
     // max possible values of the resulting star. An array of star objects is returned
-    func getStars(starFrames: [[CGRect]]) -> [Star] {
+    func getStars(starFrames: [[CGRect]], animationDelays: [NSTimeInterval], animationLengths: [NSTimeInterval], animationOptions: [UIViewAnimationOptions]) -> [Star] {
         var stars = [Star]()
         
-        for star in starFrames {
-            let startFrame = star[0]
-            let endFrame = star[1]
+        for x in 0...starFrames.count - 1 {
+            let startFrame = starFrames[x][0]
+            let endFrame = starFrames[x][1]
             
-            let starSizeMax = startFrame.width
-            let starSizeMin = startFrame.height
-            let origin = startFrame.origin
+            let starSizeMaxA = startFrame.width
+            let starSizeMinA = startFrame.height
+            let starSizeMaxB = endFrame.width
+            let starSizeMinB = endFrame.height
+            let originA = startFrame.origin
+            let originB = endFrame.origin
             
-            var newSize = CGFloat(arc4random_uniform(UInt32(starSizeMin)) + UInt32(starSizeMax))
-            var newX = origin.x
-            var newY = origin.y
+            var newStartSizeA = CGFloat(arc4random_uniform(UInt32(starSizeMinA)) + UInt32(starSizeMaxA))
+            var newStartSizeB = CGFloat(arc4random_uniform(UInt32(starSizeMinB)) + UInt32(starSizeMaxB))
+            var newXA = originA.x
+            var newYA = originA.y
+            var newXB = originB.x
+            var newYB = originB.y
             
-            if newSize > 0 {
-                newX -= newSize / 2
-                newY -= newSize / 2
+            if newStartSizeA > 0 {
+                newXA -= newStartSizeA / 2
+                newYA -= newStartSizeA / 2
             }
             
-            if newX < 0 {
-                newX = 0
+            if newStartSizeB > 0 {
+                newXB -= newStartSizeB / 2
+                newYB -= newStartSizeB / 2
             }
-            if newY < 0 {
-                newY = 0
+
+            let newStartFrame = CGRect(x: newXA, y: newYA, width: newStartSizeA, height: newStartSizeA)
+            let newEndFrame = CGRect(x: newXB, y: newYB, width: newStartSizeB, height: newStartSizeB)
+            
+            let imageContainer = UIImageView(frame: newStartFrame)
+            
+            let baseImage = DreamRightSK.imageOfLoneStar(CGRect(x: 0, y: 0, width: CGFloat(newStartSizeA), height: CGFloat(newStartSizeA)))
+            let finalImage = DreamRightSK.imageOfLoneStar(CGRect(x: 0, y: 0, width: CGFloat(newStartSizeB), height: CGFloat(newStartSizeB)))
+            
+            if newStartSizeA > newStartSizeB {
+                imageContainer.image = baseImage
             }
-            if newX > self.view.frame.width {
-                newX = self.view.frame.width - newSize
-            }
-            if newY > self.view.frame.height {
-                newY = self.view.frame.height - newSize
+            else {
+                imageContainer.image = finalImage
             }
             
-            let imageContainer = UIImageView(frame: CGRect(x: newX, y: newY, width: CGFloat(newSize), height: CGFloat(newSize)))
-            imageContainer.image = DreamRightSK.imageOfLoneStar(CGRect(x: 0, y: 0, width: CGFloat(newSize), height: CGFloat(newSize)))
-            
-            stars.append(Star(view: imageContainer, baseFrame: startFrame, finalFrame: endFrame))
+            stars.append(Star(view: imageContainer, baseImage: baseImage, finalImage: finalImage, delay: animationDelays[x], time: animationLengths[x], animationOptions: animationOptions[x], baseFrame: newStartFrame, finalFrame: newEndFrame))
         }
         
         return stars
