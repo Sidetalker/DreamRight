@@ -189,6 +189,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
     var mainLongPress: UILongPressGestureRecognizer?
     var mainTap: UITapGestureRecognizer?
     var mainDoubleTap: UITapGestureRecognizer?
+    var mainTripleTap: UITapGestureRecognizer?
     var subTap: UITapGestureRecognizer?
     var subDoubleTap: UITapGestureRecognizer?
     var subPan: UIPanGestureRecognizer?
@@ -236,12 +237,16 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
 //        }
         
         mainLongPress = UILongPressGestureRecognizer(target: self, action: Selector("mainLongPress:"))
-        mainLongPress?.minimumPressDuration = 0.5
+        mainLongPress?.minimumPressDuration = 0.44
         self.view.addGestureRecognizer(mainLongPress!)
         
         mainDoubleTap = UITapGestureRecognizer(target: self, action: Selector("mainDoubleTap:"))
-        mainDoubleTap?.numberOfTapsRequired = 3
+        mainDoubleTap?.numberOfTapsRequired = 2
         self.view.addGestureRecognizer(mainDoubleTap!)
+        
+        mainTripleTap = UITapGestureRecognizer(target: self, action: Selector("mainTripleTap:"))
+        mainTripleTap?.numberOfTapsRequired = 3
+        self.view.addGestureRecognizer(mainTripleTap!)
         
         mainTap = UITapGestureRecognizer(target: self, action: Selector("mainTap:"))
         self.view.addGestureRecognizer(mainTap!)
@@ -258,6 +263,8 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
     }
     
     func keyboardWillShow(notification: NSNotification) {
+        NSLog("keyboardWillShow")
+        
         let keyboardHeight = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue().height
         
         self.bottomGuideA.constant += keyboardHeight
@@ -265,8 +272,10 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         self.bottomGuideC.constant += keyboardHeight
         
         UIView.animateWithDuration(0.9, animations: {
-            for container in self.starContainers {
-                container.view.alpha = 0.0
+            if !self.starContainers.isEmpty {
+                for container in self.starContainers {
+                    container.view.alpha = 0.0
+                }
             }
             
             self.view.layoutIfNeeded()
@@ -274,6 +283,8 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
     }
     
     func keyboardWillHide(notification: NSNotification) {
+        NSLog("keyboardWillHide")
+        
         let keyboardHeight = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue().height
         
         self.bottomGuideA.constant -= keyboardHeight
@@ -281,8 +292,10 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         self.bottomGuideC.constant -= keyboardHeight
         
         UIView.animateWithDuration(0.9, animations: {
-            for container in self.starContainers {
-                container.view.alpha = 1.0
+            if !self.starContainers.isEmpty {
+                for container in self.starContainers {
+                    container.view.alpha = 1.0
+                }
             }
             
             self.view.layoutIfNeeded()
@@ -299,7 +312,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
             let view = container.view
             let startWidth = view.layer.borderWidth
             
-            view.layer.borderWidth = 0.0
+//            view.layer.borderWidth = 0.0
             
             if forwardOrBack {
                 UIView.animateWithDuration(star.time, delay: star.delay, options: star.animationOptions, animations: {
@@ -310,7 +323,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
                     }, completion: {
                         (value: Bool) in
                         if (value) {
-                            view.layer.borderWidth = startWidth
+//                            view.layer.borderWidth = startWidth
                         }
                 })
             }
@@ -323,7 +336,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
                     }, completion: {
                         (value: Bool) in
                         if (value) {
-                            view.layer.borderWidth = startWidth
+//                            view.layer.borderWidth = startWidth
                         }
                 })
             }
@@ -336,6 +349,17 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         
     }
     
+    func mainTripleTap(gesture: UITapGestureRecognizer) {
+        NSLog("Main Triple Tap")
+        
+        for container in starContainers {
+            container.view.removeFromSuperview()
+        }
+        
+        activeContainer = -1
+        starContainers = [StarContainer]()
+    }
+    
     func mainTap(gesture: UITapGestureRecognizer) {
         NSLog("Main Tap")
         
@@ -345,23 +369,39 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
             return
         }
         
-        for container in starContainers {
-            if container.view.layer.borderWidth == 0 {
-                container.view.layer.borderWidth == 0.5
-                activeContainer = -1
-            }
-        }
-    }
-    
-    func mainDoubleTap(gesture: UITapGestureRecognizer) {
-        NSLog("Main Triple Tap")
+        let startBorder = starContainers[0].view.layer.borderWidth
         
         for container in starContainers {
-            container.view.removeFromSuperview()
+            if startBorder != 0 {
+                container.view.layer.borderWidth = 0.0
+            }
+            else {
+                container.view.layer.borderWidth = 0.5
+            }
         }
         
         activeContainer = -1
-        starContainers = [StarContainer]()
+    }
+    
+    func mainDoubleTap(gesture: UITapGestureRecognizer) {
+        NSLog("Main Double Tap")
+        
+        if starContainers.isEmpty {
+            return
+        }
+        
+        let startWidth = starContainers[0].view.layer.borderWidth
+        
+        for container in starContainers {
+            if startWidth != 0 {
+                container.view.layer.borderWidth = 0
+            }
+            else {
+                container.view.layer.borderWidth = 0.5
+            }
+        }
+        
+        activeContainer = -1
     }
     
     func mainLongPress(gesture: UILongPressGestureRecognizer) {
@@ -392,8 +432,15 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         let animationLength = [length]
         let animationOptions = [UIViewAnimationOptions.CurveEaseOut]
         
-        let newStar = getStars([[starStartFrame, starEndFrame]], animationDelays: animationDelay, animationLengths: animationLength, animationOptions: animationOptions)[0]
-        newStar.view.backgroundColor = UIColor.clearColor()
+        let starRequest = getStars([[starStartFrame, starEndFrame]], animationDelays: animationDelay, animationLengths: animationLength, animationOptions: animationOptions)
+        
+        if starRequest == nil {
+            return
+        }
+        
+        let star = starRequest![0]
+        
+        star.view.backgroundColor = UIColor.clearColor()
         
         let newView = UIView(frame: viewStartFrame)
         newView.layer.borderColor = DreamRightSK.color2.CGColor
@@ -409,7 +456,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         subDoubleTap?.numberOfTapsRequired = 2
         newView.addGestureRecognizer(subDoubleTap!)
         
-        newView.addSubview(newStar.view)
+        newView.addSubview(star.view)
         self.view.addSubview(newView)
         
         if starContainers.count > 0 {
@@ -418,16 +465,16 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
             }
         }
         
-        let newSize = newStar.view.frame.width
+        let newSize = star.view.frame.width
         
-        starContainers.append(StarContainer(star: newStar, view: newView))
-        newStar.view.frame = CGRect(x: newView.frame.width / 2, y: newView.frame.height / 2, width: 0, height: 0)
+        starContainers.append(StarContainer(star: star, view: newView))
+        star.view.frame = CGRect(x: newView.frame.width / 2, y: newView.frame.height / 2, width: 0, height: 0)
         
         UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
             let starViewFrame = CGRect(x: viewEndFrame.width / 2 - newSize / 2, y: viewEndFrame.height / 2 - newSize / 2, width: newSize, height: newSize)
 
             newView.frame = viewEndFrame
-            newStar.view.frame = starViewFrame
+            star.view.frame = starViewFrame
             
             NSLog("UIView Frame: \(viewEndFrame)\nStarView Frame: \(starViewFrame)")
             }, completion: {
@@ -500,11 +547,10 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
             
             if recognizer.view == starContainers[x].view {
                 activeContainer = x
-                txtAnimationLength.text = "\(starContainers[x].star.time)"
-                txtDelay.text = "\(starContainers[x].star.delay)"
+                txtAnimationLength.text = NSString(format: "%.01f", starContainers[x].star.time)
+                txtDelay.text = NSString(format: "%.01f", starContainers[x].star.delay)
             }
         }
-        
         recognizer.view!.layer.borderWidth = 2.5
         self.view.bringSubviewToFront(recognizer.view!)
     }
@@ -531,7 +577,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
             textField.text = "0"
         }
         
-        if starContainers.isEmpty {
+        if starContainers.isEmpty || activeContainer == -1 {
             return
         }
         
@@ -545,7 +591,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         
     }
     
-    func getStars(starFrames: [[CGRect]], animationDelays: [NSTimeInterval], animationLengths: [NSTimeInterval], animationOptions: [UIViewAnimationOptions]) -> [Star] {
+    func getStars(starFrames: [[CGRect]], animationDelays: [NSTimeInterval], animationLengths: [NSTimeInterval], animationOptions: [UIViewAnimationOptions]) -> [Star]? {
         var stars = [Star]()
         
         for x in 0...starFrames.count - 1 {
@@ -558,6 +604,10 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
             let starSizeMaxB = Int(endFrame.height)
             let originA = startFrame.origin
             let originB = endFrame.origin
+            
+            if starSizeMinA > starSizeMaxA || starSizeMinB > starSizeMaxB {
+                return nil
+            }
             
             var newStartSizeA = starSizeMinA
             var newStartSizeB = starSizeMinB
