@@ -8,10 +8,10 @@
 
 import UIKit
 
-struct Star {
+ struct Star {
     var view: UIImageView
-    var baseImage: UIImage
-    var finalImage: UIImage
+    var baseImage: UIImage?
+    var finalImage: UIImage?
     var delay: NSTimeInterval
     var time: NSTimeInterval
     var animationOptions: UIViewAnimationOptions
@@ -19,6 +19,8 @@ struct Star {
     var finalFrame: CGRect
     
     func transition(forward: Bool) {
+        NSLog("Transitioning Star!\nBaseFrame: \(baseFrame)\nFinalFrame: \(finalFrame)")
+        
         if forward {
             UIView.animateWithDuration(time, delay: delay, options: animationOptions, animations: {
                 self.view.frame = self.finalFrame
@@ -74,8 +76,8 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         var options = [UIViewAnimationOptions]()
         
         startFrames.append(CGRect(x: self.view.frame.width / 2, y: self.view.frame.height / 2, width: 0, height: 0))
-        endFrames.append(CGRect(x: self.view.frame.width / 2, y: self.view.frame.height / 2, width: 25, height: 25))
-        delays.append(0)
+        endFrames.append(CGRect(x: self.view.frame.width / 2, y: self.view.frame.height / 2, width: 150, height: 150))
+        delays.append(1.5)
         times.append(1.5)
         options.append(UIViewAnimationOptions.CurveEaseIn)
         
@@ -117,6 +119,7 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         
         for star in stars {
             self.view.addSubview(star.view)
+            star.transition(true)
         }
     }
     
@@ -244,39 +247,54 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
             let startFrame = starFrames[x][0]
             let endFrame = starFrames[x][1]
             
-            let starSizeMaxA = startFrame.width
-            let starSizeMinA = startFrame.height
-            let starSizeMaxB = endFrame.width
-            let starSizeMinB = endFrame.height
+            let starSizeMinA = Int(startFrame.width)
+            let starSizeMaxA = Int(startFrame.height)
+            let starSizeMinB = Int(endFrame.width)
+            let starSizeMaxB = Int(endFrame.height)
             let originA = startFrame.origin
             let originB = endFrame.origin
             
-            var newStartSizeA = CGFloat(arc4random_uniform(UInt32(starSizeMinA)) + UInt32(starSizeMaxA))
-            var newStartSizeB = CGFloat(arc4random_uniform(UInt32(starSizeMinB)) + UInt32(starSizeMaxB))
+            var newStartSizeA = starSizeMinA
+            var newStartSizeB = starSizeMinB
+            
+            if starSizeMinA != starSizeMaxA {
+                newStartSizeA = Int(arc4random_uniform(UInt32(starSizeMaxA - starSizeMinA))) + starSizeMinA
+            }
+            if starSizeMinB != starSizeMaxB {
+                newStartSizeB = Int(arc4random_uniform(UInt32(starSizeMaxB - starSizeMinB))) + starSizeMinB
+            }
+            
             var newXA = originA.x
             var newYA = originA.y
             var newXB = originB.x
             var newYB = originB.y
             
             if newStartSizeA > 0 {
-                newXA -= newStartSizeA / 2
-                newYA -= newStartSizeA / 2
+                newXA -= CGFloat(newStartSizeA / 2)
+                newYA -= CGFloat(newStartSizeA / 2)
             }
             
             if newStartSizeB > 0 {
-                newXB -= newStartSizeB / 2
-                newYB -= newStartSizeB / 2
+                newXB -= CGFloat(newStartSizeB / 2)
+                newYB -= CGFloat(newStartSizeB / 2)
             }
-
-            let newStartFrame = CGRect(x: newXA, y: newYA, width: newStartSizeA, height: newStartSizeA)
-            let newEndFrame = CGRect(x: newXB, y: newYB, width: newStartSizeB, height: newStartSizeB)
+            
+            let newStartFrame = CGRect(x: newXA, y: newYA, width: CGFloat(newStartSizeA), height: CGFloat(newStartSizeA))
+            let newEndFrame = CGRect(x: newXB, y: newYB, width: CGFloat(newStartSizeB), height: CGFloat(newStartSizeB))
             
             let imageContainer = UIImageView(frame: newStartFrame)
             
-            let baseImage = DreamRightSK.imageOfLoneStar(CGRect(x: 0, y: 0, width: CGFloat(newStartSizeA), height: CGFloat(newStartSizeA)))
-            let finalImage = DreamRightSK.imageOfLoneStar(CGRect(x: 0, y: 0, width: CGFloat(newStartSizeB), height: CGFloat(newStartSizeB)))
+            var baseImage: UIImage?
+            var finalImage: UIImage?
             
-            if newStartSizeA > newStartSizeB {
+            if newStartSizeA > 0 {
+                baseImage = DreamRightSK.imageOfLoneStar(CGRect(x: 0, y: 0, width: CGFloat(newStartSizeA), height: CGFloat(newStartSizeA)))
+            }
+            if newStartSizeB > 0 {
+                finalImage = DreamRightSK.imageOfLoneStar(CGRect(x: 0, y: 0, width: CGFloat(newStartSizeB), height: CGFloat(newStartSizeB)))
+            }
+            
+            if let img = baseImage? {
                 imageContainer.image = baseImage
             }
             else {
