@@ -75,10 +75,104 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         var times = [NSTimeInterval]()
         var options = [UIViewAnimationOptions]()
         
-        startFrames.append(CGRect(x: self.view.frame.width / 2, y: self.view.frame.height / 2, width: 0, height: 0))
-        endFrames.append(CGRect(x: self.view.frame.width / 2, y: self.view.frame.height / 2, width: 150, height: 150))
-        delays.append(1.5)
-        times.append(1.5)
+        startFrames.append(CGRect(x: 0.8625 * self.view.frame.width, y: 0.1311619718309859 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.728125 * self.view.frame.width, y: 0.3987676056338028 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.1859375 * self.view.frame.width, y: 0.2975352112676056 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.5125 * self.view.frame.width, y: 0.07042253521126761 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.74375 * self.view.frame.width, y: 0.2588028169014084 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.178125 * self.view.frame.width, y: 0.08362676056338028 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.346875 * self.view.frame.width, y: 0.4058098591549296 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.884375 * self.view.frame.width, y: 0.3116197183098591 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.6796875 * self.view.frame.width, y: 0.1302816901408451 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.315625 * self.view.frame.width, y: 0.02816901408450704 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.0859375 * self.view.frame.width, y: 0.2077464788732394 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.5828125 * self.view.frame.width, y: 0.3855633802816901 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.521875 * self.view.frame.width, y: 0.238556338028169 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.2078125 * self.view.frame.width, y: 0.159330985915493 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.7203125 * self.view.frame.width, y: 0.05897887323943662 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.903125 * self.view.frame.width, y: 0.2315140845070423 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.1828125 * self.view.frame.width, y: 0.3987676056338028 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.890625 * self.view.frame.width, y: 0.3961267605633803 * self.view.frame.height, width: 0, height: 0))
+        startFrames.append(CGRect(x: 0.0546875 * self.view.frame.width, y: 0.0625 * self.view.frame.height, width: 0, height: 0))
+        
+        endFrames.append(CGRect(x: 0.8625 * self.view.frame.width, y: 0.1311619718309859 * self.view.frame.height, width: 47, height: 47))
+        endFrames.append(CGRect(x: 0.728125 * self.view.frame.width, y: 0.3987676056338028 * self.view.frame.height, width: 47, height: 47))
+        endFrames.append(CGRect(x: 0.1859375 * self.view.frame.width, y: 0.2975352112676056 * self.view.frame.height, width: 47, height: 47))
+        endFrames.append(CGRect(x: 0.5125 * self.view.frame.width, y: 0.07042253521126761 * self.view.frame.height, width: 47, height: 47))
+        endFrames.append(CGRect(x: 0.74375 * self.view.frame.width, y: 0.2588028169014084 * self.view.frame.height, width: 34, height: 34))
+        endFrames.append(CGRect(x: 0.178125 * self.view.frame.width, y: 0.08362676056338028 * self.view.frame.height, width: 32, height: 32))
+        endFrames.append(CGRect(x: 0.346875 * self.view.frame.width, y: 0.4058098591549296 * self.view.frame.height, width: 33, height: 33))
+        endFrames.append(CGRect(x: 0.884375 * self.view.frame.width, y: 0.3116197183098591 * self.view.frame.height, width: 22, height: 22))
+        endFrames.append(CGRect(x: 0.6796875 * self.view.frame.width, y: 0.1302816901408451 * self.view.frame.height, width: 21, height: 21))
+        endFrames.append(CGRect(x: 0.315625 * self.view.frame.width, y: 0.02816901408450704 * self.view.frame.height, width: 23, height: 23))
+        endFrames.append(CGRect(x: 0.0859375 * self.view.frame.width, y: 0.2077464788732394 * self.view.frame.height, width: 22, height: 22))
+        endFrames.append(CGRect(x: 0.5828125 * self.view.frame.width, y: 0.3855633802816901 * self.view.frame.height, width: 21, height: 21))
+        endFrames.append(CGRect(x: 0.521875 * self.view.frame.width, y: 0.238556338028169 * self.view.frame.height, width: 9, height: 9))
+        endFrames.append(CGRect(x: 0.2078125 * self.view.frame.width, y: 0.159330985915493 * self.view.frame.height, width: 14, height: 14))
+        endFrames.append(CGRect(x: 0.7203125 * self.view.frame.width, y: 0.05897887323943662 * self.view.frame.height, width: 8, height: 8))
+        endFrames.append(CGRect(x: 0.903125 * self.view.frame.width, y: 0.2315140845070423 * self.view.frame.height, width: 14, height: 14))
+        endFrames.append(CGRect(x: 0.1828125 * self.view.frame.width, y: 0.3987676056338028 * self.view.frame.height, width: 11, height: 11))
+        endFrames.append(CGRect(x: 0.890625 * self.view.frame.width, y: 0.3961267605633803 * self.view.frame.height, width: 12, height: 12))
+        endFrames.append(CGRect(x: 0.0546875 * self.view.frame.width, y: 0.0625 * self.view.frame.height, width: 14, height: 14))
+        
+        delays.append(0.100000001490116)
+        delays.append(0.200000002980232)
+        delays.append(0.100000001490116)
+        delays.append(0.400000005960464)
+        delays.append(0.400000005960464)
+        delays.append(0.400000005960464)
+        delays.append(0.5)
+        delays.append(0.300000011920929)
+        delays.append(0.800000011920929)
+        delays.append(0.600000023841858)
+        delays.append(0.300000011920929)
+        delays.append(0.600000023841858)
+        delays.append(0.899999976158142)
+        delays.append(0.200000002980232)
+        delays.append(0.300000011920929)
+        delays.append(0.400000005960464)
+        delays.append(0.699999988079071)
+        delays.append(0.100000001490116)
+        delays.append(0.300000011920929)
+        
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        times.append(0.800000011920929)
+        
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
+        options.append(UIViewAnimationOptions.CurveEaseIn)
         options.append(UIViewAnimationOptions.CurveEaseIn)
         
         for x in 0...startFrames.count - 1 {
@@ -90,7 +184,7 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         }
         
         // Get our star objects
-        stars = getStars(frames, animationDelays: delays, animationLengths: times, animationOptions: options)
+        stars = getStars(frames, delays, times, options)
         
         // Draw our moon icon in several sizes
         moon128 = DreamRightSK.imageOfIconCanvas(CGRect(x: 0, y: 0, width: 128, height: 128))
@@ -116,11 +210,6 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         // Add everything to the view
         self.view.addSubview(moonContainer!)
 //        self.view.addSubview(decibelDisplay!)
-        
-        for star in stars {
-            self.view.addSubview(star.view)
-            star.transition(true)
-        }
     }
     
     // Start our animation once the view has been presented
@@ -149,6 +238,34 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
                 if value {
                     self.moonContainer?.removeFromSuperview()
                 }
+        })
+        
+        delay(0.72, {
+            for star in self.stars {
+                self.view.addSubview(star.view)
+                star.transition(true)
+            }
+            
+            let dreamString = NSAttributedString(string: "Dream", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.color2), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
+            let dreamRect = CGRect(x: 0, y: 50, width: self.view.frame.width, height: 80)
+            
+            let rightString = NSAttributedString(string: "Right", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.color2), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
+            let rightRect = CGRect(x: 0, y: 130, width: self.view.frame.width, height: 80)
+            
+            let dreamLayer = createDrawableString(dreamString, dreamRect)
+            let rightLayer = createDrawableString(rightString, rightRect)
+            
+            self.view.layer.addSublayer(dreamLayer)
+            self.view.layer.addSublayer(rightLayer)
+            
+            let pathAnimation = CABasicAnimation(keyPath: "strokeEnd")
+            pathAnimation.duration = 1.5
+            pathAnimation.fromValue = 0.0
+            pathAnimation.toValue = 1.0
+            pathAnimation.fillMode = kCAFillModeForwards
+            
+            dreamLayer.addAnimation(pathAnimation, forKey: "strokeEnd")
+            rightLayer.addAnimation(pathAnimation, forKey: "strokeEnd")
         })
     }
     
@@ -233,78 +350,6 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
             stars[0].transition(true)
         default: ()
         }
-    }
-    
-    // MARK: - Helpers
-    
-    // This takes a list of star frames... the origin of each frame corresponds to the
-    // center of the resulting star. The width and height correspond respectively to the min and
-    // max possible values of the resulting star. An array of star objects is returned
-    func getStars(starFrames: [[CGRect]], animationDelays: [NSTimeInterval], animationLengths: [NSTimeInterval], animationOptions: [UIViewAnimationOptions]) -> [Star] {
-        var stars = [Star]()
-        
-        for x in 0...starFrames.count - 1 {
-            let startFrame = starFrames[x][0]
-            let endFrame = starFrames[x][1]
-            
-            let starSizeMinA = Int(startFrame.width)
-            let starSizeMaxA = Int(startFrame.height)
-            let starSizeMinB = Int(endFrame.width)
-            let starSizeMaxB = Int(endFrame.height)
-            let originA = startFrame.origin
-            let originB = endFrame.origin
-            
-            var newStartSizeA = starSizeMinA
-            var newStartSizeB = starSizeMinB
-            
-            if starSizeMinA != starSizeMaxA {
-                newStartSizeA = Int(arc4random_uniform(UInt32(starSizeMaxA - starSizeMinA))) + starSizeMinA
-            }
-            if starSizeMinB != starSizeMaxB {
-                newStartSizeB = Int(arc4random_uniform(UInt32(starSizeMaxB - starSizeMinB))) + starSizeMinB
-            }
-            
-            var newXA = originA.x
-            var newYA = originA.y
-            var newXB = originB.x
-            var newYB = originB.y
-            
-            if newStartSizeA > 0 {
-                newXA -= CGFloat(newStartSizeA / 2)
-                newYA -= CGFloat(newStartSizeA / 2)
-            }
-            
-            if newStartSizeB > 0 {
-                newXB -= CGFloat(newStartSizeB / 2)
-                newYB -= CGFloat(newStartSizeB / 2)
-            }
-            
-            let newStartFrame = CGRect(x: newXA, y: newYA, width: CGFloat(newStartSizeA), height: CGFloat(newStartSizeA))
-            let newEndFrame = CGRect(x: newXB, y: newYB, width: CGFloat(newStartSizeB), height: CGFloat(newStartSizeB))
-            
-            let imageContainer = UIImageView(frame: newStartFrame)
-            
-            var baseImage: UIImage?
-            var finalImage: UIImage?
-            
-            if newStartSizeA > 0 {
-                baseImage = DreamRightSK.imageOfLoneStar(CGRect(x: 0, y: 0, width: CGFloat(newStartSizeA), height: CGFloat(newStartSizeA)))
-            }
-            if newStartSizeB > 0 {
-                finalImage = DreamRightSK.imageOfLoneStar(CGRect(x: 0, y: 0, width: CGFloat(newStartSizeB), height: CGFloat(newStartSizeB)))
-            }
-            
-            if let img = baseImage? {
-                imageContainer.image = baseImage
-            }
-            else {
-                imageContainer.image = finalImage
-            }
-            
-            stars.append(Star(view: imageContainer, baseImage: baseImage, finalImage: finalImage, delay: animationDelays[x], time: animationLengths[x], animationOptions: animationOptions[x], baseFrame: newStartFrame, finalFrame: newEndFrame))
-        }
-        
-        return stars
     }
     
     // MARK: - EZMicrophone Delegate Function

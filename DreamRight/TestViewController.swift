@@ -8,28 +8,6 @@
 
 import UIKit
 
-struct StarContainer {
-    var star: Star
-    var view: UIView
-}
-
-enum Handles {
-    case TopLeftCorner
-    case TopRightCorner
-    case BottomLeftCorner
-    case BottomRightCorner
-    case LeftSide
-    case RightSide
-    case Top
-    case Bottom
-}
-
-extension String {
-    var floatValue: CGFloat {
-        return CGFloat((self as NSString).floatValue)
-    }
-}
-
 class TestViewControllerA: UIViewController, AVAudioRecorderDelegate, AVAudioPlayerDelegate {
 
     var recorder: AVAudioRecorder?
@@ -38,6 +16,8 @@ class TestViewControllerA: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     @IBOutlet var btnRecord: UIButton!
     @IBOutlet var btnStop: UIButton!
     @IBOutlet var btnPlay: UIButton!
+    
+    var textLayer: CALayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,15 +38,6 @@ class TestViewControllerA: UIViewController, AVAudioRecorderDelegate, AVAudioPla
         recorder?.meteringEnabled = true
         
         recorder?.prepareToRecord()
-        
-        self.view.backgroundColor = UIColor.blackColor()
-        
-        let starFrames = [CGRect(x: 50, y: 50, width: 10, height: 30), CGRect(x: 100, y: 0, width: 20, height: 30), CGRect(x: 200, y: 0, width: 200, height: 300), CGRect(x: 0, y: 100, width: 10, height: 20)]
-        let starViews = getStars(starFrames)
-        
-        for star in starViews {
-            self.view.addSubview(star)
-        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -75,10 +46,6 @@ class TestViewControllerA: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     }
     
     @IBAction func recordPressed(sender: AnyObject) {
-//        if (player!.playing) {
-//            player?.stop()
-//        }
-        
         if (!recorder!.recording) {
             let session = AVAudioSession.sharedInstance()
             session.setActive(true, error: nil)
@@ -115,45 +82,6 @@ class TestViewControllerA: UIViewController, AVAudioRecorderDelegate, AVAudioPla
         if (!recorder!.recording) {
             player?.play()
         }
-    }
-    
-    // This takes a list of star frames... the origin of each frame corresponds to the
-    // center of the resulting star. The width and height correspond respectively to the min and
-    // max possible values of the resulting star
-    func getStars(starFrames: [CGRect]) -> [UIImageView] {
-        var stars = [UIImageView]()
-        
-        for star in starFrames {
-            let starSizeMax = star.width
-            let starSizeMin = star.height
-            let origin = star.origin
-            
-            var newSize = CGFloat(arc4random_uniform(UInt32(starSizeMin)) + UInt32(starSizeMax))
-            var newX = origin.x - newSize / 2
-            var newY = origin.y - newSize / 2
-            
-            if newX < 0 {
-                newX = 0
-            }
-            if newY < 0 {
-                newY = 0
-            }
-            if newX > self.view.frame.width {
-                newX = self.view.frame.width - newSize
-            }
-            if newY > self.view.frame.height {
-                newY = self.view.frame.height - newSize
-            }
-            
-            let imageContainer = UIImageView(frame: CGRect(x: newX, y: newY, width: CGFloat(newSize), height: CGFloat(newSize)))
-            imageContainer.image = DreamRightSK.imageOfLoneStar(CGRect(x: 0, y: 0, width: CGFloat(newSize), height: CGFloat(newSize)))
-            
-            stars.append(imageContainer)
-            
-            NSLog("Starting container: \(star)\nEnding container: \(imageContainer.frame)")
-        }
-        
-        return stars
     }
 }
 
@@ -201,6 +129,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
     var panOrSize = true
     var forwardOrBack = true
     var sizeHandle: Handles?
+    var keyboardUp = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -234,7 +163,28 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
 //        for star in stars {
 //            self.view.addSubview(star.view)
 //            star.transition(true)
-//        }
+        //        }
+        
+        let dreamString = NSAttributedString(string: "Dream", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.color2), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
+        let dreamRect = CGRect(x: 0, y: 50, width: self.view.frame.width, height: 80)
+        
+        let rightString = NSAttributedString(string: "Right", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.color2), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
+        let rightRect = CGRect(x: 0, y: 130, width: self.view.frame.width, height: 80)
+        
+        let dreamLayer = createDrawableString(dreamString, dreamRect)
+        let rightLayer = createDrawableString(rightString, rightRect)
+        
+        self.view.layer.addSublayer(dreamLayer)
+        self.view.layer.addSublayer(rightLayer)
+        
+        let pathAnimation = CABasicAnimation(keyPath: "strokeEnd")
+        pathAnimation.duration = 2.5
+        pathAnimation.fromValue = 0.0
+        pathAnimation.toValue = 1.0
+        pathAnimation.fillMode = kCAFillModeForwards
+        
+        dreamLayer.addAnimation(pathAnimation, forKey: "strokeEnd")
+        rightLayer.addAnimation(pathAnimation, forKey: "strokeEnd")
         
         mainLongPress = UILongPressGestureRecognizer(target: self, action: Selector("mainLongPress:"))
         mainLongPress?.minimumPressDuration = 0.44
@@ -265,6 +215,8 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
     func keyboardWillShow(notification: NSNotification) {
         NSLog("keyboardWillShow")
         
+        keyboardUp = true
+        
         let keyboardHeight = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue().height
         
         self.bottomGuideA.constant += keyboardHeight
@@ -285,21 +237,32 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
     func keyboardWillHide(notification: NSNotification) {
         NSLog("keyboardWillHide")
         
+        keyboardUp = false
+        
         let keyboardHeight = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue().height
         
         self.bottomGuideA.constant -= keyboardHeight
         self.bottomGuideB.constant -= keyboardHeight
         self.bottomGuideC.constant -= keyboardHeight
         
+        if self.starContainers.isEmpty {
+            return
+        }
+        
         UIView.animateWithDuration(0.9, animations: {
-            if !self.starContainers.isEmpty {
-                for container in self.starContainers {
+            for container in self.starContainers {
                     container.view.alpha = 1.0
                 }
-            }
             
             self.view.layoutIfNeeded()
         })
+        
+        if activeContainer == -1 {
+            return
+        }
+        
+        starContainers[activeContainer].star.time = NSTimeInterval(txtAnimationLength.text.floatValue)
+        starContainers[activeContainer].star.delay = NSTimeInterval(txtDelay.text.floatValue)
     }
     
     override func prefersStatusBarHidden() -> Bool {
@@ -346,7 +309,67 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
     }
     
     @IBAction func rebuildTouchUp(sender: AnyObject) {
+        print("Our strings:\n\n\(dataDictToStrings(getDataDict()))")
+    }
+    
+    func getDataDict() -> [[NSObject : AnyObject]] {
+        var allData = [[NSObject : AnyObject]]()
         
+        for container in starContainers {
+            var curStar = container.star
+            var curFrame = container.view.frame
+            var curDict = [NSObject : AnyObject]()
+            
+            // STAR ORIGIN IS CENTER REFERENCED - USE THE CENTER OF THE UIIMAGEVIEW
+            curDict["baseFrame"] = [(curFrame.origin.x + curFrame.width / 2) / self.view.frame.width, (curFrame.origin.y + curFrame.height / 2) / self.view.frame.height, curStar.baseFrame.width, curStar.baseFrame.width]
+            curDict["finalFrame"] = [(curFrame.origin.x + curFrame.width / 2) / self.view.frame.width, (curFrame.origin.y + curFrame.height / 2) / self.view.frame.height, curStar.finalFrame.width, curStar.finalFrame.width]
+            curDict["delay"] = curStar.delay
+            curDict["time"] = curStar.time
+            curDict["animationOptions"] = curStar.animationOptions.rawValue
+            
+            allData.append(curDict)
+        }
+        
+        return allData
+    }
+    
+    func dataDictToStrings(data: [[NSObject : AnyObject]]) -> String {
+        var finalString = ""
+        var startFrames = ""
+        var endFrames = ""
+        var delays = ""
+        var times = ""
+        var options = ""
+        
+        for dict in data {
+            if let containerFrame = dict["baseFrame"] as? NSArray {
+                startFrames += "startFrames.append(CGRect(x: \(containerFrame[0] as NSNumber) * self.view.frame.width), y: \(containerFrame[1] as NSNumber) * self.view.frame.height), width: \(containerFrame[2]), height: \(containerFrame[3])))\n"
+            }
+            
+            if let containerFrame = dict["finalFrame"] as? NSArray {
+                endFrames += "endFrames.append(CGRect(x: \(containerFrame[0] as NSNumber) * self.view.frame.width), y: \(containerFrame[1] as NSNumber) * self.view.frame.height), width: \(containerFrame[2]), height: \(containerFrame[3])))\n"
+            }
+            
+            if let delay = dict["delay"] as? NSTimeInterval {
+                delays += "delays.append(\(delay))\n"
+            }
+            
+            if let time = dict["time"] as? NSTimeInterval {
+                times += "times.append(\(time))\n"
+            }
+            
+            if let option = dict["options"] as? UInt {
+                options += "options.append(UIViewAnimationOptions.CurveEaseIn)\n"
+            }
+        }
+        
+        finalString += startFrames + "\n"
+        finalString += endFrames + "\n"
+        finalString += delays + "\n"
+        finalString += times + "\n"
+        finalString += options + "\n"
+        
+        return finalString
     }
     
     func mainTripleTap(gesture: UITapGestureRecognizer) {
@@ -356,6 +379,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
             container.view.removeFromSuperview()
         }
         
+        forwardOrBack = true
         activeContainer = -1
         starContainers = [StarContainer]()
     }
@@ -432,13 +456,13 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         let animationLength = [length]
         let animationOptions = [UIViewAnimationOptions.CurveEaseOut]
         
-        let starRequest = getStars([[starStartFrame, starEndFrame]], animationDelays: animationDelay, animationLengths: animationLength, animationOptions: animationOptions)
+        let starRequest = getStars([[starStartFrame, starEndFrame]], animationDelay, animationLength, animationOptions)
         
-        if starRequest == nil {
+        if starRequest.count == 0 {
             return
         }
         
-        let star = starRequest![0]
+        let star = starRequest[0]
         
         star.view.backgroundColor = UIColor.clearColor()
         
@@ -470,7 +494,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         starContainers.append(StarContainer(star: star, view: newView))
         star.view.frame = CGRect(x: newView.frame.width / 2, y: newView.frame.height / 2, width: 0, height: 0)
         
-        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+        UIView.animateWithDuration(0.2, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations: {
             let starViewFrame = CGRect(x: viewEndFrame.width / 2 - newSize / 2, y: viewEndFrame.height / 2 - newSize / 2, width: newSize, height: newSize)
 
             newView.frame = viewEndFrame
@@ -542,13 +566,18 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
     func tapSubview(recognizer: UITapGestureRecognizer) {
         NSLog("Subview Tap")
         
+        if activeContainer >= 0 {
+            starContainers[activeContainer].star.time = NSTimeInterval(txtAnimationLength.text.floatValue)
+            starContainers[activeContainer].star.delay = NSTimeInterval(txtDelay.text.floatValue)
+        }
+        
         for x in 0...starContainers.count - 1 {
             starContainers[x].view.layer.borderWidth = 0.5
             
             if recognizer.view == starContainers[x].view {
                 activeContainer = x
-                txtAnimationLength.text = NSString(format: "%.01f", starContainers[x].star.time)
-                txtDelay.text = NSString(format: "%.01f", starContainers[x].star.delay)
+                txtAnimationLength.text = NSString(format: "%.0001f", starContainers[x].star.time)
+                txtDelay.text = NSString(format: "%.0001f", starContainers[x].star.delay)
             }
         }
         recognizer.view!.layer.borderWidth = 2.5
@@ -577,88 +606,11 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
             textField.text = "0"
         }
         
-        if starContainers.isEmpty || activeContainer == -1 {
+        if activeContainer == -1 {
             return
         }
         
-        var currentStar = starContainers[activeContainer].star
-        
-        currentStar.time = NSTimeInterval(txtAnimationLength.text.toInt()!)
-        currentStar.delay = NSTimeInterval(txtDelay.text.toInt()!)
-    }
-    
-    func textFieldDidBeginEditing(textField: UITextField) {
-        
-    }
-    
-    func getStars(starFrames: [[CGRect]], animationDelays: [NSTimeInterval], animationLengths: [NSTimeInterval], animationOptions: [UIViewAnimationOptions]) -> [Star]? {
-        var stars = [Star]()
-        
-        for x in 0...starFrames.count - 1 {
-            let startFrame = starFrames[x][0]
-            let endFrame = starFrames[x][1]
-            
-            let starSizeMinA = Int(startFrame.width)
-            let starSizeMaxA = Int(startFrame.height)
-            let starSizeMinB = Int(endFrame.width)
-            let starSizeMaxB = Int(endFrame.height)
-            let originA = startFrame.origin
-            let originB = endFrame.origin
-            
-            if starSizeMinA > starSizeMaxA || starSizeMinB > starSizeMaxB {
-                return nil
-            }
-            
-            var newStartSizeA = starSizeMinA
-            var newStartSizeB = starSizeMinB
-            
-            if starSizeMinA != starSizeMaxA {
-                newStartSizeA = Int(arc4random_uniform(UInt32(starSizeMaxA - starSizeMinA))) + starSizeMinA
-            }
-            if starSizeMinB != starSizeMaxB {
-                newStartSizeB = Int(arc4random_uniform(UInt32(starSizeMaxB - starSizeMinB))) + starSizeMinB
-            }
-            
-            var newXA = originA.x
-            var newYA = originA.y
-            var newXB = originB.x
-            var newYB = originB.y
-            
-            if newStartSizeA > 0 {
-                newXA -= CGFloat(newStartSizeA / 2)
-                newYA -= CGFloat(newStartSizeA / 2)
-            }
-            
-            if newStartSizeB > 0 {
-                newXB -= CGFloat(newStartSizeB / 2)
-                newYB -= CGFloat(newStartSizeB / 2)
-            }
-            
-            let newStartFrame = CGRect(x: newXA, y: newYA, width: CGFloat(newStartSizeA), height: CGFloat(newStartSizeA))
-            let newEndFrame = CGRect(x: newXB, y: newYB, width: CGFloat(newStartSizeB), height: CGFloat(newStartSizeB))
-            
-            let imageContainer = UIImageView(frame: newStartFrame)
-            
-            var baseImage: UIImage?
-            var finalImage: UIImage?
-            
-            if newStartSizeA > 0 {
-                baseImage = DreamRightSK.imageOfLoneStar(CGRect(x: 0, y: 0, width: CGFloat(newStartSizeA), height: CGFloat(newStartSizeA)))
-            }
-            if newStartSizeB > 0 {
-                finalImage = DreamRightSK.imageOfLoneStar(CGRect(x: 0, y: 0, width: CGFloat(newStartSizeB), height: CGFloat(newStartSizeB)))
-            }
-            
-            if newStartSizeA > newStartSizeB {
-                imageContainer.image = baseImage
-            }
-            else {
-                imageContainer.image = finalImage
-            }
-            
-            stars.append(Star(view: imageContainer, baseImage: baseImage, finalImage: finalImage, delay: animationDelays[x], time: animationLengths[x], animationOptions: animationOptions[x], baseFrame: newStartFrame, finalFrame: newEndFrame))
-        }
-        
-        return stars
+        starContainers[activeContainer].star.time = NSTimeInterval(txtAnimationLength.text.floatValue)
+        starContainers[activeContainer].star.delay = NSTimeInterval(txtDelay.text.floatValue)
     }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5106BE751A0AD69C00304C5F /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5106BE741A0AD69C00304C5F /* Helpers.swift */; };
 		510C30CB1A091307005D92E3 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C30CA1A091307005D92E3 /* HomeViewController.swift */; };
 		510C30D01A091991005D92E3 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C30CF1A091991005D92E3 /* TestViewController.swift */; };
 		510C30D21A091A3C005D92E3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 510C30D11A091A3C005D92E3 /* AVFoundation.framework */; };
@@ -16,8 +17,6 @@
 		5164A2091A042DE8003BAB76 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5164A2081A042DE8003BAB76 /* Images.xcassets */; };
 		5164A2181A042DE8003BAB76 /* DreamRightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5164A2171A042DE8003BAB76 /* DreamRightTests.swift */; };
 		5164A2221A04334C003BAB76 /* MoonTransparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 5164A2211A04334C003BAB76 /* MoonTransparent.png */; };
-		5164A2251A043EBA003BAB76 /* totallyMyMoon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 5164A2241A043EBA003BAB76 /* totallyMyMoon.pdf */; };
-		5164A2291A044169003BAB76 /* hugeMoonNavy.png in Resources */ = {isa = PBXBuildFile; fileRef = 5164A2281A044169003BAB76 /* hugeMoonNavy.png */; };
 		5164A2301A045FF3003BAB76 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5164A22E1A045FF3003BAB76 /* LaunchScreen.xib */; };
 		51E491ED1A06C0E500C39495 /* DreamRightSK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E491EC1A06C0E500C39495 /* DreamRightSK.swift */; };
 		76A53CAE86B48511CE9ADB1F /* libPods-DreamRight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B12A6DE5A51D4A929EC50410 /* libPods-DreamRight.a */; };
@@ -35,6 +34,7 @@
 
 /* Begin PBXFileReference section */
 		2ED8EA416B0D4CFC988E3C33 /* Pods-DreamRight.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DreamRight.release.xcconfig"; path = "Pods/Target Support Files/Pods-DreamRight/Pods-DreamRight.release.xcconfig"; sourceTree = "<group>"; };
+		5106BE741A0AD69C00304C5F /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		510C30CA1A091307005D92E3 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		510C30CC1A0915B1005D92E3 /* BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		510C30CF1A091991005D92E3 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
@@ -49,8 +49,6 @@
 		5164A2161A042DE8003BAB76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5164A2171A042DE8003BAB76 /* DreamRightTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamRightTests.swift; sourceTree = "<group>"; };
 		5164A2211A04334C003BAB76 /* MoonTransparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MoonTransparent.png; sourceTree = "<group>"; };
-		5164A2241A043EBA003BAB76 /* totallyMyMoon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = totallyMyMoon.pdf; sourceTree = "<group>"; };
-		5164A2281A044169003BAB76 /* hugeMoonNavy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hugeMoonNavy.png; sourceTree = "<group>"; };
 		5164A22F1A045FF3003BAB76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		51E491EC1A06C0E500C39495 /* DreamRightSK.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DreamRightSK.swift; sourceTree = "<group>"; };
 		877BB26B861D23D2A8D6E3BA /* Pods-DreamRight.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DreamRight.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DreamRight/Pods-DreamRight.debug.xcconfig"; sourceTree = "<group>"; };
@@ -128,6 +126,7 @@
 				51E491EC1A06C0E500C39495 /* DreamRightSK.swift */,
 				5164A1FD1A042DE8003BAB76 /* Info.plist */,
 				510C30CC1A0915B1005D92E3 /* BridgingHeader.h */,
+				5106BE741A0AD69C00304C5F /* Helpers.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -152,8 +151,6 @@
 		5164A2231A04334F003BAB76 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				5164A2281A044169003BAB76 /* hugeMoonNavy.png */,
-				5164A2241A043EBA003BAB76 /* totallyMyMoon.pdf */,
 				5164A2211A04334C003BAB76 /* MoonTransparent.png */,
 			);
 			name = Images;
@@ -252,8 +249,6 @@
 			files = (
 				5164A2071A042DE8003BAB76 /* Main.storyboard in Resources */,
 				5164A2221A04334C003BAB76 /* MoonTransparent.png in Resources */,
-				5164A2251A043EBA003BAB76 /* totallyMyMoon.pdf in Resources */,
-				5164A2291A044169003BAB76 /* hugeMoonNavy.png in Resources */,
 				5164A2301A045FF3003BAB76 /* LaunchScreen.xib in Resources */,
 				5164A2091A042DE8003BAB76 /* Images.xcassets in Resources */,
 			);
@@ -307,6 +302,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				510C30D01A091991005D92E3 /* TestViewController.swift in Sources */,
+				5106BE751A0AD69C00304C5F /* Helpers.swift in Sources */,
 				5164A2021A042DE8003BAB76 /* DreamRight.xcdatamodeld in Sources */,
 				51E491ED1A06C0E500C39495 /* DreamRightSK.swift in Sources */,
 				5164A1FF1A042DE8003BAB76 /* AppDelegate.swift in Sources */,
