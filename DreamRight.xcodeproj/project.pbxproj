@@ -19,6 +19,7 @@
 		5164A2221A04334C003BAB76 /* MoonTransparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 5164A2211A04334C003BAB76 /* MoonTransparent.png */; };
 		5164A2301A045FF3003BAB76 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5164A22E1A045FF3003BAB76 /* LaunchScreen.xib */; };
 		51E491ED1A06C0E500C39495 /* DreamRightSK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E491EC1A06C0E500C39495 /* DreamRightSK.swift */; };
+		51FEEFB71A0CC8290079919D /* TransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FEEFB61A0CC8290079919D /* TransitionManager.swift */; };
 		76A53CAE86B48511CE9ADB1F /* libPods-DreamRight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B12A6DE5A51D4A929EC50410 /* libPods-DreamRight.a */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +52,7 @@
 		5164A2211A04334C003BAB76 /* MoonTransparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MoonTransparent.png; sourceTree = "<group>"; };
 		5164A22F1A045FF3003BAB76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		51E491EC1A06C0E500C39495 /* DreamRightSK.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DreamRightSK.swift; sourceTree = "<group>"; };
+		51FEEFB61A0CC8290079919D /* TransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionManager.swift; sourceTree = "<group>"; };
 		877BB26B861D23D2A8D6E3BA /* Pods-DreamRight.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DreamRight.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DreamRight/Pods-DreamRight.debug.xcconfig"; sourceTree = "<group>"; };
 		B12A6DE5A51D4A929EC50410 /* libPods-DreamRight.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DreamRight.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -123,6 +125,7 @@
 		5164A1FC1A042DE8003BAB76 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				51FEEFB61A0CC8290079919D /* TransitionManager.swift */,
 				51E491EC1A06C0E500C39495 /* DreamRightSK.swift */,
 				5164A1FD1A042DE8003BAB76 /* Info.plist */,
 				510C30CC1A0915B1005D92E3 /* BridgingHeader.h */,
@@ -303,6 +306,7 @@
 			files = (
 				510C30D01A091991005D92E3 /* TestViewController.swift in Sources */,
 				5106BE751A0AD69C00304C5F /* Helpers.swift in Sources */,
+				51FEEFB71A0CC8290079919D /* TransitionManager.swift in Sources */,
 				5164A2021A042DE8003BAB76 /* DreamRight.xcdatamodeld in Sources */,
 				51E491ED1A06C0E500C39495 /* DreamRightSK.swift in Sources */,
 				5164A1FF1A042DE8003BAB76 /* AppDelegate.swift in Sources */,

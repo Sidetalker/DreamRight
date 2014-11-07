@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TestViewControllerA: UIViewController, AVAudioRecorderDelegate, AVAudioPlayerDelegate {
+class TestViewControllerA: UIViewController, AVAudioRecorderDelegate, AVAudioPlayerDelegate, UIGestureRecognizerDelegate {
 
     var recorder: AVAudioRecorder?
     var player: AVAudioPlayer?
@@ -19,26 +19,26 @@ class TestViewControllerA: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     
     var textLayer: CALayer?
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let outputPath = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)[0] as String
-        let outputURL = NSURL(fileURLWithPath: outputPath.stringByAppendingPathComponent("myMemo.m4a"))
-        
-        let session = AVAudioSession.sharedInstance()
-        session.setCategory(AVAudioSessionCategoryPlayAndRecord, error: nil)
-
-        var recordSettings: [NSObject : AnyObject] = Dictionary()
-        recordSettings[AVFormatIDKey] = kAudioFormatMPEG4AAC
-        recordSettings[AVSampleRateKey] = 44100.0
-        recordSettings[AVNumberOfChannelsKey] = 2
-        
-        recorder = AVAudioRecorder(URL: outputURL!, settings: recordSettings, error: nil)
-        recorder?.delegate = self
-        recorder?.meteringEnabled = true
-        
-        recorder?.prepareToRecord()
-    }
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        
+//        let outputPath = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)[0] as String
+//        let outputURL = NSURL(fileURLWithPath: outputPath.stringByAppendingPathComponent("myMemo.m4a"))
+//        
+//        let session = AVAudioSession.sharedInstance()
+//        session.setCategory(AVAudioSessionCategoryPlayAndRecord, error: nil)
+//
+//        var recordSettings: [NSObject : AnyObject] = Dictionary()
+//        recordSettings[AVFormatIDKey] = kAudioFormatMPEG4AAC
+//        recordSettings[AVSampleRateKey] = 44100.0
+//        recordSettings[AVNumberOfChannelsKey] = 2
+//        
+//        recorder = AVAudioRecorder(URL: outputURL!, settings: recordSettings, error: nil)
+//        recorder?.delegate = self
+//        recorder?.meteringEnabled = true
+//        
+//        recorder?.prepareToRecord()
+//    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -83,7 +83,45 @@ class TestViewControllerA: UIViewController, AVAudioRecorderDelegate, AVAudioPla
             player?.play()
         }
     }
+    
+    
+    @IBOutlet var label: UILabel!
+    @IBOutlet var button: UIButton!
+    @IBOutlet var aView: UIView!
+    
+    override func viewDidLoad() {
+        // Create UIGestureRecognizers for each control
+        label.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector("tapped:")))
+        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector("tapped:")))
+        aView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector("tapped:")))
+    }
+    
+    // Handle the taps with random jiggles
+    func tapped(gesture: UITapGestureRecognizer) {
+        let count = Int(randomFloatBetweenNumbers(3, 8))
+        let distance = randomFloatBetweenNumbers(5, 25)
+        
+        jiggle(gesture.view!, count, distance)
+    }
+    
+    
 }
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
 
 class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UITextFieldDelegate {
     
@@ -166,10 +204,10 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         //        }
         
         let dreamString = NSAttributedString(string: "Dream", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.color2), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
-        let dreamRect = CGRect(x: 0, y: 50, width: self.view.frame.width, height: 80)
+        let dreamRect = CGRect(x: 0, y: 120, width: self.view.frame.width, height: 80)
         
         let rightString = NSAttributedString(string: "Right", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.color2), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
-        let rightRect = CGRect(x: 0, y: 130, width: self.view.frame.width, height: 80)
+        let rightRect = CGRect(x: 0, y: 200, width: self.view.frame.width, height: 80)
         
         let dreamLayer = createDrawableString(dreamString, dreamRect)
         let rightLayer = createDrawableString(rightString, rightRect)
@@ -309,7 +347,8 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
     }
     
     @IBAction func rebuildTouchUp(sender: AnyObject) {
-        print("Our strings:\n\n\(dataDictToStrings(getDataDict()))")
+        self.dismissViewControllerAnimated(true, completion: nil)
+//        print("Our strings:\n\n\(dataDictToStrings(getDataDict()))")
     }
     
     func getDataDict() -> [[NSObject : AnyObject]] {

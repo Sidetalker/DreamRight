@@ -8,6 +8,110 @@
 
 import UIKit
 
+extension String {
+    var floatValue: CGFloat {
+        return CGFloat((self as NSString).floatValue)
+    }
+}
+
+func randomFloatBetweenNumbers(firstNum: CGFloat, secondNum: CGFloat) -> CGFloat {
+    return CGFloat(arc4random()) / CGFloat(UINT32_MAX) * abs(firstNum - secondNum) + min(firstNum, secondNum)
+}
+
+struct Star {
+    var view: UIImageView
+    var baseImage: UIImage?
+    var finalImage: UIImage?
+    var delay: NSTimeInterval
+    var time: NSTimeInterval
+    var animationOptions: UIViewAnimationOptions
+    var baseFrame: CGRect
+    var finalFrame: CGRect
+    
+    func transition(forward: Bool, twinkle: Bool) {
+        var displayFrame = self.finalFrame
+        let timing = Double(randomFloatBetweenNumbers(1.1, 1.5))
+        let delayMod = Double(randomFloatBetweenNumbers(0.5, 1.5))
+        let angle = Double(randomFloatBetweenNumbers(1, 5))
+        
+        if !forward {
+            displayFrame = self.baseFrame
+        }
+        
+        self.view.frame = CGRect(x: baseFrame.origin.x, y: baseFrame.origin.y, width: 0.1, height: 0.1)
+        
+        let rotation = -CGFloat(angle / 180 * M_PI)
+        let scale = self.finalFrame.width * 10
+        let translation = (self.baseFrame.origin.x - self.finalFrame.origin.x) / 2
+        
+        let bonusDelay = delay + delay * Double(randomFloatBetweenNumbers(0.3, 3))
+        
+        UIView.animateWithDuration(time, delay: bonusDelay, options: animationOptions, animations: {
+            let rotationTransform = CGAffineTransformRotate(CGAffineTransformIdentity, rotation)
+            let sizeTransform = CGAffineTransformScale(CGAffineTransformIdentity, scale, scale)
+            let bothTransforms = CGAffineTransformConcat(rotationTransform, sizeTransform)
+            
+            self.view.transform = bothTransforms
+            
+            }, completion: {
+                (value: Bool) in
+                if value && twinkle {
+                    self.twinkle(true, timing: timing, angle: Double(scale), chance: 7, scale: scale)
+                }
+        })
+    }
+    
+    func twinkle(start: Bool, timing: Double, angle: Double, chance: CGFloat, scale: CGFloat) {
+        let fullDuration = CFTimeInterval(timing)
+        
+        let rotationFull = angle
+        var rotationRightFull = CGFloat(rotationFull / 180 * M_PI)
+        var rotationLeftFull = -rotationRightFull
+        let sizeMod = randomFloatBetweenNumbers(0.75, 1.25)
+        
+        let returnChance = Int(randomFloatBetweenNumbers(1, chance))
+        
+        if returnChance != 1 {
+            self.twinkle(false, timing: timing, angle: angle, chance: 3, scale: scale)
+            return
+        }
+        
+        if Int(randomFloatBetweenNumbers(1, 2)) % 2 == 0 {
+            rotationLeftFull = -rotationLeftFull
+            rotationRightFull = -rotationRightFull
+        }
+        
+        UIView.animateWithDuration(fullDuration, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+            let rotationTransform = CGAffineTransformRotate(CGAffineTransformIdentity, rotationLeftFull)
+            let sizeTransform = CGAffineTransformScale(CGAffineTransformIdentity, CGFloat(scale * sizeMod), CGFloat(scale * sizeMod))
+            let bothTransforms = CGAffineTransformConcat(rotationTransform, sizeTransform)
+            self.view.transform = bothTransforms
+            
+            }, completion: nil)
+        
+        UIView.animateWithDuration(fullDuration, delay: fullDuration, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+            let rotationTransform = CGAffineTransformRotate(CGAffineTransformIdentity, rotationRightFull)
+            let sizeTransform = CGAffineTransformScale(CGAffineTransformIdentity, CGFloat(scale * 10 * sizeMod), CGFloat(scale * 10 * sizeMod))
+            let bothTransforms = CGAffineTransformConcat(rotationTransform, sizeTransform)
+            self.view.transform = rotationTransform
+            
+            }, completion: nil)
+        
+        UIView.animateWithDuration(fullDuration / 2, delay: fullDuration * 2, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+            let rotationTransform = CGAffineTransformRotate(CGAffineTransformIdentity, rotationLeftFull / 2)
+            let sizeTransform = CGAffineTransformScale(CGAffineTransformIdentity, CGFloat(scale * sizeMod), CGFloat(scale * sizeMod))
+            let bothTransforms = CGAffineTransformConcat(rotationTransform, sizeTransform)
+            self.view.transform = rotationTransform
+            
+            }, completion: {
+                (value: Bool) in
+                if value {
+                    self.twinkle(true, timing: timing, angle: angle, chance: 5, scale: scale)
+                }
+        })
+    }
+}
+
 struct StarContainer {
     var star: Star
     var view: UIView
@@ -22,12 +126,6 @@ enum Handles {
     case RightSide
     case Top
     case Bottom
-}
-
-extension String {
-    var floatValue: CGFloat {
-        return CGFloat((self as NSString).floatValue)
-    }
 }
 
 func getStars(starFrames: [[CGRect]], animationDelays: [NSTimeInterval], animationLengths: [NSTimeInterval], animationOptions: [UIViewAnimationOptions]) -> [Star] {
@@ -157,5 +255,35 @@ func delay(delay:Double, closure:()->()) {
             Int64(delay * Double(NSEC_PER_SEC))
         ),
         dispatch_get_main_queue(), closure)
+}
+
+// Takes a UIView jiggles it back and forth
+func jiggle(element: UIView, count: Int, distance: CGFloat) {
+    // Save variables for frame offset calculation
+    let originalFrame = element.frame
+    let constantSize = originalFrame.size
+    let originalOrigin = originalFrame.origin
+    let leftOrigin = originalOrigin.x - distance
+    let rightOrigin = originalOrigin.x + distance
+    
+    // Calculate frame offsets
+    let frameLeft = CGRect(origin: CGPoint(x: leftOrigin, y: originalOrigin.y), size: constantSize)
+    let frameRight = CGRect(origin: CGPoint(x: rightOrigin, y: originalOrigin.y), size: constantSize)
+    
+    // Perform "count" shakes
+    for x in 0...count {
+        let delay = Double(x) / Double(count) / 2
+        var destinationFrame = CGRect()
+        
+        if x == count { destinationFrame = originalFrame } // Restore original frame in last loop
+        else if x % 2 == 0 { destinationFrame = frameRight } // Jiggle right on evens
+        else { destinationFrame = frameLeft } // Jiggle left on odds
+        
+        // Fire the animation block
+        UIView.animateWithDuration(0.1, delay: delay, options: UIViewAnimationOptions.CurveLinear, animations: {
+            // Update the element's frame
+            element.frame = destinationFrame
+            }, completion: nil)
+    }
 }
 
