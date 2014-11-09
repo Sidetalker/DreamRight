@@ -52,7 +52,9 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
     var rightView: UIView?
     
     // MARK: - Custom transition variables
+    
     let transitionManager = TransitionManager()
+    var completed = false
     
     // MARK: - UIViewController overrides
     
@@ -71,6 +73,18 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
     
     // Start our animation once the view has been presented
     override func viewDidAppear(animated: Bool) {
+        if completed {
+            for star in stars {
+                star.view.transform = CGAffineTransformIdentity
+                star.transition(true, twinkle: true)
+            }
+            
+            return
+        } else {
+            completed = true
+        }
+        
+        
         NSLog("Firing Timers")
         blastOffTimers()
         blowUpMoon()

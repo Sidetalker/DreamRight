@@ -172,37 +172,6 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Working for a single star - just testing the function
-//        // Define start + end frames for our pretty little stars
-//        var startFrames = [CGRect]()
-//        var endFrames = [CGRect]()
-//        var frames = [[CGRect]]()
-//        var delays = [NSTimeInterval]()
-//        var times = [NSTimeInterval]()
-//        var options = [UIViewAnimationOptions]()
-//        
-//        startFrames.append(CGRect(x: self.view.frame.width / 2, y: self.view.frame.height / 2, width: 0, height: 0))
-//        endFrames.append(CGRect(x: self.view.frame.width / 2, y: self.view.frame.height / 2, width: 25, height: 25))
-//        delays.append(0)
-//        times.append(1.5)
-//        options.append(UIViewAnimationOptions.CurveEaseIn)
-//        
-//        for x in 0...startFrames.count - 1 {
-//            var curGroup = [CGRect]()
-//            curGroup.append(startFrames[x])
-//            curGroup.append(endFrames[x])
-//            
-//            frames.append(curGroup)
-//        }
-//        
-//        // Get our star objects
-//        stars = getStars(frames, animationDelays: delays, animationLengths: times, animationOptions: options)
-//        
-//        for star in stars {
-//            self.view.addSubview(star.view)
-//            star.transition(true)
-        //        }
-        
         let dreamString = NSAttributedString(string: "Dream", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.color2), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
         let dreamRect = CGRect(x: 0, y: 120, width: self.view.frame.width, height: 80)
         
