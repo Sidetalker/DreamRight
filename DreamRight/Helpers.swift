@@ -248,7 +248,7 @@ func createDrawableString(formattedString: NSAttributedString, frame: CGRect) ->
     return pathLayer
 }
 
-func delay(delay:Double, closure:()->()) {
+func delay(delay: Double, closure:()->()) {
     dispatch_after(
         dispatch_time(
             DISPATCH_TIME_NOW,

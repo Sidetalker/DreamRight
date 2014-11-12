@@ -23,7 +23,7 @@ class TransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UIView
         toView.alpha = 0.0
         
         let tempView = UIView(frame: CGRect(origin: fromView.frame.origin, size: fromView.frame.size))
-        tempView.backgroundColor = fromView.backgroundColor
+        tempView.backgroundColor = DreamRightSK.color
         
         container.addSubview(tempView)
         container.sendSubviewToBack(tempView)
