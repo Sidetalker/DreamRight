@@ -257,6 +257,22 @@ func delay(delay: Double, closure:()->()) {
         dispatch_get_main_queue(), closure)
 }
 
+extension UIView {
+    class func initWithNibName<T>(nibName: String) -> T {
+        
+        var viewsInNib = NSBundle.mainBundle().loadNibNamed(nibName, owner: self, options: nil)
+        
+        var returnView: T!
+        for view in viewsInNib {
+            if let view = view as? T {
+                returnView = view
+                break
+            }
+        }
+        return returnView
+    }
+}
+
 // Takes a UIView jiggles it back and forth
 func jiggle(element: UIView, count: Int, distance: CGFloat) {
     // Save variables for frame offset calculation
@@ -287,3 +303,22 @@ func jiggle(element: UIView, count: Int, distance: CGFloat) {
     }
 }
 
+// Takes an NSDate and returns a verbose description of the day
+func dateToNightText(date: NSDate) -> String {
+    // Prepare to format the date
+    let format = NSDateFormatter()
+    format.dateFormat = "EEEE, MMMM d, yyyy"
+    
+    // Apply the formatting to the entry's date
+    return format.stringFromDate(date)
+}
+
+// Takes an NSDate and returns a verbose description of the time of day
+func dateToDreamText(date: NSDate) -> String {
+    // Prepare to format the date
+    let format = NSDateFormatter()
+    format.dateFormat = "h:mm:ss a"
+    
+    // Apply the formatting to the entry's date
+    return format.stringFromDate(date)
+}

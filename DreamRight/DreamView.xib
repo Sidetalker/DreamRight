@@ -4,84 +4,50 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DreamBox" customModule="DreamRight" customModuleProvider="target"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="DreamBox" customModule="DreamRight" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="A Delicious Night of fun" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8ji-nx-jZ3">
-                    <rect key="frame" x="16" y="8" width="210.5" height="24"/>
+                <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A Delicious Night of fun" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8ji-nx-jZ3">
+                    <rect key="frame" x="12" y="8" width="210.5" height="24"/>
                     <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="20"/>
                     <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thursday, October 30th 2014" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wMS-aJ-zhO">
-                    <rect key="frame" x="16" y="41" width="177" height="17"/>
-                    <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="14"/>
-                    <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o5x-Dz-Mjr">
-                    <rect key="frame" x="264" y="20" width="308" height="66"/>
-                    <fontDescription key="fontDescription" name="Optima-ExtraBlack" family="Optima" pointSize="20"/>
-                    <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                    <variation key="heightClass=compact-widthClass=compact" ambiguous="YES" misplaced="YES">
-                        <rect key="frame" x="367" y="151.5" width="24" height="24.5"/>
-                    </variation>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A Delicious Night of fun" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FL0-NC-F24">
-                    <rect key="frame" x="8" y="8" width="308" height="66"/>
-                    <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="20"/>
-                    <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                    <variation key="heightClass=compact-widthClass=compact" fixedFrame="YES">
-                        <rect key="frame" x="111" y="139" width="210.5" height="24"/>
-                    </variation>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thursday, October 30th 2014" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Gi-Cq-LAB">
-                    <rect key="frame" x="8" y="41" width="308" height="66"/>
-                    <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="14"/>
-                    <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                    <variation key="heightClass=compact-widthClass=compact" fixedFrame="YES">
-                        <rect key="frame" x="111" y="172" width="177" height="17"/>
-                    </variation>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A1n-Ye-RA6">
-                    <rect key="frame" x="264" y="20" width="12" height="24.5"/>
+                <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thursday, October 30th 2014" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wMS-aJ-zhO">
+                    <rect key="frame" x="12" y="38" width="177" height="20"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="24.5" id="ena-41-Ze5"/>
+                        <constraint firstAttribute="height" constant="20" id="u6l-ut-39N"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="Optima-ExtraBlack" family="Optima" pointSize="20"/>
+                    <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="14"/>
                     <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.0" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rr3-k9-fem">
+                    <rect key="frame" x="8" y="66" width="584" height="526"/>
+                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                    <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="wMS-aJ-zhO" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="2Et-G8-2gx"/>
-                <constraint firstItem="wMS-aJ-zhO" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="41" id="M43-gS-o2A"/>
-                <constraint firstItem="A1n-Ye-RA6" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="s3n-MK-Xqz"/>
-                <constraint firstItem="A1n-Ye-RA6" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="264" id="uvt-Ly-RxH"/>
+                <constraint firstItem="wMS-aJ-zhO" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="12" id="2Et-G8-2gx"/>
+                <constraint firstAttribute="trailing" secondItem="rr3-k9-fem" secondAttribute="trailing" constant="8" id="9LD-5B-1gP"/>
+                <constraint firstItem="wMS-aJ-zhO" firstAttribute="top" secondItem="8ji-nx-jZ3" secondAttribute="bottom" constant="6" id="PNr-xY-iEj"/>
+                <constraint firstItem="8ji-nx-jZ3" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="12" id="RPN-iS-WhA"/>
+                <constraint firstAttribute="bottom" secondItem="rr3-k9-fem" secondAttribute="bottom" constant="8" id="UCN-z2-HTZ"/>
+                <constraint firstItem="rr3-k9-fem" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="iwp-Vb-VPp"/>
+                <constraint firstItem="8ji-nx-jZ3" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="vj3-Dj-LE1"/>
+                <constraint firstItem="rr3-k9-fem" firstAttribute="top" secondItem="wMS-aJ-zhO" secondAttribute="bottom" constant="8" id="x7K-nc-Tlt"/>
             </constraints>
-            <variation key="default">
-                <mask key="subviews">
-                    <exclude reference="o5x-Dz-Mjr"/>
-                    <exclude reference="FL0-NC-F24"/>
-                    <exclude reference="7Gi-Cq-LAB"/>
-                </mask>
-            </variation>
-            <variation key="heightClass=compact-widthClass=compact">
-                <mask key="subviews">
-                    <include reference="o5x-Dz-Mjr"/>
-                    <include reference="FL0-NC-F24"/>
-                    <include reference="7Gi-Cq-LAB"/>
-                </mask>
-            </variation>
             <connections>
-                <outlet property="owner" destination="-1" id="M1y-Ap-kVB"/>
+                <outlet property="constraintTitleDate" destination="PNr-xY-iEj" id="mqy-He-L2f"/>
+                <outlet property="lblDate" destination="wMS-aJ-zhO" id="p5m-ub-wLe"/>
+                <outlet property="lblTitle" destination="8ji-nx-jZ3" id="GDm-Qf-mJ6"/>
+                <outlet property="txtDescription" destination="rr3-k9-fem" id="t9m-Jy-5md"/>
             </connections>
             <point key="canvasLocation" x="272" y="237"/>
         </view>

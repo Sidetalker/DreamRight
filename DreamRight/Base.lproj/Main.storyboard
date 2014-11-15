@@ -72,7 +72,7 @@
         <scene sceneID="dHV-3V-w2j">
             <objects>
                 <collectionViewController id="Y8Q-q4-iHc" customClass="LogViewController" customModule="DreamRight" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="00W-19-bgB">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="00W-19-bgB">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="560"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.054901960780000002" green="0.1137254902" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
