@@ -165,7 +165,7 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
                 let title = nightEntry.name
                 let date = dateToNightText(nightEntry.date)
                 
-                box = DreamSuperBox(frame: cellFrame, title: title, date: date, body: nil)
+                box = DreamSuperBox(frame: cellFrame, title: title, date: date, body: nil, parent: self)
                 box?.fadeInViews(0)
             }
             else {
@@ -173,15 +173,23 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
                 let dreamTime = dateToDreamText(dreams[x - 1].time)
                 let dreamBody = dreams[x - 1].description
                 
-                box = DreamSuperBox(frame: cellFrame, title: dreamName, date: dreamTime, body: dreamBody)
+                box = DreamSuperBox(frame: cellFrame, title: dreamName, date: dreamTime, body: dreamBody, parent: self)
             }
             
+            // Add a gesture recognizer to the box
+            let tap = UITapGestureRecognizer(target: self.parent!, action: "dreamBoxTap:")
+            box!.addGestureRecognizer(tap)
+            
             // Add the new box to our array of DreamBoxes
+            box!.parent = self
             dreamBoxes.append(box!)
             
             // Add the DreamBox to our parent (the LogContainerView)
             self.parent!.view.addSubview(box!)
         }
+        
+        // Inform daddy of our new DreamBoxes
+        self.parent!.dreamBoxes = dreamBoxes
         
         // Save a reference to the UICollectionView so that we can show it again later
         self.parent!.dreamCollection = self.collectionView
@@ -395,6 +403,7 @@ class LogCell: UICollectionViewCell {
 // MARK: - Custom UIView for zooming in to dream detail
 
 class DreamSuperBox: UIView {
+    var parent: LogViewController?
     var dreamView: DreamBox?
     
     var title: String?
@@ -405,9 +414,10 @@ class DreamSuperBox: UIView {
         super.init(coder: aDecoder)
     }
     
-    init(frame: CGRect, title: String, date: String, body: String?) {
+    init(frame: CGRect, title: String, date: String, body: String?, parent: LogViewController) {
         super.init(frame: frame)
         
+        // Needed so that the DreamBox subview doesn't bleed out of this container
         self.clipsToBounds = true
         
         // Configure the view properly
@@ -426,6 +436,52 @@ class DreamSuperBox: UIView {
         dreamView?.lblDate.text = date
         dreamView?.lblTitle.text = title
         
+        // If the body text wasn't passed, hide the textfield
+        if let txt = body {
+            dreamView?.txtDescription.text = body
+        }
+        else {
+            dreamView?.txtDescription.hidden = true
+        }
+        
+        addTouchHandlers()
+    }
+    
+    override func layoutSubviews() {
+        // This hardcoded hackiness is required due to some weird storyboard bug
+        dreamView!.lblTitle.frame = titleCellFrame
+        dreamView!.lblDate.frame = dateCellFrame
+        
+        // Update the bounds with the frame changes and keep the textfield at the top
+        dreamView!.bounds = self.bounds
+        dreamView!.txtDescription.setContentOffset(CGPointZero, animated: true)
+    }
+    
+    func addTouchHandlers() {
+        
+    }
+    
+    func configureDreamBox() {
+        // Needed so that the DreamBox subview doesn't bleed out of this container
+        self.clipsToBounds = true
+        
+        // Configure the view properly
+        self.layer.borderColor = DreamRightSK.color2.CGColor
+        self.layer.borderWidth = 0.7
+        self.layer.cornerRadius = 8
+        
+        // Load our nib
+        dreamView = UIView.initWithNibName("DreamView") as DreamBox
+        dreamView?.frame = self.bounds
+        
+        // Add the DreamView
+        self.addSubview(dreamView!)
+        
+        // Configure the DreamView
+        dreamView?.lblDate.text = date
+        dreamView?.lblTitle.text = title
+        
+        // If the body text wasn't passed, hide the textfield
         if let txt = body {
             dreamView?.txtDescription.text = body
         }
@@ -434,13 +490,11 @@ class DreamSuperBox: UIView {
         }
     }
     
-    override func layoutSubviews() {
-        dreamView!.lblTitle.frame = titleCellFrame
-        dreamView!.lblDate.frame = dateCellFrame
-        dreamView!.bounds = self.bounds
-        dreamView!.txtDescription.setContentOffset(CGPointZero, animated: true)
+    func tappedMe(gesture: UITapGestureRecognizer) {
+        self.layer.borderWidth = 1.5
     }
     
+    // Fades in the title, description and date with a configurable delay
     func fadeInViews(wait: Double) {
         delay(wait, {
             UIView.animateWithDuration(0.5, animations: {
@@ -496,6 +550,7 @@ class DreamBox: UIView {
     // Called after the IBOutlets have been hooked up
     override func awakeFromNib() {
         self.txtDescription.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
+        self.txtDescription.selectable = false
     }
 }
 
@@ -512,6 +567,7 @@ class LogContainer: UIViewController {
     @IBOutlet var navContainer: UIView!
     
     var dreamCollection: UICollectionView!
+    var dreamBoxes: [DreamSuperBox]?
     
     var subNav: UIView?
     var singleLabel: UILabel?
@@ -601,46 +657,98 @@ class LogContainer: UIViewController {
 //        }
     }
     
-    func navTap(gesture: UITapGestureRecognizer) {
-        // The default state - returns to the home screen
-        if navState == 0 {
-            self.dismissViewControllerAnimated(true, completion: nil)
+    func transitionToHome() {
+        navState = 0 // Transfer back to default state
+        
+        // Remove all DreamBoxes (we'll miss you guys!)
+        for view in self.view.subviews {
+            if let box = view as? DreamSuperBox {
+                box.removeFromSuperview()
+            }
         }
-        // Detail view state - 1 is standard and 2 is editing
-        else if navState == 1 || navState == 2 {
-            // Create rectangles for each side of the button
-            let leftRec = CGRect(x: 0, y: 0, width: subNav!.frame.width / 2, height: subNav!.frame.height)
-            let rightRec = CGRect(x: subNav!.frame.width / 2, y: 0, width: subNav!.frame.width / 2, height: self.subNav!.frame.height)
-            
-            // Check if the tap came into the left rectangle (Back)
-            if CGRectContainsPoint(leftRec, gesture.locationOfTouch(0, inView: subNav!)) {
-                navState = 0 // Transfer back to default state
+        
+        // Fade the collectionView back into reality
+        UIView.animateWithDuration(0.9, delay: 0.0, options: UIViewAnimationOptions.AllowUserInteraction, animations: {
+            self.dreamCollection.alpha = 1
+            }, completion: nil)
+        
+        // Let's get ready to rumble - pop that nav bar down boys!
+        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.AllowUserInteraction, animations: {
+            self.subNav!.frame = CGRect(x: 0, y: self.navContainer.frame.height, width: self.navContainer.frame.width, height: 0)
+            }, completion: {
+                (value: Bool) in
+                // Once the nav bar is hidden swap buttons out
+                self.singleLabel?.hidden = false
                 
-                // Remove all DreamBoxes (we'll miss you guys!)
-                for view in self.view.subviews {
-                    if let box = view as? DreamSuperBox {
-                        box.removeFromSuperview()
-                    }
-                }
+                self.leftLabel?.hidden = true
+                self.rightLabel?.hidden = true
+                self.divider?.hidden = true
                 
-                // Fade the collectionView back into reality
-                UIView.animateWithDuration(0.9, delay: 0.0, options: UIViewAnimationOptions.AllowUserInteraction, animations: {
-                    self.dreamCollection.alpha = 1
-                }, completion: nil)
+                // Change the Done text back to Edit if needed
+                var textStyle = [NSObject : AnyObject]()
+                var paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.alignment = NSTextAlignment.Center
                 
-                // Let's get ready to rumble - pop that nav bar down boys!
-                UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.AllowUserInteraction, animations: {
-                    self.subNav!.frame = CGRect(x: 0, y: self.navContainer.frame.height, width: self.navContainer.frame.width, height: 0)
+                textStyle[NSForegroundColorAttributeName] = DreamRightSK.color
+                textStyle[NSFontAttributeName] = UIFont(name: "Optima-Regular", size: 20)!
+                textStyle[NSParagraphStyleAttributeName] = paragraphStyle
+                
+                let doneText = NSAttributedString(string: "Edit", attributes: textStyle)
+                self.rightLabel!.attributedText = doneText
+        })
+        
+        // Springy pop that sucker right back up
+        UIView.animateWithDuration(0.7, delay: 0.3, usingSpringWithDamping: 0.52, initialSpringVelocity: 0.0, options: UIViewAnimationOptions.AllowUserInteraction, animations: {
+            self.subNav!.frame = CGRect(x: 0, y: 0, width: self.navContainer.frame.width, height: self.navContainer.frame.height)
+            }, completion: nil)
+    }
+    
+    // Transition from night view (not editing) to night view (editing)
+    func transitionToEditA() {
+        for view in self.view.subviews {
+            if let box = view as? DreamSuperBox {
+                navState = 2
+                
+                box.editJiggle(true)
+                
+                // Swap out the Edit button with Done
+                UIView.animateWithDuration(0.2, animations: {
+                    self.rightLabel!.alpha = 0
                     }, completion: {
                         (value: Bool) in
-                        // Once the nav bar is hidden swap buttons out
-                        self.singleLabel?.hidden = false
+                        var textStyle = [NSObject : AnyObject]()
+                        var paragraphStyle = NSMutableParagraphStyle()
+                        paragraphStyle.alignment = NSTextAlignment.Center
                         
-                        self.leftLabel?.hidden = true
-                        self.rightLabel?.hidden = true
-                        self.divider?.hidden = true
+                        textStyle[NSForegroundColorAttributeName] = DreamRightSK.color
+                        textStyle[NSFontAttributeName] = UIFont(name: "Optima-Regular", size: 20)!
+                        textStyle[NSParagraphStyleAttributeName] = paragraphStyle
                         
-                        // Change the Done text back to Edit if needed
+                        let doneText = NSAttributedString(string: "Done", attributes: textStyle)
+                        self.rightLabel!.attributedText = doneText
+                })
+                
+                UIView.animateWithDuration(0.2, delay: 0.2, options: nil, animations: {
+                    self.rightLabel!.alpha = 1
+                    }, completion: nil)
+            }
+        }
+    }
+    
+    // Transition from night view (editing) to night view (not editing)
+    func transitionFromEditA() {
+        // Turn off all the jiggles
+        for view in self.view.subviews {
+            if let box = view as? DreamSuperBox {
+                navState = 1
+                
+                box.editJiggle(false)
+                
+                // Swap the label text again
+                UIView.animateWithDuration(0.2, animations: {
+                    self.rightLabel!.alpha = 0
+                    }, completion: {
+                        (value: Bool) in
                         var textStyle = [NSObject : AnyObject]()
                         var paragraphStyle = NSMutableParagraphStyle()
                         paragraphStyle.alignment = NSTextAlignment.Center
@@ -653,78 +761,54 @@ class LogContainer: UIViewController {
                         self.rightLabel!.attributedText = doneText
                 })
                 
-                // Springy pop that sucker right back up
-                UIView.animateWithDuration(0.7, delay: 0.3, usingSpringWithDamping: 0.52, initialSpringVelocity: 0.0, options: UIViewAnimationOptions.AllowUserInteraction, animations: {
-                    self.subNav!.frame = CGRect(x: 0, y: 0, width: self.navContainer.frame.width, height: self.navContainer.frame.height)
+                UIView.animateWithDuration(0.2, delay: 0.2, options: nil, animations: {
+                    self.rightLabel!.alpha = 1
                     }, completion: nil)
+            }
+        }
+    }
+    
+    func navTap(gesture: UITapGestureRecognizer) {
+        // The default state - returns to the home screen
+        if navState == 0 {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+        // Night view state - 1 is standard and 2 is editing
+        else if navState == 1 || navState == 2 {
+            // Create rectangles for each side of the button
+            let leftRec = CGRect(x: 0, y: 0, width: subNav!.frame.width / 2, height: subNav!.frame.height)
+            let rightRec = CGRect(x: subNav!.frame.width / 2, y: 0, width: subNav!.frame.width / 2, height: self.subNav!.frame.height)
+            
+            // Check if the tap came into the left rectangle (Back)
+            if CGRectContainsPoint(leftRec, gesture.locationOfTouch(0, inView: subNav!)) {
+                transitionToHome()
             }
             // Otherwise we're on the right side (Edit)
             else if CGRectContainsPoint(rightRec, gesture.locationOfTouch(0, inView: subNav!)) {
-                // Transition from detail view (not editing) to detail view (editing)
                 if navState == 1 {
-                    // Turn on the jiggle for all of our DreamBoxes
-                    for view in self.view.subviews {
-                        if let box = view as? DreamSuperBox {
-                            navState = 2
-                            
-                            box.editJiggle(true)
-                            
-                            // Swap out the Edit button with Done
-                            UIView.animateWithDuration(0.2, animations: {
-                                self.rightLabel!.alpha = 0
-                                }, completion: {
-                                    (value: Bool) in
-                                    var textStyle = [NSObject : AnyObject]()
-                                    var paragraphStyle = NSMutableParagraphStyle()
-                                    paragraphStyle.alignment = NSTextAlignment.Center
-                                    
-                                    textStyle[NSForegroundColorAttributeName] = DreamRightSK.color
-                                    textStyle[NSFontAttributeName] = UIFont(name: "Optima-Regular", size: 20)!
-                                    textStyle[NSParagraphStyleAttributeName] = paragraphStyle
-                                    
-                                    let doneText = NSAttributedString(string: "Done", attributes: textStyle)
-                                    self.rightLabel!.attributedText = doneText
-                            })
-                            
-                            UIView.animateWithDuration(0.2, delay: 0.2, options: nil, animations: {
-                                self.rightLabel!.alpha = 1
-                                }, completion: nil)
-                        }
-                    }
+                    transitionToEditA()
                 }
                 // Transition from detail view (editing) back to detail view (not editing)
                 else if navState == 2 {
-                    // Turn off all the jiggles
-                    for view in self.view.subviews {
-                        if let box = view as? DreamSuperBox {
-                            navState = 1
-                            
-                            box.editJiggle(false)
-                            
-                            // Swap the label text again
-                            UIView.animateWithDuration(0.2, animations: {
-                                self.rightLabel!.alpha = 0
-                                }, completion: {
-                                    (value: Bool) in
-                                    var textStyle = [NSObject : AnyObject]()
-                                    var paragraphStyle = NSMutableParagraphStyle()
-                                    paragraphStyle.alignment = NSTextAlignment.Center
-                                    
-                                    textStyle[NSForegroundColorAttributeName] = DreamRightSK.color
-                                    textStyle[NSFontAttributeName] = UIFont(name: "Optima-Regular", size: 20)!
-                                    textStyle[NSParagraphStyleAttributeName] = paragraphStyle
-                                    
-                                    let doneText = NSAttributedString(string: "Edit", attributes: textStyle)
-                                    self.rightLabel!.attributedText = doneText
-                            })
-                            
-                            UIView.animateWithDuration(0.2, delay: 0.2, options: nil, animations: {
-                                self.rightLabel!.alpha = 1
-                                }, completion: nil)
-                        }
-                    }
+                    transitionFromEditA()
                 }
             }
+        }
+    }
+    
+    func dreamBoxTap(gesture: UITapGestureRecognizer) {
+        for x in 0...dreamBoxes!.count - 1 {
+            let currentLocation = gesture.locationInView(self.dreamContainer)
+            
+            if CGRectContainsPoint(dreamBoxes![x].frame, currentLocation) {
+                print("We've got our man")
+            }
+            
+            print("Current location: \(gesture.locationInView(self.dreamContainer))\n")
+            
+//            if gesture.locationOfTouch(0, inView: box) {
+//                box.layer.borderWidth = 1.5
+//            }
         }
     }
 }
