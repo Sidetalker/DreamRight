@@ -577,6 +577,8 @@ class LogContainer: UIViewController {
     
     var navTap: UITapGestureRecognizer?
     var navState = 0
+    var detailBox = -1
+    var detailFrame = CGRectZero
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -768,20 +770,206 @@ class LogContainer: UIViewController {
         }
     }
     
+    func transitionFromDetailA() {
+        let mainBox = dreamBoxes![detailBox]
+        let mainY = mainBox.frame.origin.y
+        var upperBoxes = [DreamSuperBox]()
+        var lowerBoxes = [DreamSuperBox]()
+        
+        detailBox = -1
+        navState = 1
+        
+        for box in dreamBoxes! {
+            if box == mainBox {
+                continue
+            }
+            
+            let curY = box.frame.origin.y
+            
+            if curY > mainY {
+                upperBoxes.append(box)
+            }
+            else {
+                lowerBoxes.append(box)
+            }
+        }
+        
+        for box in upperBoxes {
+            let oldFrame = box.frame
+            let oldOrigin = oldFrame.origin
+            let oldY = oldFrame.origin.y
+            
+            let width = oldFrame.width
+            let height = oldFrame.height
+            let x = oldOrigin.x
+            let y = oldY - self.view.frame.height
+            
+            UIView.animateWithDuration(0.3, animations: {
+                box.frame = CGRectMake(x, y, width, height)
+                }, completion: {
+                    (value: Bool) in
+                    for box in upperBoxes {
+                        box.layoutSubviews()
+                    }
+            })
+            
+            // Another hacky fix for annoying night title bug
+            delay(0.01, {
+                for box in upperBoxes {
+                    box.layoutSubviews()
+                }
+            })
+        }
+        
+        for box in lowerBoxes {
+            let oldFrame = box.frame
+            let oldOrigin = oldFrame.origin
+            let oldY = oldFrame.origin.y
+            
+            let width = oldFrame.width
+            let height = oldFrame.height
+            let x = oldOrigin.x
+            let y = oldY + self.view.frame.height
+            
+            UIView.animateWithDuration(0.3, animations: {
+                box.frame = CGRectMake(x, y, width, height)
+                }, completion: {
+                    (value: Bool) in
+                    for box in lowerBoxes {
+                        box.layoutSubviews()
+                    }
+            })
+            
+            // Another hacky fix for annoying night title bug
+            delay(0.01, {
+                for box in lowerBoxes {
+                    box.layoutSubviews()
+                }
+            })
+        }
+        
+        UIView.animateWithDuration(0.6, delay: 0.0, usingSpringWithDamping: 0.76, initialSpringVelocity: 0.0, options: UIViewAnimationOptions.AllowAnimatedContent, animations: {
+            mainBox.frame = self.detailFrame
+        }, completion: nil)
+    }
+    
+    // Triggered by tapping on the night info DreamBox at the top
+    func editNightName() {
+//        let messageDisplay = UIAlertController(title: "Edit Name Name", message: "Rename the night", preferredStyle: UIAlertControllerStyle.Alert)
+//        
+//        messageDisplay.addTextFieldWithConfigurationHandler { textField in }
+//        let messageTextField = messageDisplay.textFields![0] as UITextField
+//        messageTextField.placeholder = "Chatroom Name"
+//        
+//        messageDisplay.addAction(UIAlertAction(title: "Create", style: UIAlertActionStyle.Default, handler: {
+//            (alert: UIAlertAction!) in
+//            if messageTextField.text != "" {
+//                self.myFoam?.createChat(messageTextField.text, userID: self.userID!)
+//            }
+//            else {
+//                messageDisplay.message = "You must enter a name for your chatroom"
+//                self.presentViewController(messageDisplay, animated: true, completion: nil)
+//            }
+//        }))
+//        
+//        messageDisplay.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {
+//            (alert: UIAlertAction!) in
+//        }))
+//        
+//        self.presentViewController(messageDisplay, animated: true, completion: nil)
+    }
+    
+    // Triggered by tapping on a DreamBox
+    func transitionToDetailA(target: Int) {
+        // We don't want to fuck with this shit mayne
+        if target == 0 {
+            editNightName()
+        }
+        
+        let mainBox = dreamBoxes![target]
+        let mainY = mainBox.frame.origin.y
+        var upperBoxes = [DreamSuperBox]()
+        var lowerBoxes = [DreamSuperBox]()
+        
+        detailBox = target
+        detailFrame = mainBox.frame
+        navState = 3
+        
+        for box in dreamBoxes! {
+            if box == mainBox {
+                continue
+            }
+            
+            let curY = box.frame.origin.y
+            
+            if curY > mainY {
+                upperBoxes.append(box)
+            }
+            else {
+                lowerBoxes.append(box)
+            }
+        }
+        
+        for box in upperBoxes {
+            let oldFrame = box.frame
+            let oldOrigin = oldFrame.origin
+            let oldY = oldFrame.origin.y
+            
+            let width = oldFrame.width
+            let height = oldFrame.height
+            let x = oldOrigin.x
+            let y = oldY + self.view.frame.height
+            
+            UIView.animateWithDuration(0.3, animations: {
+                box.frame = CGRectMake(x, y, width, height)
+                })
+        }
+        
+        for box in lowerBoxes {
+            let oldFrame = box.frame
+            let oldOrigin = oldFrame.origin
+            let oldY = oldFrame.origin.y
+            
+            let width = oldFrame.width
+            let height = oldFrame.height
+            let x = oldOrigin.x
+            let y = oldY - self.view.frame.height
+            
+            UIView.animateWithDuration(0.3, animations: {
+                box.frame = CGRectMake(x, y, width, height)
+                })
+        }
+        
+        UIView.animateWithDuration(0.6, delay: 0.0, usingSpringWithDamping: 0.76, initialSpringVelocity: 0.0, options: nil, animations: {
+            mainBox.frame = CGRectMake(10, 10, self.dreamContainer.frame.width - 20, self.dreamContainer.frame.height - 20)
+        }, completion: nil)
+    }
+    
     func navTap(gesture: UITapGestureRecognizer) {
+        // 0: Night list view (single nav button)
+        // 1: Single night view (Back + Edit buttons)
+        // 2: Single night view editing (Back + Done buttons)
+        // 3: Detail night view (Back + Edit buttons)
+        
+        
         // The default state - returns to the home screen
         if navState == 0 {
             self.dismissViewControllerAnimated(true, completion: nil)
         }
         // Night view state - 1 is standard and 2 is editing
-        else if navState == 1 || navState == 2 {
+        else if navState == 1 || navState == 2 || navState == 3 {
             // Create rectangles for each side of the button
             let leftRec = CGRect(x: 0, y: 0, width: subNav!.frame.width / 2, height: subNav!.frame.height)
             let rightRec = CGRect(x: subNav!.frame.width / 2, y: 0, width: subNav!.frame.width / 2, height: self.subNav!.frame.height)
             
             // Check if the tap came into the left rectangle (Back)
             if CGRectContainsPoint(leftRec, gesture.locationOfTouch(0, inView: subNav!)) {
-                transitionToHome()
+                if navState == 1 {
+                    transitionToHome()
+                }
+                else if navState == 3 {
+                    transitionFromDetailA()
+                }
             }
             // Otherwise we're on the right side (Edit)
             else if CGRectContainsPoint(rightRec, gesture.locationOfTouch(0, inView: subNav!)) {
@@ -801,14 +989,8 @@ class LogContainer: UIViewController {
             let currentLocation = gesture.locationInView(self.dreamContainer)
             
             if CGRectContainsPoint(dreamBoxes![x].frame, currentLocation) {
-                print("We've got our man")
+                transitionToDetailA(x)
             }
-            
-            print("Current location: \(gesture.locationInView(self.dreamContainer))\n")
-            
-//            if gesture.locationOfTouch(0, inView: box) {
-//                box.layer.borderWidth = 1.5
-//            }
         }
     }
 }
