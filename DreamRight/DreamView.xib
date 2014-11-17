@@ -29,14 +29,24 @@
                     <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
+                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XGT-Si-S9c">
+                    <rect key="frame" x="551" y="15" width="34" height="34"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="34" id="Rsc-Yk-6J6"/>
+                        <constraint firstAttribute="width" constant="34" id="saF-wg-T2h"/>
+                    </constraints>
+                </imageView>
             </subviews>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="rr3-k9-fem" secondAttribute="trailing" constant="8" id="1Lc-vV-nrl"/>
                 <constraint firstItem="rr3-k9-fem" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="6nP-yd-lXI"/>
+                <constraint firstItem="XGT-Si-S9c" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="CO7-Mc-P06"/>
+                <constraint firstAttribute="trailing" secondItem="XGT-Si-S9c" secondAttribute="trailing" constant="15" id="Hs2-W2-65t"/>
                 <constraint firstAttribute="bottom" secondItem="rr3-k9-fem" secondAttribute="bottom" constant="8" id="VFS-An-AHJ"/>
                 <constraint firstItem="rr3-k9-fem" firstAttribute="top" secondItem="wMS-aJ-zhO" secondAttribute="bottom" constant="8" id="x7K-nc-Tlt"/>
             </constraints>
             <connections>
+                <outlet property="imgPlay" destination="XGT-Si-S9c" id="W7V-Ss-eCJ"/>
                 <outlet property="lblDate" destination="wMS-aJ-zhO" id="p5m-ub-wLe"/>
                 <outlet property="lblTitle" destination="8ji-nx-jZ3" id="GDm-Qf-mJ6"/>
                 <outlet property="txtDescription" destination="rr3-k9-fem" id="t9m-Jy-5md"/>

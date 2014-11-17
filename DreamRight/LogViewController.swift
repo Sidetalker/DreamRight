@@ -258,6 +258,7 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
             UIView.animateWithDuration(0.4, delay: 0.15 + delayTime, options: UIViewAnimationOptions.CurveEaseOut, animations: {
                 dreamBoxes[x].frame = finalFrame
                 dreamBoxes[x].fadeInViews(0.15)
+                dreamBoxes[x].popInPlay(0.5 + delayTime)
                 }, completion: {
                     (value: Bool) in
             })
@@ -410,6 +411,8 @@ class DreamSuperBox: UIView {
     var date: String?
     var body: String?
     
+    var audioPlaying = false
+    
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -454,9 +457,20 @@ class DreamSuperBox: UIView {
             // Add tap recognizers for the dream title and description
             let titleTap = UITapGestureRecognizer(target: self.parent!.parent!, action: "dreamTitleTap:")
             let descriptionTap = UITapGestureRecognizer(target: self.parent!.parent!, action: "dreamDescriptionTap:")
+            let playTap = UITapGestureRecognizer(target: self, action: "dreamPlayTap:")
             
             dreamView!.lblTitle.addGestureRecognizer(titleTap)
             dreamView!.txtDescription.addGestureRecognizer(descriptionTap)
+            dreamView!.imgPlay.addGestureRecognizer(playTap)
+            
+            let playImage = DreamRightSK.imageOfPlayUp(CGRect(origin: CGPointZero, size: dreamView!.imgPlay.frame.size))
+            
+            dreamView!.imgPlay.image = playImage
+            dreamView!.imgPlay.transform = CGAffineTransformMakeScale(0.1, 0.1)
+            dreamView!.imgPlay.alpha = 0.0
+        }
+        else {
+            dreamView!.imgPlay.hidden = true
         }
     }
     
@@ -470,10 +484,6 @@ class DreamSuperBox: UIView {
         dreamView!.txtDescription.setContentOffset(CGPointZero, animated: true)
     }
     
-    func tappedMe(gesture: UITapGestureRecognizer) {
-        self.layer.borderWidth = 1.5
-    }
-    
     // Fades in the title, description and date with a configurable delay
     func fadeInViews(wait: Double) {
         delay(wait, {
@@ -483,6 +493,54 @@ class DreamSuperBox: UIView {
                 self.dreamView!.lblDate.alpha = 1.0
             })
         })
+    }
+    
+    // Pops in the play button with a configurable delay
+    func popInPlay(wait: Double) {
+        delay(wait, {
+            self.dreamView!.imgPlay.alpha = 1.0
+            
+            UIView.animateWithDuration(0.9, delay: 0.0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0.0, options: UIViewAnimationOptions.CurveEaseOut | UIViewAnimationOptions.AllowUserInteraction, animations: {
+                self.dreamView!.imgPlay.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            }, completion: nil)
+        })
+    }
+    
+    func dreamPlayTap(gesture: UITapGestureRecognizer) {
+        if parent!.parent!.navState != 3 && parent!.parent!.navState != 4 {
+            parent!.parent!.dreamBoxTap(gesture)
+        }
+        
+        var newImage: UIImage?
+        
+        if audioPlaying {
+            newImage = DreamRightSK.imageOfPlayUp(CGRect(origin: CGPointZero, size: dreamView!.imgPlay.frame.size))
+        }
+        else {
+            newImage = DreamRightSK.imageOfStopUp(CGRect(origin: CGPointZero, size: dreamView!.imgPlay.frame.size))
+        }
+        
+        UIView.animateWithDuration(0.4, delay: 0.0, options: nil, animations: {
+            self.dreamView!.imgPlay.transform = CGAffineTransformMakeScale(0.1, 0.1)
+            }, completion: {
+                (value: Bool) in
+                self.dreamView!.imgPlay.image = newImage
+                self.popInPlay(0.0)
+        })
+        
+        if audioPlaying {
+            UIView.animateWithDuration(0.4, delay: 0.0, options: nil, animations: {
+                self.frame = CGRect(x: 10, y: 10, width: self.parent!.parent!.dreamContainer.frame.width - 20, height: self.parent!.parent!.dreamContainer.frame.height - 20)
+                }, completion: nil)
+        }
+        else {
+            UIView.animateWithDuration(0.4, delay: 0.0, options: nil, animations: {
+                self.frame = CGRect(x: 10, y: 10, width: self.parent!.parent!.dreamContainer.frame.width - 20, height: self.parent!.parent!.dreamContainer.frame.height - 70)
+                }, completion: nil)
+        }
+        
+        // Flip the toggle
+        audioPlaying = !audioPlaying
     }
     
     // Start and stop the edit indicating jiggles
@@ -547,7 +605,7 @@ class DreamBox: UIView {
     @IBOutlet var lblTitle: UILabel!
     @IBOutlet var lblDate: UILabel!
     @IBOutlet var txtDescription: UITextView!
-    @IBOutlet var constraintTitleDate: NSLayoutConstraint!
+    @IBOutlet var imgPlay: UIImageView!
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -585,6 +643,7 @@ class LogContainer: UIViewController {
     var navState = 0
     var detailBox = -1
     var detailFrame = CGRectZero
+    var audioPlaying = false
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -660,9 +719,6 @@ class LogContainer: UIViewController {
             
             dreamSegue.parent = self
         }
-//        else if segue.identifier == "logNavSegue" {
-//            let logVC = segue.destinationViewController as LogContainer
-//        }
     }
     
     func transitionToHome() {
@@ -816,6 +872,10 @@ class LogContainer: UIViewController {
         
         detailBox = -1
         navState = 1
+        
+        if mainBox.audioPlaying {
+            mainBox.dreamPlayTap(UITapGestureRecognizer())
+        }
         
         for box in dreamBoxes! {
             if box == mainBox {

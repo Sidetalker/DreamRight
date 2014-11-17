@@ -40,6 +40,7 @@
 /* Begin PBXFileReference section */
 		2ED8EA416B0D4CFC988E3C33 /* Pods-DreamRight.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DreamRight.release.xcconfig"; path = "Pods/Target Support Files/Pods-DreamRight/Pods-DreamRight.release.xcconfig"; sourceTree = "<group>"; };
 		5106BE741A0AD69C00304C5F /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		510AA56D1A1A83980017DDDE /* DreamRight.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = DreamRight.playground; sourceTree = "<group>"; };
 		510C30CA1A091307005D92E3 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		510C30CC1A0915B1005D92E3 /* BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		510C30CF1A091991005D92E3 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
@@ -131,6 +132,7 @@
 		5164A1FC1A042DE8003BAB76 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				510AA56D1A1A83980017DDDE /* DreamRight.playground */,
 				5164A1FD1A042DE8003BAB76 /* Info.plist */,
 				5164A2001A042DE8003BAB76 /* DreamRight.xcdatamodeld */,
 				5164A1FE1A042DE8003BAB76 /* AppDelegate.swift */,

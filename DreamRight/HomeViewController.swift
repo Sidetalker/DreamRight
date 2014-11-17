@@ -224,12 +224,7 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         dreamLayer = createDrawableString(dreamString, dreamRect)
         rightLayer = createDrawableString(rightString, rightRect)
         
-        dreamView!.layer.addSublayer(dreamLayer!)
-        rightView!.layer.addSublayer(rightLayer!)
-        
-        // Add the string generation layers to the view
-//        self.view.addSubview(dreamView!)
-//        self.view.addSubview(rightView!)
+        // Add the string generation layers to the view\
         self.view.layer.addSublayer(dreamLayer!)
         self.view.layer.addSublayer(rightLayer!)
         
