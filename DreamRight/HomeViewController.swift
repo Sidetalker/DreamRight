@@ -134,7 +134,7 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         //                        buttonString = "See Your Dreams"
         //                    default: () }
         //
-        //                    let buttonUpString = NSAttributedString(string: buttonString, attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.color2), (NSFontAttributeName, UIFont(name: "HelveticaNeue-Thin", size: 20)!)))
+        //                    let buttonUpString = NSAttributedString(string: buttonString, attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.yellow), (NSFontAttributeName, UIFont(name: "HelveticaNeue-Thin", size: 20)!)))
         //
         //                    let buttonDownString = NSAttributedString(string: buttonString, attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, UIColor.whiteColor()), (NSFontAttributeName, UIFont(name: "HelveticaNeue-Thin", size: 20)!)))
         //
@@ -208,17 +208,17 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
     
     func drawText() {
         // Create attributed strings and define a frame for the Dream Right text
-        let dreamString = NSAttributedString(string: "Dream", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.color2), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
+        let dreamString = NSAttributedString(string: "Dream", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.yellow), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
         let dreamRect = CGRect(x: 0, y: 50, width: self.view.frame.width, height: 80)
         
-        let rightString = NSAttributedString(string: "Right", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.color2), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
+        let rightString = NSAttributedString(string: "Right", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.yellow), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
         let rightRect = CGRect(x: 0, y: 130, width: self.view.frame.width, height: 80)
         
         dreamView = UIView(frame: dreamRect)
-        dreamView!.backgroundColor = DreamRightSK.color
+        dreamView!.backgroundColor = DreamRightSK.blue
         
         rightView = UIView(frame: rightRect)
-        rightView!.backgroundColor = DreamRightSK.color
+        rightView!.backgroundColor = DreamRightSK.blue
         
         // Generate a layer containing beziers for drawing the strings
         dreamLayer = createDrawableString(dreamString, dreamRect)

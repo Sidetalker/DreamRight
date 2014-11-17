@@ -240,7 +240,7 @@ func createDrawableString(formattedString: NSAttributedString, frame: CGRect) ->
     pathLayer.backgroundColor = UIColor.clearColor().CGColor
     pathLayer.geometryFlipped = true
     pathLayer.path = path.CGPath
-    pathLayer.strokeColor = DreamRightSK.color2.CGColor
+    pathLayer.strokeColor = DreamRightSK.yellow.CGColor
     pathLayer.fillColor = UIColor.clearColor().CGColor
     pathLayer.lineWidth = 0.8
     pathLayer.lineJoin = kCALineJoinRound

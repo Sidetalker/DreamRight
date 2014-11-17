@@ -13,7 +13,7 @@ import UIKit
 let titleCellFrame = CGRect(x: 12.0, y: 8.0, width: 250, height: 24.0)
 let dateCellFrame = CGRect(x: 12.0, y: 38.0, width: 250, height: 20.0)
 
-let borderColor = DreamRightSK.color2.CGColor
+let borderColor = DreamRightSK.yellow.CGColor
 let borderWidth = 0.8
 let cornerRadius = 8
 
@@ -392,7 +392,7 @@ class LogCell: UICollectionViewCell {
     
     // Set up the log cell
     func configure() {
-        self.layer.borderColor = DreamRightSK.color2.CGColor
+        self.layer.borderColor = DreamRightSK.yellow.CGColor
         self.layer.borderWidth = 0.7
         self.layer.cornerRadius = 8
         
@@ -421,7 +421,7 @@ class DreamSuperBox: UIView {
         self.clipsToBounds = true
         
         // Configure the view properly
-        self.layer.borderColor = DreamRightSK.color2.CGColor
+        self.layer.borderColor = DreamRightSK.yellow.CGColor
         self.layer.borderWidth = 0.7
         self.layer.cornerRadius = 8
         
@@ -609,7 +609,7 @@ class LogContainer: UIViewController {
         let navFrame = navContainer.frame
         
         subNav = UIView(frame: CGRect(x: 0, y: navFrame.height, width: navFrame.width, height: 0))
-        subNav?.backgroundColor = DreamRightSK.color2
+        subNav?.backgroundColor = DreamRightSK.yellow
         
         singleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: navFrame.width, height: navFrame.height))
         
@@ -617,7 +617,7 @@ class LogContainer: UIViewController {
         var paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = NSTextAlignment.Center
         
-        textStyle[NSForegroundColorAttributeName] = DreamRightSK.color
+        textStyle[NSForegroundColorAttributeName] = DreamRightSK.blue
         textStyle[NSFontAttributeName] = UIFont(name: "Optima-Regular", size: 20)!
         textStyle[NSParagraphStyleAttributeName] = paragraphStyle
         
@@ -636,7 +636,7 @@ class LogContainer: UIViewController {
         rightLabel?.attributedText = NSAttributedString(string: "Edit", attributes: textStyle)
         
         divider = UIView(frame: CGRect(x: navFrame.width / 2, y: 0, width: 1, height: navFrame.height * 2))
-        divider?.backgroundColor = DreamRightSK.color
+        divider?.backgroundColor = DreamRightSK.blue
         divider?.hidden = true
         divider?.userInteractionEnabled = false
         
@@ -697,7 +697,7 @@ class LogContainer: UIViewController {
                 var paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.alignment = NSTextAlignment.Center
                 
-                textStyle[NSForegroundColorAttributeName] = DreamRightSK.color
+                textStyle[NSForegroundColorAttributeName] = DreamRightSK.blue
                 textStyle[NSFontAttributeName] = UIFont(name: "Optima-Regular", size: 20)!
                 textStyle[NSParagraphStyleAttributeName] = paragraphStyle
                 
@@ -728,7 +728,7 @@ class LogContainer: UIViewController {
                         var paragraphStyle = NSMutableParagraphStyle()
                         paragraphStyle.alignment = NSTextAlignment.Center
                         
-                        textStyle[NSForegroundColorAttributeName] = DreamRightSK.color
+                        textStyle[NSForegroundColorAttributeName] = DreamRightSK.blue
                         textStyle[NSFontAttributeName] = UIFont(name: "Optima-Regular", size: 20)!
                         textStyle[NSParagraphStyleAttributeName] = paragraphStyle
                         
@@ -761,7 +761,7 @@ class LogContainer: UIViewController {
                         var paragraphStyle = NSMutableParagraphStyle()
                         paragraphStyle.alignment = NSTextAlignment.Center
                         
-                        textStyle[NSForegroundColorAttributeName] = DreamRightSK.color
+                        textStyle[NSForegroundColorAttributeName] = DreamRightSK.blue
                         textStyle[NSFontAttributeName] = UIFont(name: "Optima-Regular", size: 20)!
                         textStyle[NSParagraphStyleAttributeName] = paragraphStyle
                         

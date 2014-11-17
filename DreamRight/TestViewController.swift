@@ -172,10 +172,10 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let dreamString = NSAttributedString(string: "Dream", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.color2), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
+        let dreamString = NSAttributedString(string: "Dream", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.yellow), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
         let dreamRect = CGRect(x: 0, y: 120, width: self.view.frame.width, height: 80)
         
-        let rightString = NSAttributedString(string: "Right", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.color2), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
+        let rightString = NSAttributedString(string: "Right", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.yellow), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
         let rightRect = CGRect(x: 0, y: 200, width: self.view.frame.width, height: 80)
         
         let dreamLayer = createDrawableString(dreamString, dreamRect)
@@ -475,7 +475,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         star.view.backgroundColor = UIColor.clearColor()
         
         let newView = UIView(frame: viewStartFrame)
-        newView.layer.borderColor = DreamRightSK.color2.CGColor
+        newView.layer.borderColor = DreamRightSK.yellow.CGColor
         newView.layer.borderWidth = 2.5
         
         subPan = UIPanGestureRecognizer(target: self, action: Selector("panSubview:"))
