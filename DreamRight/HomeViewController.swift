@@ -120,90 +120,12 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         
         let myButtons = [UIButton](count: 2, repeatedValue: UIButton())
         
-        let x = 0
-        
-        //                for x in 0...1 {
-        //                    let button = myButtons[x]
-        //                    var buttonString = ""
-        //                    var buttonFrame = CGRect(x: 0, y: CGFloat(150 * x), width: self.view.frame.width, height: 100)
-        //
-        //                    switch x {
-        //                    case 0:
-        //                        buttonString = "Go To Sleep"
-        //                    case 1:
-        //                        buttonString = "See Your Dreams"
-        //                    default: () }
-        //
-        //                    let buttonUpString = NSAttributedString(string: buttonString, attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.yellow), (NSFontAttributeName, UIFont(name: "HelveticaNeue-Thin", size: 20)!)))
-        //
-        //                    let buttonDownString = NSAttributedString(string: buttonString, attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, UIColor.whiteColor()), (NSFontAttributeName, UIFont(name: "HelveticaNeue-Thin", size: 20)!)))
-        //
-        //                    button.frame = buttonFrame
-        //                    button.alpha = 0.0
-        //                    button.backgroundColor = UIColor.clearColor()
-        //                    button.setAttributedTitle(buttonUpString, forState: UIControlState.Normal)
-        //                    button.setAttributedTitle(buttonDownString, forState: UIControlState.Highlighted)
-        //
-        //                    self.view.addSubview(button)
-        //                }
-        
-        //                let gravitySleep = UIGravityBehavior(items: [myButtons[0]])
-        //                gravitySleep.magnitude = 1.3
-        //
-        //                let collisionSleep = UICollisionBehavior(items: [myButtons[0]])
-        //                collisionSleep.translatesReferenceBoundsIntoBoundary = true
-        //
-        //                let elasticitySleep = UIDynamicItemBehavior(items: [myButtons[0]])
-        //                elasticitySleep.elasticity = 0.4
-        
-        //                self.animator?.addBehavior(gravitySleep)
-        //                self.animator?.addBehavior(collisionSleep)
-        //                self.animator?.addBehavior(elasticitySleep)
-        
         UIView.animateWithDuration(1.7, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut | UIViewAnimationOptions.AllowUserInteraction, animations: {
             self.goToSleep.alpha = 1.0
             self.seeYourDreams.alpha = 1.0
             self.designTheStars.alpha = 1.0
             
             }, completion: nil)
-        
-        delay(2, {
-            //                    UIView.animateWithDuration(1.2, delay: 0.00, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
-            //                        let dreamOrigin = CGPointMake(self.dreamLayer!.frame.origin.x - 50, self.dreamLayer!.frame.origin.y - 50)
-            //                        let rightOrigin = CGPointMake(self.rightLayer!.frame.origin.x - 50, self.rightLayer!.frame.origin.y - 50)
-            //
-            //                        let dreamSize = CGSize(width: self.dreamLayer!.frame.width + 100, height: self.dreamLayer!.frame.height + 100)
-            //                        let rightSize = CGSize(width: self.rightLayer!.frame.width + 100, height: self.rightLayer!.frame.height + 100)
-            //
-            //                        self.dreamView!.frame = CGRect(origin: dreamOrigin, size: dreamSize)
-            //                        self.rightView!.frame = CGRect(origin: rightOrigin, size: rightSize)
-            //
-            //                        }, completion: nil)
-            
-            
-            
-            
-            
-            //                    let gravityDream = UIGravityBehavior(items: [myButtons[1]])
-            //                    gravityDream.magnitude = 1.3
-            //                    gravitySleep.addItem(myButtons[1])
-            //
-            //                    let collisionDream = UICollisionBehavior(items: [myButtons[1]])
-            //                    collisionDream.translatesReferenceBoundsIntoBoundary = true
-            //                    collisionSleep.addItem(myButtons[1])
-            //
-            //                    let elasticityDream = UIDynamicItemBehavior(items: [myButtons[1]])
-            //                    elasticityDream.elasticity = 0.4
-            //                    elasticitySleep.addItem(myButtons[1])
-            //
-            ////                    self.animator?.addBehavior(gravityDream)
-            ////                    self.animator?.addBehavior(collisionDream)
-            ////                    self.animator?.addBehavior(elasticityDream)
-            //                    
-            //                    UIView.animateWithDuration(0.8, delay: 0.04, options: UIViewAnimationOptions.CurveEaseIn, animations: {
-            //                        myButtons[1].alpha = 1.0
-            //                        }, completion: nil)
-        })
     }
     
     func drawText() {

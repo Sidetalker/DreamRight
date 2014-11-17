@@ -114,7 +114,7 @@
         // CGContextRef context = (CGContextRef) [nsGraphicsContext graphicsPort];
         
         // The first wave is drawn with a 2px stroke width, all others a with 1px stroke width.
-        CGContextSetLineWidth(context, (i==0)? 2:1 );
+        CGContextSetLineWidth(context, (i==0)? 1.2:.6 );
         
         CGFloat halfHeight = CGRectGetHeight(self.bounds)/2;
         CGFloat width = CGRectGetWidth(self.bounds);
@@ -131,7 +131,7 @@
         // [[UIColor colorWithWhite:_whiteValue alpha:progress/3.0*2+1.0/3.0] set];
         
         CGFloat multiplier = MIN(1.0, (progress / 3.0f * 2.0f) + (1.0f / 3.0f));
-        [[[UIColor whiteColor] colorWithAlphaComponent:multiplier * CGColorGetAlpha([UIColor whiteColor].CGColor)] set];
+        [[self.waveColor colorWithAlphaComponent:multiplier * CGColorGetAlpha([UIColor whiteColor].CGColor)] set];
         
         for(CGFloat x = 0; x<width+_density; x+=_density) {
             // We use a parable to scale the sinus wave, that has its peak in the middle of the view.

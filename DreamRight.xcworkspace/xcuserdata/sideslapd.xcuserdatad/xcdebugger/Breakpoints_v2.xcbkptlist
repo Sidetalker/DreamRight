@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DreamRight/LogViewController.swift"
-            timestampString = "437950550.406897"
+            timestampString = "437958770.05369"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1165"
-            endingLineNumber = "1165"
+            startingLineNumber = "1231"
+            endingLineNumber = "1231"
             landmarkName = "dreamBoxTap(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -26,13 +26,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DreamRight/LogViewController.swift"
-            timestampString = "437950550.406897"
+            timestampString = "437958770.05369"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1172"
-            endingLineNumber = "1172"
-            landmarkName = "dreamBoxTap(_:)"
-            landmarkType = "5">
+            startingLineNumber = "1238"
+            endingLineNumber = "1238"
+            landmarkName = "LogContainer"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DreamRight/LogViewController.swift"
-            timestampString = "437950550.406897"
+            timestampString = "437958770.05369"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1033"
-            endingLineNumber = "1033"
+            startingLineNumber = "1099"
+            endingLineNumber = "1099"
             landmarkName = "transitionToDetailA(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DreamRight/LogViewController.swift"
-            timestampString = "437950550.406897"
+            timestampString = "437958770.05369"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1180"
-            endingLineNumber = "1180"
+            startingLineNumber = "1246"
+            endingLineNumber = "1246"
             landmarkName = "dreamTitleTap(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DreamRight/LogViewController.swift"
-            timestampString = "437950550.406897"
+            timestampString = "437958770.05369"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1225"
-            endingLineNumber = "1225"
+            startingLineNumber = "1291"
+            endingLineNumber = "1291"
             landmarkName = "dreamDescriptionTap(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DreamRight/LogViewController.swift"
-            timestampString = "437950550.406897"
+            timestampString = "437958770.05369"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1179"
-            endingLineNumber = "1179"
+            startingLineNumber = "1245"
+            endingLineNumber = "1245"
             landmarkName = "dreamTitleTap(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DreamRight/LogViewController.swift"
-            timestampString = "437949895.668551"
+            timestampString = "437956523.039596"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "462"
-            endingLineNumber = "462"
+            startingLineNumber = "476"
+            endingLineNumber = "476"
             landmarkName = "init(frame:title:date:body:parent:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DreamRight/LogViewController.swift"
-            timestampString = "437950550.406897"
+            timestampString = "437958770.05369"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1159"
-            endingLineNumber = "1159"
+            startingLineNumber = "1225"
+            endingLineNumber = "1225"
             landmarkName = "dreamBoxTap(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -138,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DreamRight/LogViewController.swift"
-            timestampString = "437949895.668551"
+            timestampString = "437956523.039596"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "465"
-            endingLineNumber = "465"
+            startingLineNumber = "479"
+            endingLineNumber = "479"
             landmarkName = "init(frame:title:date:body:parent:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DreamRight/LogViewController.swift"
-            timestampString = "437949895.668551"
+            timestampString = "437956523.039596"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "471"
-            endingLineNumber = "471"
+            startingLineNumber = "492"
+            endingLineNumber = "492"
             landmarkName = "init(frame:title:date:body:parent:)"
             landmarkType = "5">
             <Locations>
@@ -200,11 +200,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DreamRight/LogViewController.swift"
-            timestampString = "437949895.668551"
+            timestampString = "437956523.039596"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "468"
-            endingLineNumber = "468"
+            startingLineNumber = "483"
+            endingLineNumber = "483"
             landmarkName = "init(frame:title:date:body:parent:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -216,11 +216,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DreamRight/LogViewController.swift"
-            timestampString = "437949895.668551"
+            timestampString = "437956523.039596"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "467"
-            endingLineNumber = "467"
+            startingLineNumber = "482"
+            endingLineNumber = "482"
             landmarkName = "init(frame:title:date:body:parent:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -232,12 +232,60 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DreamRight/LogViewController.swift"
-            timestampString = "437949895.668551"
+            timestampString = "437956523.039596"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "466"
-            endingLineNumber = "466"
+            startingLineNumber = "481"
+            endingLineNumber = "481"
             landmarkName = "init(frame:title:date:body:parent:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "DreamRight/LogViewController.swift"
+            timestampString = "437956523.039596"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "532"
+            endingLineNumber = "532"
+            landmarkName = "growVisualizer(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "DreamRight/LogViewController.swift"
+            timestampString = "437958770.05369"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1310"
+            endingLineNumber = "1310"
+            landmarkName = "LogContainer"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "DreamRight/LogViewController.swift"
+            timestampString = "437958337.576462"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "540"
+            endingLineNumber = "540"
+            landmarkName = "growVisualizer(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

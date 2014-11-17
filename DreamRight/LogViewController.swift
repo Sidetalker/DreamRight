@@ -411,6 +411,7 @@ class DreamSuperBox: UIView {
     var date: String?
     var body: String?
     
+    var audioDisplay: ZLSinusWaveView?
     var audioPlaying = false
     
     required init(coder aDecoder: NSCoder) {
@@ -445,6 +446,19 @@ class DreamSuperBox: UIView {
         dreamView?.lblDate.text = date
         dreamView?.lblTitle.text = title
         
+        // Make the audioView whether or not we'll use it
+        let containerFrame = self.parent!.parent!.dreamContainer.frame
+        
+        self.audioDisplay = ZLSinusWaveView(frame: CGRect(x: containerFrame.width / 2, y: containerFrame.height - 25, width: 0, height: 0))
+        audioDisplay?.backgroundColor = DreamRightSK.blue
+        audioDisplay?.waveColor = DreamRightSK.yellow
+        audioDisplay?.plotType = EZPlotType.Rolling
+        audioDisplay?.shouldFill = true
+        audioDisplay?.shouldMirror = true
+        audioDisplay?.idleAmplitude = 0.2
+        audioDisplay?.frequency = 1.5
+        audioDisplay?.oscillating = true
+        
         // If the body text wasn't passed, hide the textfield
         if let txt = body {
             dreamView?.txtDescription.text = body
@@ -463,11 +477,18 @@ class DreamSuperBox: UIView {
             dreamView!.txtDescription.addGestureRecognizer(descriptionTap)
             dreamView!.imgPlay.addGestureRecognizer(playTap)
             
+            // Configure the play image
             let playImage = DreamRightSK.imageOfPlayUp(CGRect(origin: CGPointZero, size: dreamView!.imgPlay.frame.size))
             
             dreamView!.imgPlay.image = playImage
             dreamView!.imgPlay.transform = CGAffineTransformMakeScale(0.1, 0.1)
             dreamView!.imgPlay.alpha = 0.0
+            
+            // Add the audioDisplay to our parent's parent's frame
+            self.parent!.parent!.audioDisplay = self.audioDisplay!
+            EZOutput.sharedOutput().outputDataSource = self.parent!.parent!
+            EZOutput.sharedOutput().startPlayback()
+            self.parent!.parent!.dreamContainer.addSubview(self.audioDisplay!)
         }
         else {
             dreamView!.imgPlay.hidden = true
@@ -506,6 +527,27 @@ class DreamSuperBox: UIView {
         })
     }
     
+    // Grow visualizer
+    func growVisualizer(grow: Bool) {
+        let containerFrame = self.parent!.parent!.dreamContainer.frame
+        
+        var finalFrame = CGRectZero
+        
+        if grow {
+            finalFrame = CGRect(x: 0, y: containerFrame.height - 55, width: containerFrame.width, height: 50)
+        }
+        else {
+            finalFrame = CGRect(x: containerFrame.width / 2, y: containerFrame.height - 30, width: 0, height: 0)
+        }
+        
+        UIView.animateWithDuration(0.25, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn | UIViewAnimationOptions.AllowAnimatedContent, animations: {
+            self.parent!.parent!.audioDisplay!.frame = finalFrame
+            }, completion: {
+                (value: Bool) in
+                // TODO: - Audio Displa Shit here
+        })
+    }
+    
     func dreamPlayTap(gesture: UITapGestureRecognizer) {
         if parent!.parent!.navState != 3 && parent!.parent!.navState != 4 {
             parent!.parent!.dreamBoxTap(gesture)
@@ -532,11 +574,19 @@ class DreamSuperBox: UIView {
             UIView.animateWithDuration(0.4, delay: 0.0, options: nil, animations: {
                 self.frame = CGRect(x: 10, y: 10, width: self.parent!.parent!.dreamContainer.frame.width - 20, height: self.parent!.parent!.dreamContainer.frame.height - 20)
                 }, completion: nil)
+            
+            delay(0.0, {
+                self.growVisualizer(false)
+            })
         }
         else {
             UIView.animateWithDuration(0.4, delay: 0.0, options: nil, animations: {
                 self.frame = CGRect(x: 10, y: 10, width: self.parent!.parent!.dreamContainer.frame.width - 20, height: self.parent!.parent!.dreamContainer.frame.height - 70)
                 }, completion: nil)
+            
+            delay(0.2, {
+                self.growVisualizer(true)
+            })
         }
         
         // Flip the toggle
@@ -626,7 +676,7 @@ class LogNav: UIViewController {
 
 // MARK: - Log Container View
 
-class LogContainer: UIViewController {
+class LogContainer: UIViewController, EZOutputDataSource {
     @IBOutlet var dreamContainer: UIView!
     @IBOutlet var navContainer: UIView!
     
@@ -644,6 +694,17 @@ class LogContainer: UIViewController {
     var detailBox = -1
     var detailFrame = CGRectZero
     var audioPlaying = false
+    var audioDisplay: ZLSinusWaveView?
+    
+    func output(output: EZOutput!, callbackWithActionFlags ioActionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>, inTimeStamp: UnsafePointer<AudioTimeStamp>, inBusNumber: UInt32, inNumberFrames: UInt32, ioData: UnsafeMutablePointer<AudioBufferList>) {
+        dispatch_async(dispatch_get_main_queue()) {
+            // Update the main buffer
+            if let display = self.audioDisplay? {
+                var bufferThing: [Float] = [0, 0, 0]
+                display.updateBuffer(&bufferThing, withBufferSize: 3)
+            }
+        }
+    }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -1232,6 +1293,17 @@ class LogContainer: UIViewController {
                 else {
                     dreamBoxTap(gesture)
                 }
+            }
+        }
+    }
+    
+    // MARK: - EZMicrophone Delegate Function
+    
+    func microphone(microphone: EZMicrophone!, hasAudioReceived buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
+        dispatch_async(dispatch_get_main_queue()) {
+            // Update the main buffer
+            if let display = self.audioDisplay? {
+                display.updateBuffer(buffer[0], withBufferSize: bufferSize)
             }
         }
     }
