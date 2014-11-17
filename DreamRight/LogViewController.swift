@@ -425,6 +425,12 @@ class DreamSuperBox: UIView {
         self.layer.borderWidth = 0.7
         self.layer.cornerRadius = 8
         
+        // Save the variables
+        self.title = title
+        self.date = date
+        self.body = body
+        self.parent = parent
+        
         // Load our nib
         dreamView = UIView.initWithNibName("DreamView") as DreamBox
         dreamView?.frame = self.bounds
@@ -444,7 +450,14 @@ class DreamSuperBox: UIView {
             dreamView?.txtDescription.hidden = true
         }
         
-        addTouchHandlers()
+        if dreamView?.txtDescription.hidden != true {
+            // Add tap recognizers for the dream title and description
+            let titleTap = UITapGestureRecognizer(target: self.parent!.parent!, action: "dreamTitleTap:")
+            let descriptionTap = UITapGestureRecognizer(target: self.parent!.parent!, action: "dreamDescriptionTap:")
+            
+            dreamView!.lblTitle.addGestureRecognizer(titleTap)
+            dreamView!.txtDescription.addGestureRecognizer(descriptionTap)
+        }
     }
     
     override func layoutSubviews() {
@@ -455,39 +468,6 @@ class DreamSuperBox: UIView {
         // Update the bounds with the frame changes and keep the textfield at the top
         dreamView!.bounds = self.bounds
         dreamView!.txtDescription.setContentOffset(CGPointZero, animated: true)
-    }
-    
-    func addTouchHandlers() {
-        
-    }
-    
-    func configureDreamBox() {
-        // Needed so that the DreamBox subview doesn't bleed out of this container
-        self.clipsToBounds = true
-        
-        // Configure the view properly
-        self.layer.borderColor = DreamRightSK.color2.CGColor
-        self.layer.borderWidth = 0.7
-        self.layer.cornerRadius = 8
-        
-        // Load our nib
-        dreamView = UIView.initWithNibName("DreamView") as DreamBox
-        dreamView?.frame = self.bounds
-        
-        // Add the DreamView
-        self.addSubview(dreamView!)
-        
-        // Configure the DreamView
-        dreamView?.lblDate.text = date
-        dreamView?.lblTitle.text = title
-        
-        // If the body text wasn't passed, hide the textfield
-        if let txt = body {
-            dreamView?.txtDescription.text = body
-        }
-        else {
-            dreamView?.txtDescription.hidden = true
-        }
     }
     
     func tappedMe(gesture: UITapGestureRecognizer) {
@@ -513,10 +493,6 @@ class DreamSuperBox: UIView {
             return
         }
         
-        // Grab the current frame and origin
-        let curFrame = self.frame
-        let curOrigin = curFrame.origin
-        
         // Create the animation and configure the wobble angle (radians)
         let animation = CAKeyframeAnimation(keyPath: "transform")
         let wobbleAngle = CGFloat(0.013)
@@ -534,6 +510,36 @@ class DreamSuperBox: UIView {
         
         // Add the animation to our layer (starts immediately)
         self.layer.addAnimation(animation, forKey: "transform")
+    }
+    
+    // Start and stop the edit indicating jiggles for the current box's UIControls
+    func editInnerJiggle(start: Bool) {
+        // Remove existing animations if !start
+        if !start {
+            self.dreamView!.lblTitle.layer.removeAllAnimations()
+            self.dreamView!.txtDescription.layer.removeAllAnimations()
+            
+            return
+        }
+        
+        // Create the animation and configure the wobble angle (radians)
+        let animation = CAKeyframeAnimation(keyPath: "transform")
+        let wobbleAngle = CGFloat(0.013)
+        
+        // Wobble to left now, wobble to the right ya'll
+        let left = NSValue(CATransform3D: CATransform3DMakeRotation(wobbleAngle, 0, 0, 1))
+        let right = NSValue(CATransform3D: CATransform3DMakeRotation(-wobbleAngle, 0, 0, 1))
+        
+        // Configure the animation
+        animation.values = [left, right]
+        animation.timingFunctions = [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut), CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)]
+        animation.autoreverses = true
+        animation.duration = 0.13
+        animation.repeatCount = HUGE
+        
+        // Add the animation to our layer (starts immediately)
+        self.dreamView!.lblTitle.layer.addAnimation(animation, forKey: "transform")
+        self.dreamView!.txtDescription.layer.addAnimation(animation, forKey: "transform")
     }
 }
 
@@ -770,6 +776,38 @@ class LogContainer: UIViewController {
         }
     }
     
+    func transitionToEditB() {
+        transitionToEditA()
+        
+        dreamBoxes![detailBox].editJiggle(false)
+        dreamBoxes![detailBox].editInnerJiggle(true)
+        
+        navState = 4
+    }
+    
+    func transitionFromEditB() {
+        transitionFromEditA()
+        
+        dreamBoxes![detailBox].editInnerJiggle(false)
+        
+        navState = 3
+    }
+    
+    // Brings us from the detail view to the night view while still in editing mode
+    func transitionFromDetailB()
+    {
+        // But swap the jiggle
+        dreamBoxes![detailBox].editInnerJiggle(false)
+        dreamBoxes![detailBox].editJiggle(true)
+        
+        // Just a normal transition
+        transitionFromDetailA()
+        
+        // Change back to edit state
+        navState = 2
+    }
+    
+    // Brings us from the detail view to the night view in non-editing mode
     func transitionFromDetailA() {
         let mainBox = dreamBoxes![detailBox]
         let mainY = mainBox.frame.origin.y
@@ -855,28 +893,77 @@ class LogContainer: UIViewController {
     
     // Triggered by tapping on the night info DreamBox at the top
     func editNightName() {
-//        let messageDisplay = UIAlertController(title: "Edit Name Name", message: "Rename the night", preferredStyle: UIAlertControllerStyle.Alert)
-//        
-//        messageDisplay.addTextFieldWithConfigurationHandler { textField in }
-//        let messageTextField = messageDisplay.textFields![0] as UITextField
-//        messageTextField.placeholder = "Chatroom Name"
-//        
-//        messageDisplay.addAction(UIAlertAction(title: "Create", style: UIAlertActionStyle.Default, handler: {
-//            (alert: UIAlertAction!) in
-//            if messageTextField.text != "" {
-//                self.myFoam?.createChat(messageTextField.text, userID: self.userID!)
-//            }
-//            else {
-//                messageDisplay.message = "You must enter a name for your chatroom"
-//                self.presentViewController(messageDisplay, animated: true, completion: nil)
-//            }
-//        }))
-//        
-//        messageDisplay.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {
-//            (alert: UIAlertAction!) in
-//        }))
-//        
-//        self.presentViewController(messageDisplay, animated: true, completion: nil)
+        let messageDisplay = UIAlertController(title: "Edit Night Name", message: "Rename the night", preferredStyle: UIAlertControllerStyle.Alert)
+        
+        messageDisplay.addTextFieldWithConfigurationHandler { textField in }
+        let messageTextField = messageDisplay.textFields![0] as UITextField
+        messageTextField.placeholder = "Night name"
+        messageTextField.text = dreamBoxes![0].title!
+        messageTextField.tag = 10
+        messageTextField.addTarget(self, action: "textFieldChanged:", forControlEvents: UIControlEvents.EditingChanged)
+        
+        messageDisplay.addAction(UIAlertAction(title: "Done", style: UIAlertActionStyle.Default, handler: {
+            (alert: UIAlertAction!) in
+            self.dreamBoxes![0].title = messageTextField.text
+            self.dreamBoxes![0].dreamView!.lblTitle.text = messageTextField.text
+        }))
+        
+        messageDisplay.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {
+            (alert: UIAlertAction!) in
+            if self.dreamBoxes![0].dreamView!.lblTitle.text != self.dreamBoxes![0].title {
+                UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations: {
+                    self.dreamBoxes![0].dreamView!.lblTitle.alpha = 0.0
+                    }, completion: {
+                        (value: Bool) in
+                        self.dreamBoxes![0].dreamView!.lblTitle.text = self.dreamBoxes![0].title
+                        
+                        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                            self.dreamBoxes![0].dreamView!.lblTitle.alpha = 1.0
+                            }, completion: nil)
+                })
+            }
+        }))
+        
+        self.presentViewController(messageDisplay, animated: true, completion: nil)
+    }
+    
+    // Callback to update title in realtime
+    func textFieldChanged(sender: UITextField) {
+        var current = detailBox
+        
+        if sender.tag == 10 {
+            current = 0
+        }
+        
+        if sender.text.utf16Count >= 20 {
+            sender.text = self.dreamBoxes![current].dreamView!.lblTitle.text
+            return
+        }
+        
+        self.dreamBoxes![current].dreamView!.lblTitle.text = sender.text
+        
+        delay(0.01, {
+            self.dreamBoxes![current].dreamView!.layoutSubviews()
+        })
+    }
+    
+    // Triggered by tapping on a DreamBox while in editing mode
+    func transitionToDetailB(target: Int) {
+        if target == 0 {
+            editNightName()
+            return
+        }
+        
+        // But then switch the edit wiggle
+        dreamBoxes![target].editJiggle(false)
+        dreamBoxes![target].editInnerJiggle(true)
+        
+        // Normal transition
+        transitionToDetailA(target)
+        detailBox = target
+        
+        // And remember to change state
+        navState = 4
     }
     
     // Triggered by tapping on a DreamBox
@@ -884,6 +971,7 @@ class LogContainer: UIViewController {
         // We don't want to fuck with this shit mayne
         if target == 0 {
             editNightName()
+            return
         }
         
         let mainBox = dreamBoxes![target]
@@ -950,35 +1038,58 @@ class LogContainer: UIViewController {
         // 1: Single night view (Back + Edit buttons)
         // 2: Single night view editing (Back + Done buttons)
         // 3: Detail night view (Back + Edit buttons)
-        
+        // 4: Detail night view editing (Back + Done buttons)
         
         // The default state - returns to the home screen
         if navState == 0 {
             self.dismissViewControllerAnimated(true, completion: nil)
         }
         // Night view state - 1 is standard and 2 is editing
-        else if navState == 1 || navState == 2 || navState == 3 {
+        else if navState == 1 || navState == 2 || navState == 3 || navState == 4 {
             // Create rectangles for each side of the button
             let leftRec = CGRect(x: 0, y: 0, width: subNav!.frame.width / 2, height: subNav!.frame.height)
             let rightRec = CGRect(x: subNav!.frame.width / 2, y: 0, width: subNav!.frame.width / 2, height: self.subNav!.frame.height)
             
             // Check if the tap came into the left rectangle (Back)
             if CGRectContainsPoint(leftRec, gesture.locationOfTouch(0, inView: subNav!)) {
-                if navState == 1 {
+                if navState == 1 || navState == 2 {
+                    print("transitionToHome state: \(navState)\n")
                     transitionToHome()
+                    print("transitionToHome state: \(navState)\n")
                 }
                 else if navState == 3 {
+                    print("transitionFromDetailA state: \(navState)\n")
                     transitionFromDetailA()
+                    print("transitionFromDetailA state: \(navState)\n")
+                }
+                else if navState == 4 {
+                    print("transitionFromDetailB state: \(navState)\n")
+                    transitionFromDetailB()
+                    print("transitionFromDetailB state: \(navState)\n")
                 }
             }
             // Otherwise we're on the right side (Edit)
             else if CGRectContainsPoint(rightRec, gesture.locationOfTouch(0, inView: subNav!)) {
                 if navState == 1 {
+                    print("transitionToEditA state: \(navState)\n")
                     transitionToEditA()
+                    print("transitionToEditA state: \(navState)\n")
                 }
                 // Transition from detail view (editing) back to detail view (not editing)
                 else if navState == 2 {
+                    print("transitionFromEditA state: \(navState)\n")
                     transitionFromEditA()
+                    print("transitionFromEditA state: \(navState)\n")
+                }
+                else if navState == 3 {
+                    print("transitionToEditB state: \(navState)\n")
+                    transitionToEditB()
+                    print("transitionToEditB state: \(navState)\n")
+                }
+                else if navState == 4 {
+                    print("transitionFromEditB state: \(navState)\n")
+                    transitionFromEditB()
+                    print("transitionFromEditB state: \(navState)\n")
                 }
             }
         }
@@ -989,7 +1100,78 @@ class LogContainer: UIViewController {
             let currentLocation = gesture.locationInView(self.dreamContainer)
             
             if CGRectContainsPoint(dreamBoxes![x].frame, currentLocation) {
-                transitionToDetailA(x)
+                if navState == 1 {
+                    print("transitionToDetailA state: \(navState)\n")
+                    transitionToDetailA(x)
+                    print("transitionToDetailA state: \(navState)\n")
+                }
+                else if navState == 2 {
+                    print("transitionToDetailB state: \(navState)\n")
+                    transitionToDetailB(x)
+                    print("transitionToDetailB state: \(navState)\n")
+                }
+                
+            }
+        }
+    }
+    
+    func dreamTitleTap(gesture: UITapGestureRecognizer) {
+        for x in 0...dreamBoxes!.count - 1 {
+            let currentLocation = gesture.locationInView(self.dreamContainer)
+            
+            if CGRectContainsPoint(dreamBoxes![x].frame, currentLocation) {
+                if navState == 4 {
+                    let messageDisplay = UIAlertController(title: "Edit Dream Name", message: "Rename the dream", preferredStyle: UIAlertControllerStyle.Alert)
+                    
+                    messageDisplay.addTextFieldWithConfigurationHandler { textField in }
+                    let messageTextField = messageDisplay.textFields![0] as UITextField
+                    messageTextField.placeholder = "Dream name"
+                    messageTextField.text = dreamBoxes![x].title!
+                    messageTextField.tag = 20
+                    messageTextField.addTarget(self, action: "textFieldChanged:", forControlEvents: UIControlEvents.EditingChanged)
+                    
+                    messageDisplay.addAction(UIAlertAction(title: "Done", style: UIAlertActionStyle.Default, handler: {
+                        (alert: UIAlertAction!) in
+                        self.dreamBoxes![x].title = messageTextField.text
+                        self.dreamBoxes![x].dreamView!.lblTitle.text = messageTextField.text
+                    }))
+                    
+                    messageDisplay.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {
+                        (alert: UIAlertAction!) in
+                        if self.dreamBoxes![x].dreamView!.lblTitle.text != self.dreamBoxes![x].title {
+                            UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations: {
+                                self.dreamBoxes![x].dreamView!.lblTitle.alpha = 0.0
+                                }, completion: {
+                                    (value: Bool) in
+                                    self.dreamBoxes![x].dreamView!.lblTitle.text = self.dreamBoxes![x].title
+                                    
+                                    UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                                        self.dreamBoxes![x].dreamView!.lblTitle.alpha = 1.0
+                                        }, completion: nil)
+                            })
+                        }
+                    }))
+                    
+                    self.presentViewController(messageDisplay, animated: true, completion: nil)
+                }
+                else {
+                    dreamBoxTap(gesture)
+                }
+            }
+        }
+    }
+    
+    func dreamDescriptionTap(gesture: UITapGestureRecognizer) {
+        for x in 0...dreamBoxes!.count - 1 {
+            let currentLocation = gesture.locationInView(self.dreamContainer)
+            
+            if CGRectContainsPoint(dreamBoxes![x].frame, currentLocation) {
+                if navState == 4 {
+                    print("Edit the description")
+                }
+                else {
+                    dreamBoxTap(gesture)
+                }
             }
         }
     }

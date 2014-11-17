@@ -10,22 +10,19 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A Delicious Night of fun" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8ji-nx-jZ3">
+                <label opaque="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="A Delicious Night of fun" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8ji-nx-jZ3">
                     <rect key="frame" x="12" y="8" width="210.5" height="24"/>
                     <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="20"/>
                     <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thursday, October 30th 2014" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wMS-aJ-zhO">
+                <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Thursday, October 30th 2014" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wMS-aJ-zhO">
                     <rect key="frame" x="12" y="38" width="177" height="20"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="20" id="u6l-ut-39N"/>
-                    </constraints>
                     <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="14"/>
                     <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.0" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rr3-k9-fem">
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.0" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rr3-k9-fem">
                     <rect key="frame" x="8" y="66" width="584" height="526"/>
                     <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                     <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -34,17 +31,12 @@
                 </textView>
             </subviews>
             <constraints>
-                <constraint firstItem="wMS-aJ-zhO" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="12" id="2Et-G8-2gx"/>
-                <constraint firstAttribute="trailing" secondItem="rr3-k9-fem" secondAttribute="trailing" constant="8" id="9LD-5B-1gP"/>
-                <constraint firstItem="wMS-aJ-zhO" firstAttribute="top" secondItem="8ji-nx-jZ3" secondAttribute="bottom" constant="6" id="PNr-xY-iEj"/>
-                <constraint firstItem="8ji-nx-jZ3" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="12" id="RPN-iS-WhA"/>
-                <constraint firstAttribute="bottom" secondItem="rr3-k9-fem" secondAttribute="bottom" constant="8" id="UCN-z2-HTZ"/>
-                <constraint firstItem="rr3-k9-fem" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="iwp-Vb-VPp"/>
-                <constraint firstItem="8ji-nx-jZ3" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="vj3-Dj-LE1"/>
+                <constraint firstAttribute="trailing" secondItem="rr3-k9-fem" secondAttribute="trailing" constant="8" id="1Lc-vV-nrl"/>
+                <constraint firstItem="rr3-k9-fem" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="6nP-yd-lXI"/>
+                <constraint firstAttribute="bottom" secondItem="rr3-k9-fem" secondAttribute="bottom" constant="8" id="VFS-An-AHJ"/>
                 <constraint firstItem="rr3-k9-fem" firstAttribute="top" secondItem="wMS-aJ-zhO" secondAttribute="bottom" constant="8" id="x7K-nc-Tlt"/>
             </constraints>
             <connections>
-                <outlet property="constraintTitleDate" destination="PNr-xY-iEj" id="mqy-He-L2f"/>
                 <outlet property="lblDate" destination="wMS-aJ-zhO" id="p5m-ub-wLe"/>
                 <outlet property="lblTitle" destination="8ji-nx-jZ3" id="GDm-Qf-mJ6"/>
                 <outlet property="txtDescription" destination="rr3-k9-fem" id="t9m-Jy-5md"/>
