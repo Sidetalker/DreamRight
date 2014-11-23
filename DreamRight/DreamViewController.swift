@@ -11,8 +11,8 @@ import UIKit
 // MARK: - Contants
 
 // Max and min # of stars involved in the burst
-let minStars = 9
-let maxStars = 11
+let minStars = 18
+let maxStars = 22
 
 // Max and min star size
 let minSize: CGFloat = 12
@@ -34,9 +34,10 @@ let maxHeight: CGFloat = 610
 
 // Time to grow, bring alpha to one and initial start scale
 let growthTime = 1.1
-let fadeTime = 0.5
-let startScale: CGFloat = 1.0
-let endScale: CGFloat = 0.01
+let fadeInTime = 0.4
+let fadeDelay = 0.25
+let fadeOutTime = 0.65
+let scale: CGFloat = 3.5
 
 class BurstView: UIView {
     var stars = [UIImageView]()
@@ -58,11 +59,11 @@ class BurstView: UIView {
         let location = CGPoint(x: center.x - size / 2, y: center.y - size / 2)
         
         self.addSubview(imageView)
+        self.sendSubviewToBack(imageView)
         self.stars.append(imageView)
         
         imageView.frame = CGRect(origin: location, size: CGSize(width: size, height: size))
         imageView.alpha = 0.0
-//        imageView.layer.transform = CATransform3DMakeScale(startScale, startScale, 1.0)
         animator = UIDynamicAnimator(referenceView: self)
         
         self.animator.addBehavior(gravity)
@@ -95,18 +96,17 @@ class BurstView: UIView {
                 star.transform = CGAffineTransformIdentity
                 
                 UIView.animateWithDuration(growthTime, delay: 0.0, options: nil, animations: {
-//                    star.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.5, 0.5)
-                    star.transform = CGAffineTransformMakeScale(2.0, 2.0)
-//                    star.layer.transform = CATransform3DMakeScale(4, 4, 1.0)
+                    star.transform = CGAffineTransformMakeScale(scale, scale)
                     }, completion: nil)
                 
-                UIView.animateWithDuration(fadeTime, delay: 0.0, options: nil, animations: {
+                UIView.animateWithDuration(fadeInTime, delay: 0.0, options: nil, animations: {
                     star.alpha = 1.0
-                    }, completion: nil)
-                
-                UIView.animateWithDuration(0.5, delay: fadeTime, options: nil, animations: {
-                    star.alpha = 0.0
-                    }, completion: nil)
+                    }, completion: {
+                        (value: Bool) in
+                        UIView.animateWithDuration(fadeOutTime, delay: fadeDelay, options: nil, animations: {
+                            star.alpha = 0.0
+                            }, completion: nil)
+                })
             })
         }
         
@@ -150,6 +150,10 @@ class DreamViewController: UIViewController {
 
     // A single tap will start recording
     func singleTap(gesture: UILongPressGestureRecognizer) {
+        if gesture.state != UIGestureRecognizerState.Began {
+            return
+        }
+        
         // Save the gesture point
         let gesturePoint = gesture.locationInView(self.view)
         
@@ -168,7 +172,7 @@ class DreamViewController: UIViewController {
         
         // Burst each of the stars out
         self.view.addSubview(starView)
-        self.view.bringSubviewToFront(btnBack)
+        self.view.sendSubviewToBack(starView)
         starView.explode()
         
         // Add each star to the
