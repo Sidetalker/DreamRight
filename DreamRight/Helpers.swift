@@ -18,6 +18,14 @@ func randomFloatBetweenNumbers(firstNum: CGFloat, secondNum: CGFloat) -> CGFloat
     return CGFloat(arc4random()) / CGFloat(UINT32_MAX) * abs(firstNum - secondNum) + min(firstNum, secondNum)
 }
 
+func randomIntBetweenNumbers(firstNum: Int, secondNum: Int) -> Int {
+    let first = CGFloat(firstNum)
+    let second = CGFloat(secondNum)
+    let random = randomFloatBetweenNumbers(first, second)
+    
+    return Int(random)
+}
+
 struct Star {
     var view: UIImageView
     var baseImage: UIImage?

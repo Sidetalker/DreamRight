@@ -49,7 +49,7 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Register the custom cell xib file
         self.collectionView.registerNib(UINib(nibName: "LogCell", bundle: nil), forCellWithReuseIdentifier: "logCell")
         
@@ -571,7 +571,7 @@ class DreamSuperBox: UIView {
         })
         
         if audioPlaying {
-            UIView.animateWithDuration(0.4, delay: 0.0, options: nil, animations: {
+            UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 0.76, initialSpringVelocity: 0.0, options: nil, animations: {
                 self.frame = CGRect(x: 10, y: 10, width: self.parent!.parent!.dreamContainer.frame.width - 20, height: self.parent!.parent!.dreamContainer.frame.height - 20)
                 }, completion: nil)
             
@@ -580,7 +580,7 @@ class DreamSuperBox: UIView {
             })
         }
         else {
-            UIView.animateWithDuration(0.4, delay: 0.0, options: nil, animations: {
+            UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 0.76, initialSpringVelocity: 0.0, options: nil, animations: {
                 self.frame = CGRect(x: 10, y: 10, width: self.parent!.parent!.dreamContainer.frame.width - 20, height: self.parent!.parent!.dreamContainer.frame.height - 70)
                 }, completion: nil)
             

@@ -416,6 +416,11 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
             
             logVC.transitioningDelegate = transitionManager
         }
+        else if segue.identifier == "sleepSegue" {
+            let sleepVC = segue.destinationViewController as DreamViewController
+            
+            sleepVC.transitioningDelegate = transitionManager
+        }
     }
     
     // MARK: - EZMicrophone Delegate Function
