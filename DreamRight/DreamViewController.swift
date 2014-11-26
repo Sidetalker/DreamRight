@@ -8,7 +8,7 @@
 
 import UIKit
 
-// MARK: - Contants
+// MARK: - Constants
 
 // Max and min # of stars involved in the burst
 let minStars = 18
@@ -32,7 +32,7 @@ let maxDirection: CGFloat = 151
 let minHeight: CGFloat = 340
 let maxHeight: CGFloat = 610
 
-// Time to grow, bring alpha to one and initial start scale
+// Time to grow, bring alpha to 1/0 and initial start scale
 let growthTime = 1.1
 let fadeInTime = 0.4
 let fadeDelay = 0.25
@@ -118,68 +118,450 @@ class BurstView: UIView {
 }
 
 class DreamViewController: UIViewController {
+    // View for instructions
+    var detailView: DetailView!
+    var exitView: ExitSuperView!
+    var detailShown = false
+    var exitShown = false
+    var exitState = 0
+    
     // Star container for initial burst
     var burstViews = [BurstView]()
     
     // Animator and gravity generator
     var animator: UIDynamicAnimator!
     var gravity: UIGravityBehavior!
-    
-    @IBOutlet var btnBack: UIView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let singleTap = UILongPressGestureRecognizer(target: self, action: "singleTap:")
         let longPress = UILongPressGestureRecognizer(target: self, action: "longPress:")
         
-        singleTap.minimumPressDuration = 0.0
+        longPress.minimumPressDuration = 0.0
+        longPress.cancelsTouchesInView = false
         
-        self.view.addGestureRecognizer(singleTap)
         self.view.addGestureRecognizer(longPress)
+        
+        let detailFrame = CGRect(x: self.view.frame.width - 60, y: self.view.frame.height - 60, width: 50, height: 50)
+        detailView = DetailView(frame: detailFrame)
+        exitView = ExitSuperView(frame: self.view.frame, backgroundColor: self.view.backgroundColor!, parent: self)
+        
+        self.view.addSubview(exitView)
+        self.view.addSubview(detailView)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    @IBAction func backTa(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
 
     // A single tap will start recording
-    func singleTap(gesture: UILongPressGestureRecognizer) {
-        if gesture.state != UIGestureRecognizerState.Began {
-            return
-        }
-        
+    func longPress(gesture: UILongPressGestureRecognizer) {
         // Save the gesture point
         let gesturePoint = gesture.locationInView(self.view)
         
-        // Create the new view
-        let starView = BurstView(frame: self.view.frame)
-        
-        // Create each of the stars
-        for x in 0...randomIntBetweenNumbers(minStars, maxStars) {
-            // Calculate frame and generate star
-            let curSize = randomFloatBetweenNumbers(minSize, maxSize)
-            let curRect = CGRect(origin: CGPointZero, size: CGSize(width: curSize, height: curSize))
-            let curStar = DreamRightSK.imageOfLoneStar(curRect)
-            
-            starView.addImage(curStar, center: gesturePoint)
+        if gesture.state == UIGestureRecognizerState.Ended {
+            if exitState == 1 {
+                exitState = 0
+                exitView.transitionMask(true)
+                return
+            }
         }
         
-        // Burst each of the stars out
-        self.view.addSubview(starView)
-        self.view.sendSubviewToBack(starView)
-        starView.explode()
-        
-        // Add each star to the
+        // If this is the first tap...
+        if gesture.state == UIGestureRecognizerState.Began {
+            if detailShown {
+                detailView.transition(false)
+                detailShown = false
+                
+                if CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
+                    exitView.transition(true)
+                    exitShown = true
+                }
+                
+                return
+            }
+            
+            if exitShown {
+                if !CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
+                    exitView.transition(false)
+                    exitShown = false
+                    
+                    if CGRectContainsPoint(detailView.frame, gesturePoint) {
+                        detailView.transition(true)
+                        detailShown = true
+                    }
+                    
+                    return
+                }
+                
+                exitState = 1
+                exitView.transitionMask(false)
+                
+                return
+            }
+            
+            if CGRectContainsPoint(detailView.frame, gesturePoint) {
+                detailView.transition(true)
+                detailShown = true
+                return
+            }
+            
+            if CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
+                exitView.transition(true)
+                exitShown = true
+                return
+            }
+            
+            // Create the new view
+            let starView = BurstView(frame: self.view.frame)
+            
+            // Create each of the stars
+            for x in 0...randomIntBetweenNumbers(minStars, maxStars) {
+                // Calculate frame and generate star
+                let curSize = randomFloatBetweenNumbers(minSize, maxSize)
+                let curRect = CGRect(origin: CGPointZero, size: CGSize(width: curSize, height: curSize))
+                let curStar = DreamRightSK.imageOfLoneStar(curRect)
+                
+                starView.addImage(curStar, center: gesturePoint)
+            }
+            
+            // Burst each of the stars out
+            self.view.addSubview(starView)
+            self.view.sendSubviewToBack(starView)
+            starView.explode()
+        }
     }
     
-    // A long press initiates a the end of a dream
-    func longPress(gesture: UILongPressGestureRecognizer) {
+    func initiateExit() {
+        exitState = 2
         
+        detailView.dismiss()
+        exitView.dismiss()
+        
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+}
+
+let dismissDuration: NSTimeInterval = 0.8
+let dismissDamping: CGFloat = 0.52
+let dismissVelocity: CGFloat = 0.0
+
+class DetailView : UIView {
+    @IBOutlet var detailView: UIView!
+    @IBOutlet var lblQuestionMark: UILabel!
+    @IBOutlet var lblInfo: UILabel!
+    
+    var detailShown = false
+    var detailTransition = false
+    
+    // Border constants
+    let borderColor = DreamRightSK.yellow.CGColor
+    let borderWidth: CGFloat = 0.8
+    let cornerRadius: CGFloat = 8
+    
+    // Animation constants
+    let fadeDuration: NSTimeInterval = 0.23
+    let expandDuration: NSTimeInterval = 0.53
+    let expandDamping: CGFloat = 0.79
+    
+    // Padding constants
+    let verticalHeight: CGFloat = 80
+    let horizontalPadding: CGFloat = 40
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.commonInit()
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.commonInit()
+    }
+    
+    private func commonInit() {
+        // Set up the rounded frame
+        self.layer.borderColor = borderColor
+        self.layer.borderWidth = borderWidth
+        self.layer.cornerRadius = cornerRadius
+        
+        // Don't let our xib view bleed out
+        self.clipsToBounds = true
+        
+        // Load up our xib and add the view
+        NSBundle.mainBundle().loadNibNamed("DreamInstruction", owner: self, options: nil)
+        
+        detailView.frame = self.bounds
+        detailView.autoresizingMask = .FlexibleHeight | .FlexibleWidth
+        
+        self.addSubview(detailView)
+    }
+    
+    override func layoutSubviews() {
+        detailView.frame = self.bounds
+    }
+    
+    func transition(expand: Bool) {
+        // Get our main view's size
+        let superSize = self.superview!.frame.size
+        
+        // Configure variables for animation
+        var newFrame = CGRect(x: horizontalPadding, y: superSize.height / 2 - verticalHeight / 2, width: superSize.width - horizontalPadding * 2, height: verticalHeight)
+        var fadeIn = lblInfo
+        var fadeOut = lblQuestionMark
+        
+        // Swap things out if we're contracting
+        if !expand {
+            newFrame = CGRect(x: superSize.width - 60, y: superSize.height - 60, width: 50, height: 50)
+            fadeIn = lblQuestionMark
+            fadeOut = lblInfo
+        }
+        
+        // Fade out the text and follow up a springy frame update
+        UIView.animateWithDuration(fadeDuration, animations: {
+            fadeOut.alpha = 0
+            }, completion: {
+                (value: Bool) in
+                UIView.animateWithDuration(self.expandDuration, delay: 0.0, usingSpringWithDamping: self.expandDamping, initialSpringVelocity: 0.0, options: nil, animations: {
+                    self.frame = newFrame
+                    }, completion: nil)})
+        
+        // Fade the text back in when the frame update is complete
+        UIView.animateWithDuration(fadeDuration, delay: fadeDuration + expandDuration, options: nil, animations: {
+            fadeIn.alpha = 1
+            }, completion: {
+                (value: Bool) in
+                self.detailShown = !self.detailShown
+        })
+    }
+    
+    func dismiss() {
+        // Get our main view's size
+        let superSize = self.superview!.frame.size
+        
+        // Fade out the text and follow up a springy frame update
+        UIView.animateWithDuration(fadeDuration, animations: {
+            self.lblQuestionMark.alpha = 0.0
+            }, completion: {
+                (value: Bool) in
+                UIView.animateWithDuration(dismissDuration, delay: 0.0, usingSpringWithDamping: dismissDamping, initialSpringVelocity: dismissVelocity, options: nil, animations: {
+                    self.frame = CGRect(x: superSize.width - 35, y: superSize.height - 35, width: 0, height: 0)
+                    }, completion: nil)})
+    }
+}
+
+class ExitSuperView: UIView {
+    var normalView: ExitView!
+    var invertedView: ExitView!
+    var parent: DreamViewController!
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    init(frame: CGRect, backgroundColor: UIColor, parent: DreamViewController) {
+        super.init(frame: frame)
+        
+        let exitFrame = CGRect(x: 10, y: self.frame.height - 60, width: 50, height: 50)
+        self.backgroundColor = UIColor.clearColor()
+        self.parent = parent
+        
+        normalView = ExitView(frame: exitFrame, masked: false, superSize: self.frame.size, superColor: backgroundColor)
+        invertedView = ExitView(frame: exitFrame, masked: true, superSize: self.frame.size, superColor: backgroundColor)
+        
+        self.addSubview(normalView)
+        self.addSubview(invertedView)
+    }
+    
+    func detailShown() -> Bool {
+        return normalView!.detailShown
+    }
+    
+    func transition(expand: Bool) {
+        normalView!.transition(expand)
+    }
+    
+    func transitionMask(maskOn: Bool) {
+        invertedView!.transitionMask(maskOn)
+    }
+    
+    func initiateExit() {
+       parent.initiateExit()
+    }
+    
+    func dismiss() {
+        normalView.dismiss()
+        invertedView.dismiss()
+    }
+}
+
+class ExitView: UIView {
+    @IBOutlet var contentView: UIView!
+    @IBOutlet var lblPrompt: UILabel!
+    @IBOutlet var lblX: UILabel!
+    
+    // Padding constants
+    let verticalHeight: CGFloat = 80
+    let horizontalPadding: CGFloat = 40
+    
+    // Border constants
+    let borderColor = DreamRightSK.yellow.CGColor
+    let borderWidth: CGFloat = 0.8
+    let cornerRadius: CGFloat = 8
+    
+    // Animation constants
+    let fadeDuration: NSTimeInterval = 0.23
+    let expandDuration: NSTimeInterval = 0.53
+    let expandDamping: CGFloat = 0.79
+    let showMask: CGFloat = 1.5
+    let hideMask: CGFloat = 0.8
+    
+    // Mask variables
+    var hasMask = false
+    var curMasked = true
+    var detailShown = false
+    var mask: CAGradientLayer?
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    init(frame: CGRect, masked: Bool, superSize: CGSize, superColor: UIColor) {
+        super.init(frame: frame)
+        
+        // Set up the rounded frame
+        self.layer.borderColor = borderColor
+        self.layer.borderWidth = borderWidth
+        self.layer.cornerRadius = cornerRadius
+        
+        // Don't let our xib view bleed out
+        self.clipsToBounds = true
+        
+        // Load up our xib and add the view
+        NSBundle.mainBundle().loadNibNamed("DreamQuit", owner: self, options: nil)
+        
+        contentView.frame = self.bounds
+        contentView.autoresizingMask = .FlexibleHeight | .FlexibleWidth
+        
+        if masked {
+            hasMask = true
+            
+            var newFrame = CGRect(x: horizontalPadding, y: superSize.height / 2 - verticalHeight / 2, width: superSize.width - horizontalPadding * 2, height: verticalHeight)
+            
+            self.frame = newFrame
+            contentView.frame = self.bounds
+            contentView.backgroundColor = DreamRightSK.yellow
+            lblPrompt.textColor = superColor
+            lblPrompt.alpha = 1.0
+            lblX.alpha = 0.0
+            
+            mask = CAGradientLayer()
+            
+            mask!.position = CGPoint(x: -newFrame.size.width, y: 0)
+            mask!.bounds = CGRect(origin: CGPoint(x: -newFrame.size.width, y: 0), size: CGSize(width: newFrame.size.width * 2, height: newFrame.size.height * 2))
+            
+            mask!.startPoint = CGPoint(x: 1.0, y: 1.0)
+            mask!.endPoint = CGPoint(x: 0.5, y: 1.0)
+            
+            let outerColor = UIColor(white: 1.0, alpha: 0.0).CGColor
+            let innerColor = UIColor(white: 1.0, alpha: 1.0).CGColor
+            
+            mask!.colors = [outerColor, innerColor, innerColor, innerColor]
+            mask!.locations = [0.0, 0.35, 0.5, 1.0]
+            
+            self.layer.mask = mask!
+        }
+        else {
+            contentView.backgroundColor = superColor
+            lblPrompt.alpha = 0.0
+            lblX.alpha = 1.0
+            lblX.textColor = DreamRightSK.yellow
+            lblPrompt.textColor = DreamRightSK.yellow
+        }
+        
+        self.addSubview(contentView)
+    }
+    
+    func transition(expand: Bool) {
+        // Get our main view's size
+        let superSize = self.superview!.frame.size
+        
+        // Configure variables for animation
+        var newFrame = CGRect(x: horizontalPadding, y: superSize.height / 2 - verticalHeight / 2, width: superSize.width - horizontalPadding * 2, height: verticalHeight)
+        var fadeIn = lblPrompt
+        var fadeOut = lblX
+        
+        // Swap things out if we're contracting
+        if !expand {
+            newFrame = CGRect(x: 10, y: superSize.height - 60, width: 50, height: 50)
+            fadeIn = lblX
+            fadeOut = lblPrompt
+        }
+        
+        // Fade out the text and follow up a springy frame update
+        UIView.animateWithDuration(fadeDuration, animations: {
+            fadeOut.alpha = 0
+            }, completion: {
+                (value: Bool) in
+                UIView.animateWithDuration(self.expandDuration, delay: 0.0, usingSpringWithDamping: self.expandDamping, initialSpringVelocity: 0.0, options: nil, animations: {
+                    self.frame = newFrame
+                    }, completion: nil)})
+        
+        // Fade the text back in when the frame update is complete
+        UIView.animateWithDuration(fadeDuration, delay: fadeDuration + expandDuration, options: nil, animations: {
+            fadeIn.alpha = 1
+            }, completion: {
+                (value: Bool) in
+                self.detailShown = !self.detailShown
+        })
+    }
+    
+    func transitionMask(maskOn: Bool) {
+        if !hasMask {
+            return
+        }
+        
+        let curPosition = (mask!.presentationLayer().valueForKey("position") as NSValue).CGPointValue()
+        var newPosition = CGPoint(x: self.frame.size.width / 3, y: 0)
+        let fullLength = self.frame.size.width
+        var transitionTime = showMask
+        
+        if maskOn {
+            newPosition = CGPoint(x: -self.frame.size.width, y: 0)
+            transitionTime = hideMask + newPosition.x / fullLength * hideMask
+        }
+        
+        CATransaction.begin()
+        
+        let revealAnimation = CABasicAnimation(keyPath: "position")
+        revealAnimation.fromValue = NSValue(CGPoint: curPosition)
+        revealAnimation.toValue = NSValue(CGPoint: newPosition)
+        revealAnimation.duration = NSTimeInterval(transitionTime)
+        
+        CATransaction.setCompletionBlock({
+            if !maskOn && (self.mask!.presentationLayer().valueForKey("position") as NSValue).CGPointValue().x == self.frame.size.width / 3 {
+                (self.superview! as ExitSuperView).initiateExit()
+            }
+        })
+        
+        mask!.position = newPosition
+        
+        mask!.addAnimation(revealAnimation, forKey: "revealAnimation")
+        
+        CATransaction.commit()
+    }
+    
+    func dismiss() {
+        // Get our main view's size
+        let superSize = self.superview!.frame.size
+        
+        // Fade out the text and follow up a springy frame update
+        UIView.animateWithDuration(fadeDuration, animations: {
+            self.lblPrompt.alpha = 0.0
+            }, completion: {
+                (value: Bool) in
+                UIView.animateWithDuration(dismissDuration, delay: 0.0, usingSpringWithDamping: dismissDamping, initialSpringVelocity: dismissVelocity, options: nil, animations: {
+                    self.frame = CGRect(x: superSize.width / 2, y: superSize.height / 2, width: 0, height: 0)
+                    }, completion: nil)})
     }
 }

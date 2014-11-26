@@ -11,6 +11,7 @@
 		510C30CB1A091307005D92E3 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C30CA1A091307005D92E3 /* HomeViewController.swift */; };
 		510C30D01A091991005D92E3 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C30CF1A091991005D92E3 /* TestViewController.swift */; };
 		510C30D21A091A3C005D92E3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 510C30D11A091A3C005D92E3 /* AVFoundation.framework */; };
+		5155E7931A25A6D900EA2402 /* DreamInstruction.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5155E7921A25A6D900EA2402 /* DreamInstruction.xib */; };
 		5164A1FF1A042DE8003BAB76 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5164A1FE1A042DE8003BAB76 /* AppDelegate.swift */; };
 		5164A2021A042DE8003BAB76 /* DreamRight.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5164A2001A042DE8003BAB76 /* DreamRight.xcdatamodeld */; };
 		5164A2071A042DE8003BAB76 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5164A2051A042DE8003BAB76 /* Main.storyboard */; };
@@ -20,6 +21,7 @@
 		5164A2301A045FF3003BAB76 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5164A22E1A045FF3003BAB76 /* LaunchScreen.xib */; };
 		517091471A0EFF9000DB1DC8 /* LogCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 517091461A0EFF9000DB1DC8 /* LogCell.xib */; };
 		517AF2F61A13296300169C82 /* DreamView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 517AF2F51A13296300169C82 /* DreamView.xib */; };
+		51CA6C3B1A25EC470036C6CD /* DreamQuit.xib in Resources */ = {isa = PBXBuildFile; fileRef = 51CA6C3A1A25EC470036C6CD /* DreamQuit.xib */; };
 		51E491ED1A06C0E500C39495 /* DreamRightSK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E491EC1A06C0E500C39495 /* DreamRightSK.swift */; };
 		51FEEFB71A0CC8290079919D /* TransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FEEFB61A0CC8290079919D /* TransitionManager.swift */; };
 		51FEEFB91A0EF1D10079919D /* DreamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FEEFB81A0EF1D10079919D /* DreamViewController.swift */; };
@@ -45,6 +47,7 @@
 		510C30CC1A0915B1005D92E3 /* BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		510C30CF1A091991005D92E3 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		510C30D11A091A3C005D92E3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		5155E7921A25A6D900EA2402 /* DreamInstruction.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DreamInstruction.xib; sourceTree = "<group>"; };
 		5164A1F91A042DE8003BAB76 /* DreamRight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DreamRight.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5164A1FD1A042DE8003BAB76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5164A1FE1A042DE8003BAB76 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -58,6 +61,7 @@
 		5164A22F1A045FF3003BAB76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		517091461A0EFF9000DB1DC8 /* LogCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LogCell.xib; sourceTree = "<group>"; };
 		517AF2F51A13296300169C82 /* DreamView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DreamView.xib; sourceTree = "<group>"; };
+		51CA6C3A1A25EC470036C6CD /* DreamQuit.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DreamQuit.xib; sourceTree = "<group>"; };
 		51E491EC1A06C0E500C39495 /* DreamRightSK.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DreamRightSK.swift; sourceTree = "<group>"; };
 		51FEEFB61A0CC8290079919D /* TransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionManager.swift; sourceTree = "<group>"; };
 		51FEEFB81A0EF1D10079919D /* DreamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DreamViewController.swift; sourceTree = "<group>"; };
@@ -177,6 +181,8 @@
 				517091461A0EFF9000DB1DC8 /* LogCell.xib */,
 				517AF2F51A13296300169C82 /* DreamView.xib */,
 				5164A2051A042DE8003BAB76 /* Main.storyboard */,
+				5155E7921A25A6D900EA2402 /* DreamInstruction.xib */,
+				51CA6C3A1A25EC470036C6CD /* DreamQuit.xib */,
 			);
 			name = "User Interface";
 			sourceTree = "<group>";
@@ -274,7 +280,9 @@
 			files = (
 				5164A2071A042DE8003BAB76 /* Main.storyboard in Resources */,
 				517091471A0EFF9000DB1DC8 /* LogCell.xib in Resources */,
+				51CA6C3B1A25EC470036C6CD /* DreamQuit.xib in Resources */,
 				517AF2F61A13296300169C82 /* DreamView.xib in Resources */,
+				5155E7931A25A6D900EA2402 /* DreamInstruction.xib in Resources */,
 				5164A2221A04334C003BAB76 /* MoonTransparent.png in Resources */,
 				5164A2301A045FF3003BAB76 /* LaunchScreen.xib in Resources */,
 				5164A2091A042DE8003BAB76 /* Images.xcassets in Resources */,

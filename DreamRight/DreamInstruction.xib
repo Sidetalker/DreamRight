@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DetailView" customModule="DreamRight" customModuleProvider="target">
+            <connections>
+                <outlet property="detailView" destination="iN0-l3-epB" id="gEa-xM-ebj"/>
+                <outlet property="lblInfo" destination="41c-EM-Cly" id="dOy-Ji-HJH"/>
+                <outlet property="lblQuestionMark" destination="RBP-9f-bhp" id="3La-6c-DYD"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RBP-9f-bhp">
+                    <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                    <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                    <variation key="widthClass=compact" misplaced="YES">
+                        <rect key="frame" x="194" y="287" width="11.5" height="24"/>
+                    </variation>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to Start/Stop Recording Tap and Hold to Wake Up" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="41c-EM-Cly">
+                    <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="53.5" id="RKg-KU-hgS"/>
+                        <constraint firstAttribute="width" constant="219" id="mNz-ei-ZXv"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="RKg-KU-hgS"/>
+                            <exclude reference="mNz-ei-ZXv"/>
+                        </mask>
+                    </variation>
+                    <variation key="widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="RKg-KU-hgS"/>
+                            <include reference="mNz-ei-ZXv"/>
+                        </mask>
+                    </variation>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="0.02050688585" green="0.043798546549999998" blue="0.1454406415" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="centerX" secondItem="41c-EM-Cly" secondAttribute="centerX" id="f3h-zc-3sM"/>
+                <constraint firstAttribute="centerX" secondItem="RBP-9f-bhp" secondAttribute="centerX" id="gF3-lK-ir8"/>
+                <constraint firstAttribute="centerY" secondItem="41c-EM-Cly" secondAttribute="centerY" constant="0.5" id="o3W-io-dda">
+                    <variation key="widthClass=compact" constant="0.0"/>
+                </constraint>
+                <constraint firstAttribute="centerY" secondItem="RBP-9f-bhp" secondAttribute="centerY" constant="0.5" id="xSg-0A-Lwm"/>
+            </constraints>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="RBP-9f-bhp"/>
+                    <exclude reference="41c-EM-Cly"/>
+                </mask>
+                <mask key="constraints">
+                    <exclude reference="f3h-zc-3sM"/>
+                    <exclude reference="o3W-io-dda"/>
+                    <exclude reference="gF3-lK-ir8"/>
+                    <exclude reference="xSg-0A-Lwm"/>
+                </mask>
+            </variation>
+            <variation key="widthClass=compact">
+                <mask key="subviews">
+                    <include reference="RBP-9f-bhp"/>
+                    <include reference="41c-EM-Cly"/>
+                </mask>
+                <mask key="constraints">
+                    <include reference="f3h-zc-3sM"/>
+                    <include reference="o3W-io-dda"/>
+                    <include reference="gF3-lK-ir8"/>
+                    <include reference="xSg-0A-Lwm"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="340" y="275"/>
+        </view>
+    </objects>
+</document>

@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="i1N-6C-WDZ">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
-        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -17,45 +16,8 @@
                     <view key="view" contentMode="scaleToFill" id="uIa-Pl-IW3">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="58Q-36-8ya">
-                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                <state key="normal" title="Back">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="backTa:" destination="IOF-Vt-mAx" eventType="touchUpInside" id="7EE-gk-DmH"/>
-                                </connections>
-                            </button>
-                        </subviews>
                         <color key="backgroundColor" red="0.020506885848876076" green="0.043798546545029807" blue="0.14544064153439151" alpha="1" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstItem="nEY-42-zi6" firstAttribute="top" secondItem="58Q-36-8ya" secondAttribute="bottom" constant="8" id="4xO-cZ-a1l"/>
-                            <constraint firstItem="58Q-36-8ya" firstAttribute="leading" secondItem="uIa-Pl-IW3" secondAttribute="leadingMargin" id="qAf-kq-kSm"/>
-                        </constraints>
-                        <variation key="default">
-                            <mask key="subviews">
-                                <exclude reference="58Q-36-8ya"/>
-                            </mask>
-                            <mask key="constraints">
-                                <exclude reference="4xO-cZ-a1l"/>
-                                <exclude reference="qAf-kq-kSm"/>
-                            </mask>
-                        </variation>
-                        <variation key="widthClass=compact">
-                            <mask key="subviews">
-                                <include reference="58Q-36-8ya"/>
-                            </mask>
-                            <mask key="constraints">
-                                <include reference="4xO-cZ-a1l"/>
-                                <include reference="qAf-kq-kSm"/>
-                            </mask>
-                        </variation>
                     </view>
-                    <connections>
-                        <outlet property="btnBack" destination="uIa-Pl-IW3" id="f9T-QK-hdz"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AMN-Ei-0Rb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
