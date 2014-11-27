@@ -22,6 +22,8 @@
 		517091471A0EFF9000DB1DC8 /* LogCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 517091461A0EFF9000DB1DC8 /* LogCell.xib */; };
 		517AF2F61A13296300169C82 /* DreamView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 517AF2F51A13296300169C82 /* DreamView.xib */; };
 		51CA6C3B1A25EC470036C6CD /* DreamQuit.xib in Resources */ = {isa = PBXBuildFile; fileRef = 51CA6C3A1A25EC470036C6CD /* DreamQuit.xib */; };
+		51CA6C3D1A26570E0036C6CD /* StarVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CA6C3C1A26570E0036C6CD /* StarVisualizer.swift */; };
+		51CA6C3F1A2659D70036C6CD /* unicornHead.png in Resources */ = {isa = PBXBuildFile; fileRef = 51CA6C3E1A2659D70036C6CD /* unicornHead.png */; };
 		51E491ED1A06C0E500C39495 /* DreamRightSK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E491EC1A06C0E500C39495 /* DreamRightSK.swift */; };
 		51FEEFB71A0CC8290079919D /* TransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FEEFB61A0CC8290079919D /* TransitionManager.swift */; };
 		51FEEFB91A0EF1D10079919D /* DreamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FEEFB81A0EF1D10079919D /* DreamViewController.swift */; };
@@ -62,6 +64,8 @@
 		517091461A0EFF9000DB1DC8 /* LogCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LogCell.xib; sourceTree = "<group>"; };
 		517AF2F51A13296300169C82 /* DreamView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DreamView.xib; sourceTree = "<group>"; };
 		51CA6C3A1A25EC470036C6CD /* DreamQuit.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DreamQuit.xib; sourceTree = "<group>"; };
+		51CA6C3C1A26570E0036C6CD /* StarVisualizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarVisualizer.swift; sourceTree = "<group>"; };
+		51CA6C3E1A2659D70036C6CD /* unicornHead.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unicornHead.png; sourceTree = "<group>"; };
 		51E491EC1A06C0E500C39495 /* DreamRightSK.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DreamRightSK.swift; sourceTree = "<group>"; };
 		51FEEFB61A0CC8290079919D /* TransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionManager.swift; sourceTree = "<group>"; };
 		51FEEFB81A0EF1D10079919D /* DreamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DreamViewController.swift; sourceTree = "<group>"; };
@@ -126,6 +130,7 @@
 				510C30CA1A091307005D92E3 /* HomeViewController.swift */,
 				51FEEFB81A0EF1D10079919D /* DreamViewController.swift */,
 				51FEEFBA1A0EF21F0079919D /* LogViewController.swift */,
+				51CA6C3C1A26570E0036C6CD /* StarVisualizer.swift */,
 				517AF2F71A13297A00169C82 /* User Interface */,
 				5164A2231A04334F003BAB76 /* Images */,
 				5164A1FC1A042DE8003BAB76 /* Supporting Files */,
@@ -169,6 +174,7 @@
 			isa = PBXGroup;
 			children = (
 				5164A2081A042DE8003BAB76 /* Images.xcassets */,
+				51CA6C3E1A2659D70036C6CD /* unicornHead.png */,
 				5164A2211A04334C003BAB76 /* MoonTransparent.png */,
 			);
 			name = Images;
@@ -281,6 +287,7 @@
 				5164A2071A042DE8003BAB76 /* Main.storyboard in Resources */,
 				517091471A0EFF9000DB1DC8 /* LogCell.xib in Resources */,
 				51CA6C3B1A25EC470036C6CD /* DreamQuit.xib in Resources */,
+				51CA6C3F1A2659D70036C6CD /* unicornHead.png in Resources */,
 				517AF2F61A13296300169C82 /* DreamView.xib in Resources */,
 				5155E7931A25A6D900EA2402 /* DreamInstruction.xib in Resources */,
 				5164A2221A04334C003BAB76 /* MoonTransparent.png in Resources */,
@@ -343,6 +350,7 @@
 				5164A2021A042DE8003BAB76 /* DreamRight.xcdatamodeld in Sources */,
 				51FEEFB91A0EF1D10079919D /* DreamViewController.swift in Sources */,
 				51E491ED1A06C0E500C39495 /* DreamRightSK.swift in Sources */,
+				51CA6C3D1A26570E0036C6CD /* StarVisualizer.swift in Sources */,
 				5164A1FF1A042DE8003BAB76 /* AppDelegate.swift in Sources */,
 				510C30CB1A091307005D92E3 /* HomeViewController.swift in Sources */,
 			);

@@ -117,13 +117,23 @@ class BurstView: UIView {
     }
 }
 
-class DreamViewController: UIViewController {
+// Visualizer constants
+let gain: Float = 1.34
+let roll: Int32 = 420
+let visualizerHeight: CGFloat = 120
+
+// Recording constants
+let minLength: NSTimeInterval = 10
+let recordTextAnimLength: NSTimeInterval = 1.3
+
+class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicrophoneDelegate {
     // View for instructions
     var detailView: DetailView!
     var exitView: ExitSuperView!
     var detailShown = false
     var exitShown = false
     var exitState = 0
+    var unicornCount = 0
     
     // Star container for initial burst
     var burstViews = [BurstView]()
@@ -131,28 +141,69 @@ class DreamViewController: UIViewController {
     // Animator and gravity generator
     var animator: UIDynamicAnimator!
     var gravity: UIGravityBehavior!
+    
+    // Misc audio shenanigans
+    var visualizer: EZAudioPlotGL!
+    var visualizerMask: UIView!
+    var microphone: EZMicrophone!
+    var recordingStart: NSDate?
+    
+    // Lukas's unicorn
+    @IBOutlet var imgUnicorn: UIImageView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let longPress = UILongPressGestureRecognizer(target: self, action: "longPress:")
-        
         longPress.minimumPressDuration = 0.0
-        longPress.cancelsTouchesInView = false
         
         self.view.addGestureRecognizer(longPress)
         
-        let detailFrame = CGRect(x: self.view.frame.width - 60, y: self.view.frame.height - 60, width: 50, height: 50)
+        let detailFrame = CGRect(x: self.view.frame.width - 50, y: self.view.frame.height - 50, width: 40, height: 40)
         detailView = DetailView(frame: detailFrame)
         exitView = ExitSuperView(frame: self.view.frame, backgroundColor: self.view.backgroundColor!, parent: self)
         
+        visualizer = EZAudioPlotGL(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: visualizerHeight))
+        visualizer.plotType = EZPlotType.Rolling
+        visualizer.backgroundColor = self.view.backgroundColor
+        visualizer.color = DreamRightSK.yellow
+        visualizer.gain = gain
+        visualizer.shouldFill = true
+        visualizer.shouldMirror = true
+        visualizer.setRollingHistoryLength(roll)
+        
+        visualizerMask = UIView(frame: visualizer.frame)
+        visualizerMask.frame.origin = CGPoint(x: -self.view.frame.width, y: 0)
+        visualizerMask.backgroundColor = self.view.backgroundColor
+        
+        microphone = EZMicrophone(delegate: self, startsImmediately: false)
+        
         self.view.addSubview(exitView)
         self.view.addSubview(detailView)
+        self.view.addSubview(visualizer)
+        self.view.addSubview(visualizerMask)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func showUnicorn() {
+        delay(0.5, {
+            let size = self.imgUnicorn.frame.size
+            let newY = self.view.frame.height - 178
+            let sameX = self.imgUnicorn.frame.origin.x
+            let newPoint = CGPoint(x: sameX, y: newY)
+            
+            UIView.animateWithDuration(0.9, delay: 0.0, usingSpringWithDamping: 0.47, initialSpringVelocity: 0.0, options: nil, animations: {
+                self.imgUnicorn.frame = CGRect(origin: newPoint, size: size)
+                }, completion: nil)
+        })
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
 
     // A single tap will start recording
@@ -177,6 +228,13 @@ class DreamViewController: UIViewController {
                 if CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
                     exitView.transition(true)
                     exitShown = true
+                    
+                    unicornCount++
+                    
+                    if unicornCount == 4 {
+                        unicornCount = 0
+                        showUnicorn()
+                    }
                 }
                 
                 return
@@ -190,6 +248,13 @@ class DreamViewController: UIViewController {
                     if CGRectContainsPoint(detailView.frame, gesturePoint) {
                         detailView.transition(true)
                         detailShown = true
+                        
+                        unicornCount++
+                        
+                        if unicornCount == 4 {
+                            unicornCount = 0
+                            showUnicorn()
+                        }
                     }
                     
                     return
@@ -204,32 +269,87 @@ class DreamViewController: UIViewController {
             if CGRectContainsPoint(detailView.frame, gesturePoint) {
                 detailView.transition(true)
                 detailShown = true
+                
+                unicornCount = 0
+                
                 return
             }
             
             if CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
                 exitView.transition(true)
                 exitShown = true
+                
+                unicornCount = 0
+                
                 return
             }
             
-            // Create the new view
-            let starView = BurstView(frame: self.view.frame)
-            
-            // Create each of the stars
-            for x in 0...randomIntBetweenNumbers(minStars, maxStars) {
-                // Calculate frame and generate star
-                let curSize = randomFloatBetweenNumbers(minSize, maxSize)
-                let curRect = CGRect(origin: CGPointZero, size: CGSize(width: curSize, height: curSize))
-                let curStar = DreamRightSK.imageOfLoneStar(curRect)
+            // Switch the microphone on or off
+            if !microphone.microphoneOn {
+                // Create the new view
+                let starView = BurstView(frame: self.view.frame)
                 
-                starView.addImage(curStar, center: gesturePoint)
+                // Create each of the stars
+                for x in 0...randomIntBetweenNumbers(minStars, maxStars) {
+                    // Calculate frame and generate star
+                    let curSize = randomFloatBetweenNumbers(minSize, maxSize)
+                    let curRect = CGRect(origin: CGPointZero, size: CGSize(width: curSize, height: curSize))
+                    let curStar = DreamRightSK.imageOfLoneStar(curRect)
+                    
+                    starView.addImage(curStar, center: gesturePoint)
+                }
+                
+                // Burst each of the stars out
+                self.view.addSubview(starView)
+                starView.explode()
+                
+                recordingStart = NSDate()
+                microphone.startFetchingAudio()
+                
+                delay(0.1, {
+                    self.visualizerMask.frame.origin = CGPoint(x: -self.view.frame.width, y: 0)
+                })
             }
-            
-            // Burst each of the stars out
-            self.view.addSubview(starView)
-            self.view.sendSubviewToBack(starView)
-            starView.explode()
+            else {
+                microphone.stopFetchingAudio()
+                
+                let recordingEnd = NSDate()
+                let recordLength = recordingEnd.timeIntervalSinceDate(recordingStart!)
+                
+                let infoLabel = UILabel()
+                infoLabel.textColor = DreamRightSK.yellow
+                infoLabel.font = UIFont.systemFontOfSize(25)
+                
+                if recordLength < minLength {
+                    infoLabel.text = "Dream Discarded"
+                }
+                else {
+                    infoLabel.text = "Dream Saved"
+                }
+                
+                infoLabel.sizeToFit()
+                
+                let infoHeight = infoLabel.frame.height
+                let infoWidth = infoLabel.frame.width
+                let newFrame = CGRect(x: self.view.frame.width / 2 - infoWidth / 2, y: self.view.frame.height / 2 - infoHeight / 2, width: infoWidth, height: infoHeight)
+                
+                infoLabel.frame = newFrame
+                infoLabel.transform = CGAffineTransformMakeScale(0.5, 0.5)
+                
+                self.view.addSubview(infoLabel)
+                
+                UIView.animateWithDuration(recordTextAnimLength, animations: {
+                    infoLabel.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.5, 1.5)
+                    infoLabel.alpha = 0.0
+                })
+                
+                UIView.animateWithDuration(0.8, animations: {
+                    self.visualizerMask.frame.origin = CGPointZero
+                    }, completion: {
+                        (value: Bool) in
+                        self.visualizer.clear()
+                })
+            }
         }
     }
     
@@ -239,10 +359,37 @@ class DreamViewController: UIViewController {
         detailView.dismiss()
         exitView.dismiss()
         
-        self.dismissViewControllerAnimated(true, completion: nil)
+        let starView = BurstView(frame: self.view.frame)
+        
+        for x in 0...randomIntBetweenNumbers(minStars, maxStars) {
+            // Calculate frame and generate star
+            let curSize = randomFloatBetweenNumbers(minSize, maxSize)
+            let curRect = CGRect(origin: CGPointZero, size: CGSize(width: curSize, height: curSize))
+            let curStar = DreamRightSK.imageOfLoneStar(curRect)
+            
+            starView.addImage(curStar, center: CGPoint(x: self.view.frame.width / 2, y: self.view.frame.height / 2))
+        }
+        
+        self.view.addSubview(starView)
+        self.view.sendSubviewToBack(starView)
+        
+        delay(0.3, {
+            starView.explode()
+        })
+        
+        delay(0.8, {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        })
+    }
+    
+    func microphone(microphone: EZMicrophone!, hasAudioReceived buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
+        dispatch_async(dispatch_get_main_queue(), {
+            self.visualizer.updateBuffer(buffer[0], withBufferSize: bufferSize)
+        })
     }
 }
 
+// Dismissal constants
 let dismissDuration: NSTimeInterval = 0.8
 let dismissDamping: CGFloat = 0.52
 let dismissVelocity: CGFloat = 0.0
@@ -312,7 +459,7 @@ class DetailView : UIView {
         
         // Swap things out if we're contracting
         if !expand {
-            newFrame = CGRect(x: superSize.width - 60, y: superSize.height - 60, width: 50, height: 50)
+            newFrame = CGRect(x: superSize.width - 50, y: superSize.height - 50, width: 40, height: 40)
             fadeIn = lblQuestionMark
             fadeOut = lblInfo
         }
@@ -322,7 +469,7 @@ class DetailView : UIView {
             fadeOut.alpha = 0
             }, completion: {
                 (value: Bool) in
-                UIView.animateWithDuration(self.expandDuration, delay: 0.0, usingSpringWithDamping: self.expandDamping, initialSpringVelocity: 0.0, options: nil, animations: {
+                UIView.animateWithDuration(self.expandDuration, delay: 0.0, usingSpringWithDamping: self.expandDamping, initialSpringVelocity: 0.0, options: UIViewAnimationOptions.AllowUserInteraction, animations: {
                     self.frame = newFrame
                     }, completion: nil)})
         
@@ -345,7 +492,7 @@ class DetailView : UIView {
             }, completion: {
                 (value: Bool) in
                 UIView.animateWithDuration(dismissDuration, delay: 0.0, usingSpringWithDamping: dismissDamping, initialSpringVelocity: dismissVelocity, options: nil, animations: {
-                    self.frame = CGRect(x: superSize.width - 35, y: superSize.height - 35, width: 0, height: 0)
+                    self.frame = CGRect(x: superSize.width - 25, y: superSize.height - 25, width: 0, height: 0)
                     }, completion: nil)})
     }
 }
@@ -362,7 +509,7 @@ class ExitSuperView: UIView {
     init(frame: CGRect, backgroundColor: UIColor, parent: DreamViewController) {
         super.init(frame: frame)
         
-        let exitFrame = CGRect(x: 10, y: self.frame.height - 60, width: 50, height: 50)
+        let exitFrame = CGRect(x: 10, y: self.frame.height - 50, width: 40, height: 40)
         self.backgroundColor = UIColor.clearColor()
         self.parent = parent
         
@@ -493,7 +640,7 @@ class ExitView: UIView {
         
         // Swap things out if we're contracting
         if !expand {
-            newFrame = CGRect(x: 10, y: superSize.height - 60, width: 50, height: 50)
+            newFrame = CGRect(x: 10, y: superSize.height - 50, width: 40, height: 40)
             fadeIn = lblX
             fadeOut = lblPrompt
         }
@@ -503,7 +650,7 @@ class ExitView: UIView {
             fadeOut.alpha = 0
             }, completion: {
                 (value: Bool) in
-                UIView.animateWithDuration(self.expandDuration, delay: 0.0, usingSpringWithDamping: self.expandDamping, initialSpringVelocity: 0.0, options: nil, animations: {
+                UIView.animateWithDuration(self.expandDuration, delay: 0.0, usingSpringWithDamping: self.expandDamping, initialSpringVelocity: 0.0, options: UIViewAnimationOptions.AllowUserInteraction, animations: {
                     self.frame = newFrame
                     }, completion: nil)})
         
@@ -562,6 +709,7 @@ class ExitView: UIView {
                 (value: Bool) in
                 UIView.animateWithDuration(dismissDuration, delay: 0.0, usingSpringWithDamping: dismissDamping, initialSpringVelocity: dismissVelocity, options: nil, animations: {
                     self.frame = CGRect(x: superSize.width / 2, y: superSize.height / 2, width: 0, height: 0)
+                    self.alpha = 0.0
                     }, completion: nil)})
     }
 }
