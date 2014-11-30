@@ -17,52 +17,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="unicornHead.png" translatesAutoresizingMaskIntoConstraints="NO" id="mAD-Vw-wUs">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="unicornHead.png" translatesAutoresizingMaskIntoConstraints="NO" id="4YI-K3-iFZ">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="178" id="AsC-rj-pHE"/>
-                                    <constraint firstAttribute="width" constant="178" id="UjQ-um-5d6"/>
-                                </constraints>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="AsC-rj-pHE"/>
-                                        <exclude reference="UjQ-um-5d6"/>
-                                    </mask>
-                                </variation>
-                                <variation key="widthClass=compact">
-                                    <mask key="constraints">
-                                        <include reference="AsC-rj-pHE"/>
-                                        <include reference="UjQ-um-5d6"/>
-                                    </mask>
+                                <variation key="widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="111" y="600" width="178" height="178"/>
                                 </variation>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.020506885848876076" green="0.043798546545029807" blue="0.14544064153439151" alpha="1" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstItem="nEY-42-zi6" firstAttribute="top" secondItem="mAD-Vw-wUs" secondAttribute="bottom" constant="-178" id="Gye-zS-zkv"/>
-                            <constraint firstAttribute="centerX" secondItem="mAD-Vw-wUs" secondAttribute="centerX" id="jgA-Le-eDY"/>
-                        </constraints>
                         <variation key="default">
                             <mask key="subviews">
-                                <exclude reference="mAD-Vw-wUs"/>
-                            </mask>
-                            <mask key="constraints">
-                                <exclude reference="Gye-zS-zkv"/>
-                                <exclude reference="jgA-Le-eDY"/>
+                                <exclude reference="4YI-K3-iFZ"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
-                                <include reference="mAD-Vw-wUs"/>
-                            </mask>
-                            <mask key="constraints">
-                                <include reference="Gye-zS-zkv"/>
-                                <include reference="jgA-Le-eDY"/>
+                                <include reference="4YI-K3-iFZ"/>
                             </mask>
                         </variation>
                     </view>
                     <connections>
-                        <outlet property="imgUnicorn" destination="mAD-Vw-wUs" id="eGz-1A-dwy"/>
+                        <outlet property="imgUnicorn" destination="4YI-K3-iFZ" id="jzW-zD-rWB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AMN-Ei-0Rb" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -118,7 +118,7 @@ class BurstView: UIView {
 }
 
 // Visualizer constants
-let gain: Float = 1.34
+let gain: Float = 1.77
 let roll: Int32 = 420
 let visualizerHeight: CGFloat = 120
 
@@ -147,12 +147,17 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
     var visualizerMask: UIView!
     var microphone: EZMicrophone!
     var recordingStart: NSDate?
+    var savingDream = false
     
     // Lukas's unicorn
     @IBOutlet var imgUnicorn: UIImageView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        for view in self.view.subviews {
+            view.removeFromSuperview()
+        }
         
         let longPress = UILongPressGestureRecognizer(target: self, action: "longPress:")
         longPress.minimumPressDuration = 0.0
@@ -163,25 +168,28 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         detailView = DetailView(frame: detailFrame)
         exitView = ExitSuperView(frame: self.view.frame, backgroundColor: self.view.backgroundColor!, parent: self)
         
-        visualizer = EZAudioPlotGL(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: visualizerHeight))
-        visualizer.plotType = EZPlotType.Rolling
-        visualizer.backgroundColor = self.view.backgroundColor
-        visualizer.color = DreamRightSK.yellow
-        visualizer.gain = gain
-        visualizer.shouldFill = true
-        visualizer.shouldMirror = true
-        visualizer.setRollingHistoryLength(roll)
+        imgUnicorn.frame = CGRect(x: self.view.frame.width / 2 - 89, y: self.view.frame.height, width: 178, height: 178)
+        
+        self.view.addSubview(exitView)
+        self.view.addSubview(detailView)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        initVisualizer()
         
         visualizerMask = UIView(frame: visualizer.frame)
         visualizerMask.frame.origin = CGPoint(x: -self.view.frame.width, y: 0)
         visualizerMask.backgroundColor = self.view.backgroundColor
         
-        microphone = EZMicrophone(delegate: self, startsImmediately: false)
+        microphone = EZMicrophone(delegate: self, startsImmediately: true)
+        self.visualizerMask.frame.origin = CGPointZero
         
-        self.view.addSubview(exitView)
-        self.view.addSubview(detailView)
-        self.view.addSubview(visualizer)
         self.view.addSubview(visualizerMask)
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        microphone.stopFetchingAudio()
+        visualizer.clear()
     }
 
     override func didReceiveMemoryWarning() {
@@ -189,11 +197,36 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         // Dispose of any resources that can be recreated.
     }
     
+    func initVisualizer() {
+        for view in self.view.subviews {
+            if let curView = view as? EZAudioPlotGL {
+                curView.removeFromSuperview()
+            }
+        }
+        
+        visualizer = EZAudioPlotGL(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: visualizerHeight))
+        visualizer.plotType = EZPlotType.Rolling
+        visualizer.backgroundColor = self.view.backgroundColor
+        visualizer.color = DreamRightSK.yellow
+        visualizer.gain = gain
+        visualizer.shouldFill = false
+        visualizer.shouldMirror = true
+        visualizer.setRollingHistoryLength(roll)
+        
+        self.view.addSubview(visualizer)
+        
+        if visualizerMask != nil {
+            self.view.sendSubviewToBack(visualizerMask)
+        }
+        
+        self.view.sendSubviewToBack(visualizer)
+    }
+    
     func showUnicorn() {
         delay(0.5, {
             let size = self.imgUnicorn.frame.size
             let newY = self.view.frame.height - 178
-            let sameX = self.imgUnicorn.frame.origin.x
+            let sameX = self.view.frame.width / 2 - 89
             let newPoint = CGPoint(x: sameX, y: newY)
             
             UIView.animateWithDuration(0.9, delay: 0.0, usingSpringWithDamping: 0.47, initialSpringVelocity: 0.0, options: nil, animations: {
@@ -210,6 +243,10 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
     func longPress(gesture: UILongPressGestureRecognizer) {
         // Save the gesture point
         let gesturePoint = gesture.locationInView(self.view)
+        
+        if savingDream {
+            return
+        }
         
         if gesture.state == UIGestureRecognizerState.Ended {
             if exitState == 1 {
@@ -311,46 +348,59 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
                 })
             }
             else {
-                microphone.stopFetchingAudio()
-                
-                let recordingEnd = NSDate()
-                let recordLength = recordingEnd.timeIntervalSinceDate(recordingStart!)
-                
-                let infoLabel = UILabel()
-                infoLabel.textColor = DreamRightSK.yellow
-                infoLabel.font = UIFont.systemFontOfSize(25)
-                
-                if recordLength < minLength {
-                    infoLabel.text = "Dream Discarded"
-                }
-                else {
-                    infoLabel.text = "Dream Saved"
-                }
-                
-                infoLabel.sizeToFit()
-                
-                let infoHeight = infoLabel.frame.height
-                let infoWidth = infoLabel.frame.width
-                let newFrame = CGRect(x: self.view.frame.width / 2 - infoWidth / 2, y: self.view.frame.height / 2 - infoHeight / 2, width: infoWidth, height: infoHeight)
-                
-                infoLabel.frame = newFrame
-                infoLabel.transform = CGAffineTransformMakeScale(0.5, 0.5)
-                
-                self.view.addSubview(infoLabel)
-                
-                UIView.animateWithDuration(recordTextAnimLength, animations: {
-                    infoLabel.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.5, 1.5)
-                    infoLabel.alpha = 0.0
-                })
-                
-                UIView.animateWithDuration(0.8, animations: {
-                    self.visualizerMask.frame.origin = CGPointZero
-                    }, completion: {
-                        (value: Bool) in
-                        self.visualizer.clear()
-                })
+                stopMic()
             }
         }
+    }
+    
+    func stopMic() {
+        savingDream = true
+        
+        let recordingEnd = NSDate()
+        var recordLength: NSTimeInterval = 0
+        
+        if recordingStart != nil {
+            recordLength = recordingEnd.timeIntervalSinceDate(recordingStart!)
+        }
+        
+        let infoLabel = UILabel()
+        infoLabel.textColor = DreamRightSK.yellow
+        infoLabel.font = UIFont.systemFontOfSize(25)
+        
+        if recordLength < minLength {
+            infoLabel.text = "Dream Discarded"
+        }
+        else {
+            infoLabel.text = "Dream Saved"
+        }
+        
+        infoLabel.sizeToFit()
+        
+        let infoHeight = infoLabel.frame.height
+        let infoWidth = infoLabel.frame.width
+        let newFrame = CGRect(x: self.view.frame.width / 2 - infoWidth / 2, y: self.view.frame.height / 2 - infoHeight / 2, width: infoWidth, height: infoHeight)
+        
+        infoLabel.frame = newFrame
+        infoLabel.transform = CGAffineTransformMakeScale(0.5, 0.5)
+        
+        self.view.addSubview(infoLabel)
+        
+        UIView.animateWithDuration(recordTextAnimLength, animations: {
+            infoLabel.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.5, 1.5)
+            infoLabel.alpha = 0.0
+            }, completion: {
+                (value: Bool) in
+                infoLabel.removeFromSuperview()
+                self.savingDream = false
+        })
+        
+        UIView.animateWithDuration(0.8, animations: {
+            self.visualizerMask.frame.origin = CGPointZero
+            }, completion: {
+                (value: Bool) in
+                self.microphone.stopFetchingAudio()
+                self.initVisualizer()
+        })
     }
     
     func initiateExit() {
@@ -358,6 +408,8 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         
         detailView.dismiss()
         exitView.dismiss()
+        
+        stopMic()
         
         let starView = BurstView(frame: self.view.frame)
         
@@ -371,7 +423,6 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         }
         
         self.view.addSubview(starView)
-        self.view.sendSubviewToBack(starView)
         
         delay(0.3, {
             starView.explode()
