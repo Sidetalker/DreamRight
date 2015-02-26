@@ -25,6 +25,9 @@
 /// The number of additional waves in the background. The more waves, to more CPU power is needed. Default: 4.
 @property (assign,nonatomic) float waves;
 
+/// The stroke width of the first wave.
+@property (assign,nonatomic) float waveWidth;
+
 /// The actual amplitude the view is visualizing. This amplitude is based on the microphone's amplitude
 @property (assign,nonatomic,readonly) float amplitude;
 
@@ -43,10 +46,16 @@
 /// Set to NO, if you want to stop the view to oscillate.
 @property (assign,nonatomic) BOOL oscillating;
 
-/*
- * Color to use when drawing the waves
- * Default: white
- */
-@property (nonatomic, strong) UIColor *waveColor;
+/// The maximum amplitude of the waveform in percent of the view height. Default: 0.5 (half).
+@property (assign,nonatomic) float maxAmplitude;
+
+/// The wave inset for each edge.
+@property (assign,nonatomic) UIEdgeInsets waveInsets;
+
+/// The decoritive views to be placed at the left end of the wave.
+@property (strong, nonatomic) UIView *leftDecorativeView;
+
+/// The decoritive views to be placed at the right end of the wave.
+@property (strong, nonatomic) UIView *rightDecorativeView;
 
 @end

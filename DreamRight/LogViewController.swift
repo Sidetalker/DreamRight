@@ -51,7 +51,7 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
         super.viewDidLoad()
         
         // Register the custom cell xib file
-        self.collectionView.registerNib(UINib(nibName: "LogCell", bundle: nil), forCellWithReuseIdentifier: "logCell")
+        self.collectionView?.registerNib(UINib(nibName: "LogCell", bundle: nil), forCellWithReuseIdentifier: "logCell")
         
         // Load dummy data
         entries = [LogEntry]()
@@ -96,7 +96,7 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
 
     // Don't present the layout until we are loaded - this allows for a nice fade
     override func viewDidAppear(animated: Bool) {
-        self.collectionView.setCollectionViewLayout(SpringyFlow(), animated: true)
+        self.collectionView?.setCollectionViewLayout(SpringyFlow(), animated: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -123,7 +123,7 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         // Use an existing prototype cell - customized in the LogCell subclass
-        let myCell = self.collectionView.dequeueReusableCellWithReuseIdentifier("logCell", forIndexPath: indexPath) as LogCell
+        let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("logCell", forIndexPath: indexPath) as LogCell
         
         var curEntry = entries![indexPath.row]
         // Apply the formatting to the entry's date
@@ -144,10 +144,10 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
 
     override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         // Obtain the selected cell's attributes
-        let cellAttributes = self.collectionView.layoutAttributesForItemAtIndexPath(indexPath)
+        let cellAttributes = collectionView.layoutAttributesForItemAtIndexPath(indexPath)
         
         // Convert the selected cell's frame from the context of the collection to the context of the main view
-        var cellFrame = self.collectionView.convertRect(cellAttributes!.frame, toView: self.view)
+        var cellFrame = collectionView.convertRect(cellAttributes!.frame, toView: self.view)
         
         // Get the current selection from our night log array
         let nightEntry = entries![indexPath.row]
@@ -196,7 +196,7 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
         
         // Fade away the UICollectionView
         UIView.animateWithDuration(0.5, animations: {
-            self.collectionView.alpha = 0
+            collectionView.alpha = 0
         })
         
         // Begin to animate the navigation bar
@@ -451,7 +451,7 @@ class DreamSuperBox: UIView {
         
         self.audioDisplay = ZLSinusWaveView(frame: CGRect(x: containerFrame.width / 2, y: containerFrame.height - 25, width: 0, height: 0))
         audioDisplay?.backgroundColor = DreamRightSK.blue
-        audioDisplay?.waveColor = DreamRightSK.yellow
+        audioDisplay?.color = DreamRightSK.yellow
         audioDisplay?.plotType = EZPlotType.Rolling
         audioDisplay?.shouldFill = true
         audioDisplay?.shouldMirror = true

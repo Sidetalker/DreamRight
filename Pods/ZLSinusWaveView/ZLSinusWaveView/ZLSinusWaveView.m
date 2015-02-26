@@ -31,9 +31,12 @@
     return self;
 }
 
--(void)awakeFromNib {
-    [super awakeFromNib];
-    [self setup];
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self setup];
+    }
+    return self;
 }
 
 -(void)setup {
@@ -44,8 +47,11 @@
     _idleAmplitude = 0.1;
     _dampingFactor = 0.86;
     _waves = 5;
+    _waveWidth = 2;
     _phaseShift = -0.15;
     _density = 5.0;
+    _maxAmplitude = 0.5;
+    _waveInsets = UIEdgeInsetsZero;
 }
 
 -(void)_refreshDisplay {
@@ -54,6 +60,26 @@
 #elif TARGET_OS_MAC
     [self setNeedsDisplay:YES];
 #endif
+}
+
+- (void)setLeftDecorativeView:(UIView *)leftDecorativeView {
+    if (leftDecorativeView) {
+        [self addSubview:leftDecorativeView];
+    } else {
+        [leftDecorativeView removeFromSuperview];
+    }
+    _leftDecorativeView = leftDecorativeView;
+    [self setNeedsLayout];
+}
+
+- (void)setRightDecorativeView:(UIView *)rightDecorativeView {
+    if (rightDecorativeView) {
+        [self addSubview:rightDecorativeView];
+    } else {
+        [rightDecorativeView removeFromSuperview];
+    }
+    _rightDecorativeView = rightDecorativeView;
+    [self setNeedsLayout];
 }
 
 -(void)setSampleData:(float *)data
@@ -102,8 +128,8 @@
     UIRectFill(frame);
     // Set the waveform line color
     [(UIColor*)self.color set];
-
-    // NSLog(@"drawing %f waves", _waves);
+    
+    frame = UIEdgeInsetsInsetRect(self.bounds, self.waveInsets);
     
     // We draw multiple sinus waves, with equal phases but altered amplitudes, multiplied by a parable function.
     for(int i=0;i<_waves+1;i++) {
@@ -113,14 +139,14 @@
         // CGContextSaveGState(context);
         // CGContextRef context = (CGContextRef) [nsGraphicsContext graphicsPort];
         
-        // The first wave is drawn with a 2px stroke width, all others a with 1px stroke width.
-        CGContextSetLineWidth(context, (i==0)? 1.2:.6 );
+        // The first wave is drawn with a waveWidth stroke width, all others a with 1px stroke width.
+        CGContextSetLineWidth(context, (i==0)? self.waveWidth:1 );
         
-        CGFloat halfHeight = CGRectGetHeight(self.bounds)/2;
-        CGFloat width = CGRectGetWidth(self.bounds);
+        CGFloat halfHeight = CGRectGetHeight(frame)/2;
+        CGFloat width = CGRectGetWidth(frame);
         CGFloat mid = width /2.0;
         
-        const CGFloat maxAmplitude = halfHeight-4; // 4 corresponds to twice the stroke width
+        const CGFloat maxAmplitude = halfHeight*_maxAmplitude-4; // 4 corresponds to twice the stroke width
         
         // Progress is a value between 1.0 and -0.5, determined by the current wave idx, which is used to alter the wave's amplitude.
         CGFloat progress = 1.0-(CGFloat)i/_waves;
@@ -131,23 +157,40 @@
         // [[UIColor colorWithWhite:_whiteValue alpha:progress/3.0*2+1.0/3.0] set];
         
         CGFloat multiplier = MIN(1.0, (progress / 3.0f * 2.0f) + (1.0f / 3.0f));
-        [[self.waveColor colorWithAlphaComponent:multiplier * CGColorGetAlpha([UIColor whiteColor].CGColor)] set];
+        [[self.color colorWithAlphaComponent:multiplier * CGColorGetAlpha([UIColor whiteColor].CGColor)] set];
         
         for(CGFloat x = 0; x<width+_density; x+=_density) {
             // We use a parable to scale the sinus wave, that has its peak in the middle of the view.
             CGFloat scaling = -pow(1/mid*(x-mid),2)+1;
             CGFloat y = scaling *maxAmplitude *normedAmplitude *sinf(2 *M_PI *(x / width) *_frequency +_phase) + halfHeight;
             
+            CGFloat pointX = CGRectGetMinX(frame)+x; if (pointX != pointX) {pointX = 0;}
+            CGFloat pointY = CGRectGetMinY(frame)+y; if (pointY != pointY) {pointY = 0;}
+            
             if (x==0) {
-                CGContextMoveToPoint(context, x, y);
+                CGContextMoveToPoint(context, pointX, pointY);
             }
             else {
-                CGContextAddLineToPoint(context, x, y);
+                CGContextAddLineToPoint(context, pointX, pointY);
             }
         }
         CGContextStrokePath(context);
     }
-CGContextRestoreGState(ctx);
+    CGContextRestoreGState(ctx);
 }
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
     
+    CGRect frame = UIEdgeInsetsInsetRect(self.bounds, self.waveInsets);
+    
+    if (self.leftDecorativeView) {
+        self.leftDecorativeView.center = CGPointMake(CGRectGetMinX(frame), CGRectGetMidY(frame));
+    }
+    
+    if (self.rightDecorativeView) {
+        self.rightDecorativeView.center = CGPointMake(CGRectGetMaxX(frame), CGRectGetMidY(frame));
+    }
+}
+
 @end
