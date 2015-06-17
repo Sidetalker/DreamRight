@@ -95,11 +95,16 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
     }
 
     // Don't present the layout until we are loaded - this allows for a nice fade
-//    override func viewDidAppear(animated: Bool) {
-//        super.viewDidAppear(animated)
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
 //        
 //        self.collectionView?.setCollectionViewLayout(SpringyFlow(), animated: false)
-//    }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.collectionView?.setCollectionViewLayout(SpringyFlow(), animated: false)
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -785,7 +790,6 @@ class LogContainer: UIViewController, EZOutputDataSource {
             let dreamSegue = segue.destinationViewController as! LogViewController
             
             dreamSegue.parent = self
-            dreamSegue.collectionView?.setCollectionViewLayout(SpringyFlow(), animated: false)
         }
     }
     

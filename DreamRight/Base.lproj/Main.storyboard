@@ -121,7 +121,7 @@
             <objects>
                 <collectionViewController id="Y8Q-q4-iHc" customClass="LogViewController" customModule="DreamRight" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="00W-19-bgB">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="560"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="540"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" red="0.054901960780000002" green="0.1137254902" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
@@ -167,17 +167,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yaq-7n-LSd">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="560"/>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yaq-7n-LSd">
+                                <rect key="frame" x="0.0" y="20" width="600" height="540"/>
                                 <animations/>
                                 <connections>
                                     <segue destination="Y8Q-q4-iHc" kind="embed" identifier="logDreamSegue" id="buQ-LW-8Lh"/>
                                 </connections>
                             </containerView>
-                            <containerView opaque="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cc6-u2-eji">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cc6-u2-eji">
                                 <rect key="frame" x="0.0" y="560" width="600" height="40"/>
                                 <animations/>
                                 <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="DAz-sg-Ujb"/>
                                     <constraint firstAttribute="height" constant="38" id="HVH-fm-gdO"/>
                                 </constraints>
                                 <variation key="default">
@@ -198,36 +199,14 @@
                         <animations/>
                         <color key="backgroundColor" red="0.054901960780000002" green="0.1137254902" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="yaq-7n-LSd" firstAttribute="top" secondItem="Ura-ef-l6z" secondAttribute="bottom" id="2ZC-zW-XNI"/>
-                            <constraint firstItem="yaq-7n-LSd" firstAttribute="leading" secondItem="Fx0-Ef-Pmy" secondAttribute="leadingMargin" constant="-16" id="GLB-Lx-riA"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="yaq-7n-LSd" secondAttribute="trailing" constant="-16" id="Tgs-OZ-n4F"/>
-                            <constraint firstItem="cc6-u2-eji" firstAttribute="leading" secondItem="Fx0-Ef-Pmy" secondAttribute="leadingMargin" constant="-16" id="UQX-R6-ooN"/>
-                            <constraint firstItem="btp-CF-7Yk" firstAttribute="top" secondItem="cc6-u2-eji" secondAttribute="bottom" id="Uei-v8-WYg"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="cc6-u2-eji" secondAttribute="trailing" constant="-16" id="Vdt-H1-y6G"/>
-                            <constraint firstItem="btp-CF-7Yk" firstAttribute="top" secondItem="yaq-7n-LSd" secondAttribute="bottom" constant="38" id="fYf-BS-rir"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="yaq-7n-LSd" secondAttribute="trailing" constant="-16" id="1xL-L8-kuM"/>
+                            <constraint firstItem="btp-CF-7Yk" firstAttribute="top" secondItem="cc6-u2-eji" secondAttribute="bottom" id="C4g-Bv-EnV"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="cc6-u2-eji" secondAttribute="trailing" constant="-16" id="JGI-mq-Z6U"/>
+                            <constraint firstItem="yaq-7n-LSd" firstAttribute="top" secondItem="Ura-ef-l6z" secondAttribute="bottom" id="Qoc-gP-0eT"/>
+                            <constraint firstItem="yaq-7n-LSd" firstAttribute="leading" secondItem="Fx0-Ef-Pmy" secondAttribute="leadingMargin" constant="-16" id="TwD-fs-iOk"/>
+                            <constraint firstItem="cc6-u2-eji" firstAttribute="leading" secondItem="Fx0-Ef-Pmy" secondAttribute="leadingMargin" constant="-16" id="bu9-c2-D4R"/>
+                            <constraint firstItem="cc6-u2-eji" firstAttribute="top" secondItem="yaq-7n-LSd" secondAttribute="bottom" id="l6c-zL-TCZ"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="2ZC-zW-XNI"/>
-                                <exclude reference="GLB-Lx-riA"/>
-                                <exclude reference="Tgs-OZ-n4F"/>
-                                <exclude reference="UQX-R6-ooN"/>
-                                <exclude reference="Vdt-H1-y6G"/>
-                                <exclude reference="Uei-v8-WYg"/>
-                                <exclude reference="fYf-BS-rir"/>
-                            </mask>
-                        </variation>
-                        <variation key="widthClass=compact">
-                            <mask key="constraints">
-                                <include reference="2ZC-zW-XNI"/>
-                                <include reference="GLB-Lx-riA"/>
-                                <include reference="Tgs-OZ-n4F"/>
-                                <include reference="UQX-R6-ooN"/>
-                                <include reference="Vdt-H1-y6G"/>
-                                <include reference="Uei-v8-WYg"/>
-                                <include reference="fYf-BS-rir"/>
-                            </mask>
-                        </variation>
                     </view>
                     <connections>
                         <outlet property="dreamContainer" destination="yaq-7n-LSd" id="eWJ-GM-X2r"/>
