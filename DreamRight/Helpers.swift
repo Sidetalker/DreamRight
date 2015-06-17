@@ -215,12 +215,12 @@ func createDrawableString(formattedString: NSAttributedString, frame: CGRect) ->
     var runArrayNS = runArrayCT as Array
     
     for var x = 0; x < runArrayNS.count; x++ {
-        let runCT = runArrayNS[x] as CTRunRef
+        let runCT = runArrayNS[x] as! CTRunRef
         let runPT = CFArrayGetValueAtIndex(runArrayCT, x)
         
         let attributesDict = CTRunGetAttributes(runCT) as Dictionary
         
-        let runFont = attributesDict[kCTFontAttributeName] as CTFontRef
+        let runFont = attributesDict[kCTFontAttributeName] as! CTFontRef
         let glyphCount = Int(CTRunGetGlyphCount(runCT))
         
         for var y = 0; y < glyphCount; y++ {

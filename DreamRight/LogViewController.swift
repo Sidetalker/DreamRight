@@ -96,7 +96,14 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
 
     // Don't present the layout until we are loaded - this allows for a nice fade
     override func viewDidAppear(animated: Bool) {
-        self.collectionView?.setCollectionViewLayout(SpringyFlow(), animated: true)
+        super.viewDidAppear(animated)
+//        
+//        self.collectionView?.setCollectionViewLayout(SpringyFlow(), animated: false)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.collectionView?.setCollectionViewLayout(SpringyFlow(), animated: false)
     }
 
     override func didReceiveMemoryWarning() {
@@ -123,9 +130,10 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         // Use an existing prototype cell - customized in the LogCell subclass
-        let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("logCell", forIndexPath: indexPath) as LogCell
+        let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("logCell", forIndexPath: indexPath) as! LogCell
         
         var curEntry = entries![indexPath.row]
+        
         // Apply the formatting to the entry's date
         let dateString = dateToNightText(curEntry.date)
         
@@ -290,11 +298,19 @@ class SpringyFlow: UICollectionViewFlowLayout {
         // Configure misc cell variables
         self.minimumInteritemSpacing = 10;
         self.minimumLineSpacing = 10;
+        
+        
+        // BUG FIXME ERROR WHATEVER - this isn't working right like it should... seems like a bug on Apple's side
+        // The collectionView frame is just wrong to start with
         self.itemSize = CGSizeMake(self.collectionView!.frame.width - 20, 66);
+        
+        // Window hack for the time being
+//        self.itemSize = CGSizeMake(UIScreen.mainScreen().bounds.width - 20, 66)
+        
         self.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
         
         // Cast layout attributes as dynamic items
-        let contentSize = self.collectionView!.contentSize
+        let contentSize = collectionViewContentSize()
         let items = super.layoutAttributesForElementsInRect(CGRect(x: 0, y: 0, width: contentSize.width, height: contentSize.height)) as? [UIDynamicItem]
         
         // Only configure these dynamic behaviors once
@@ -327,7 +343,7 @@ class SpringyFlow: UICollectionViewFlowLayout {
         let scrollView = self.collectionView
         let delta = newBounds.origin.y - scrollView!.bounds.origin.y
         let touchLocation = self.collectionView!.panGestureRecognizer.locationInView(self.collectionView)
-        let behaviours = dynamicAnimator!.behaviors as [UIAttachmentBehavior]
+        let behaviours = dynamicAnimator!.behaviors as! [UIAttachmentBehavior]
         
         // Examine each behaviour (essentially each cell)
         for behaviour in behaviours {
@@ -336,7 +352,7 @@ class SpringyFlow: UICollectionViewFlowLayout {
             // 1380 was determined by trial and error - higher numbers mean tighter "springs"
             let scrollResistance: CGFloat = (yDistanceFromTouch) / 1380
             
-            let item = behaviour.items.first as UICollectionViewLayoutAttributes
+            let item = behaviour.items.first as! UICollectionViewLayoutAttributes
             var center = item.center
             
             // Determine the new center for the item based on the variables above
@@ -384,11 +400,6 @@ class LogCell: UICollectionViewCell {
     // IBOutlet is not yet connected in this init
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-    }
-    
-    // IBOutlet has become connected
-    override init() {
-        super.init()
     }
     
     // Set up the log cell
@@ -699,7 +710,7 @@ class LogContainer: UIViewController, EZOutputDataSource {
     func output(output: EZOutput!, callbackWithActionFlags ioActionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>, inTimeStamp: UnsafePointer<AudioTimeStamp>, inBusNumber: UInt32, inNumberFrames: UInt32, ioData: UnsafeMutablePointer<AudioBufferList>) {
         dispatch_async(dispatch_get_main_queue()) {
             // Update the main buffer
-            if let display = self.audioDisplay? {
+            if let display = self.audioDisplay {
                 var bufferThing: [Float] = [0, 0, 0]
                 display.updateBuffer(&bufferThing, withBufferSize: 3)
             }
@@ -776,7 +787,7 @@ class LogContainer: UIViewController, EZOutputDataSource {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "logDreamSegue" {
-            let dreamSegue = segue.destinationViewController as LogViewController
+            let dreamSegue = segue.destinationViewController as! LogViewController
             
             dreamSegue.parent = self
         }
@@ -1017,7 +1028,7 @@ class LogContainer: UIViewController, EZOutputDataSource {
         let messageDisplay = UIAlertController(title: "Edit Night Name", message: "Rename the night", preferredStyle: UIAlertControllerStyle.Alert)
         
         messageDisplay.addTextFieldWithConfigurationHandler { textField in }
-        let messageTextField = messageDisplay.textFields![0] as UITextField
+        let messageTextField = messageDisplay.textFields![0] as! UITextField
         messageTextField.placeholder = "Night name"
         messageTextField.text = dreamBoxes![0].title!
         messageTextField.tag = 10
@@ -1056,7 +1067,7 @@ class LogContainer: UIViewController, EZOutputDataSource {
             current = 0
         }
         
-        if sender.text.utf16Count >= 20 {
+        if count(sender.text.utf16) >= 20 {
             sender.text = self.dreamBoxes![current].dreamView!.lblTitle.text
             return
         }
@@ -1245,7 +1256,7 @@ class LogContainer: UIViewController, EZOutputDataSource {
                     let messageDisplay = UIAlertController(title: "Edit Dream Name", message: "Rename the dream", preferredStyle: UIAlertControllerStyle.Alert)
                     
                     messageDisplay.addTextFieldWithConfigurationHandler { textField in }
-                    let messageTextField = messageDisplay.textFields![0] as UITextField
+                    let messageTextField = messageDisplay.textFields![0] as! UITextField
                     messageTextField.placeholder = "Dream name"
                     messageTextField.text = dreamBoxes![x].title!
                     messageTextField.tag = 20
@@ -1302,7 +1313,7 @@ class LogContainer: UIViewController, EZOutputDataSource {
     func microphone(microphone: EZMicrophone!, hasAudioReceived buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
         dispatch_async(dispatch_get_main_queue()) {
             // Update the main buffer
-            if let display = self.audioDisplay? {
+            if let display = self.audioDisplay {
                 display.updateBuffer(buffer[0], withBufferSize: bufferSize)
             }
         }

@@ -719,7 +719,7 @@ class ExitView: UIView {
             return
         }
         
-        let curPosition = (mask!.presentationLayer().valueForKey("position") as NSValue).CGPointValue()
+        let curPosition = (mask!.presentationLayer().valueForKey("position") as! NSValue).CGPointValue()
         var newPosition = CGPoint(x: self.frame.size.width / 3, y: 0)
         let fullLength = self.frame.size.width
         var transitionTime = showMask
@@ -737,8 +737,8 @@ class ExitView: UIView {
         revealAnimation.duration = NSTimeInterval(transitionTime)
         
         CATransaction.setCompletionBlock({
-            if !maskOn && (self.mask!.presentationLayer().valueForKey("position") as NSValue).CGPointValue().x == self.frame.size.width / 3 {
-                (self.superview! as ExitSuperView).initiateExit()
+            if !maskOn && (self.mask!.presentationLayer().valueForKey("position") as! NSValue).CGPointValue().x == self.frame.size.width / 3 {
+                (self.superview! as! ExitSuperView).initiateExit()
             }
         })
         

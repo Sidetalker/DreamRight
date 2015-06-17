@@ -477,7 +477,7 @@
 			baseConfigurationReference = 877BB26B861D23D2A8D6E3BA /* Pods-DreamRight.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = DreamRight/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -493,7 +493,7 @@
 			baseConfigurationReference = 2ED8EA416B0D4CFC988E3C33 /* Pods-DreamRight.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = DreamRight/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

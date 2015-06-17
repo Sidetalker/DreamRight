@@ -224,7 +224,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         
         keyboardUp = true
         
-        let keyboardHeight = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue().height
+        let keyboardHeight = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue().height
         
         self.bottomGuideA.constant += keyboardHeight
         self.bottomGuideB.constant += keyboardHeight
@@ -246,7 +246,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         
         keyboardUp = false
         
-        let keyboardHeight = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue().height
+        let keyboardHeight = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue().height
         
         self.bottomGuideA.constant -= keyboardHeight
         self.bottomGuideB.constant -= keyboardHeight
@@ -351,11 +351,11 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         
         for dict in data {
             if let containerFrame = dict["baseFrame"] as? NSArray {
-                startFrames += "startFrames.append(CGRect(x: \(containerFrame[0] as NSNumber) * self.view.frame.width), y: \(containerFrame[1] as NSNumber) * self.view.frame.height), width: \(containerFrame[2]), height: \(containerFrame[3])))\n"
+                startFrames += "startFrames.append(CGRect(x: \(containerFrame[0] as! NSNumber) * self.view.frame.width), y: \(containerFrame[1] as! NSNumber) * self.view.frame.height), width: \(containerFrame[2]), height: \(containerFrame[3])))\n"
             }
             
             if let containerFrame = dict["finalFrame"] as? NSArray {
-                endFrames += "endFrames.append(CGRect(x: \(containerFrame[0] as NSNumber) * self.view.frame.width), y: \(containerFrame[1] as NSNumber) * self.view.frame.height), width: \(containerFrame[2]), height: \(containerFrame[3])))\n"
+                endFrames += "endFrames.append(CGRect(x: \(containerFrame[0] as! NSNumber) * self.view.frame.width), y: \(containerFrame[1] as! NSNumber) * self.view.frame.height), width: \(containerFrame[2]), height: \(containerFrame[3])))\n"
             }
             
             if let delay = dict["delay"] as? NSTimeInterval {
@@ -517,7 +517,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
     
     func panSubview(recognizer: UIPanGestureRecognizer) {
         if recognizer.state == UIGestureRecognizerState.Began {
-            if let view = recognizer.view? {
+            if let view = recognizer.view {
                 panBaseLoc = recognizer.locationInView(view)
                 panBaseSize = view.frame.size
                 
@@ -558,7 +558,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
             }
         }
         
-        if let view = recognizer.view? {
+        if let view = recognizer.view {
             let baseLoc = recognizer.locationInView(self.view)
             let localLoc = recognizer.locationInView(view)
             
@@ -584,8 +584,8 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
             
             if recognizer.view == starContainers[x].view {
                 activeContainer = x
-                txtAnimationLength.text = NSString(format: "%.0001f", starContainers[x].star.time)
-                txtDelay.text = NSString(format: "%.0001f", starContainers[x].star.delay)
+                txtAnimationLength.text = NSString(format: "%.0001f", starContainers[x].star.time) as String
+                txtDelay.text = NSString(format: "%.0001f", starContainers[x].star.delay) as String
             }
         }
         recognizer.view!.layer.borderWidth = 2.5
