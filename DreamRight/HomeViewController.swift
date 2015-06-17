@@ -177,7 +177,7 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         
         // Blow up the moon and destroy it when you're done
         UIView.animateWithDuration(1.0, delay: 0.25, options: UIViewAnimationOptions.CurveEaseIn, animations: {
-            if let view = self.moonContainer? {
+            if let view = self.moonContainer {
                 view.frame = CGRect(x: Double(self.view.frame.width / 2.0) - xMod, y: Double(self.view.frame.height / 2.0) - yMod, width: size, height: size)
             }}, completion: {
                 (value: Bool) in
@@ -397,7 +397,7 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         let newHeight: CGFloat = decibelDisplay!.frame.height + 150 / total
         
         dispatch_async(dispatch_get_main_queue()) {
-            if let display = self.decibelDisplay? {
+            if let display = self.decibelDisplay {
                 display.frame = CGRect(x: newX, y: newY, width: newWidth, height: newHeight)
             }
         }
@@ -407,17 +407,17 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "designSegue" {
-            let designVC = segue.destinationViewController as TestViewControllerB
+            let designVC = segue.destinationViewController as! TestViewControllerB
             
             designVC.transitioningDelegate = transitionManager
         }
         else if segue.identifier == "logSegue" {
-            let logVC = segue.destinationViewController as LogContainer
+            let logVC = segue.destinationViewController as! LogContainer
             
             logVC.transitioningDelegate = transitionManager
         }
         else if segue.identifier == "sleepSegue" {
-            let sleepVC = segue.destinationViewController as DreamViewController
+            let sleepVC = segue.destinationViewController as! DreamViewController
             
             sleepVC.transitioningDelegate = transitionManager
         }
@@ -428,7 +428,7 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
     func microphone(microphone: EZMicrophone!, hasAudioReceived buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
         dispatch_async(dispatch_get_main_queue()) {
             // Update the main buffer
-            if let display = self.decibelDisplay? {
+            if let display = self.decibelDisplay {
                 display.updateBuffer(buffer[0], withBufferSize: bufferSize)
             }
         }
