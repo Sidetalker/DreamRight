@@ -41,7 +41,7 @@ struct LogDream {
 // MARK: - Subclassed UIViewControllers
 
 // The main collection view manager - this embedded in one of LogContainerView's containers
-class LogViewController: UICollectionViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class LogViewController: UICollectionViewController {
     var entries: [LogEntry]?
     var parent: LogContainer?
     
@@ -61,7 +61,7 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
             let nightName = "Original Name #\(x)"
             var nightTags = [String]()
             
-            if Int(randomFloatBetweenNumbers(1, 2)) % 2 == 0 {
+            if Int(randomFloatBetweenNumbers(1, secondNum: 2)) % 2 == 0 {
                 nightTags.append("tag4")
             }
             else {
@@ -70,17 +70,17 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
             
             var dreams = [LogDream]()
             
-            for y in 0...Int(randomFloatBetweenNumbers(0, 3)) {
+            for y in 0...Int(randomFloatBetweenNumbers(0, secondNum: 3)) {
                 let dreamTime = NSDate(timeInterval: NSTimeInterval(1000 * y), sinceDate: nightTime)
                 let dreamName = "Original Name #\(x * y)"
                 var dreamDescription = "Original Description #\(x * y)"
                 var dreamTags = ["tag2"]
                 
-                for x in 0...50 {
+                for _ in 0...50 {
                     dreamDescription += "MOARMOARMOAR"
                 }
                 
-                if Int(randomFloatBetweenNumbers(1, 2)) % 2 == 0 {
+                if Int(randomFloatBetweenNumbers(1, secondNum: 2)) % 2 == 0 {
                     dreamTags.append("tag2")
                 }
                 else {
@@ -132,7 +132,7 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
         // Use an existing prototype cell - customized in the LogCell subclass
         let myCell = collectionView.dequeueReusableCellWithReuseIdentifier("logCell", forIndexPath: indexPath) as! LogCell
         
-        var curEntry = entries![indexPath.row]
+        let curEntry = entries![indexPath.row]
         
         // Apply the formatting to the entry's date
         let dateString = dateToNightText(curEntry.date)
@@ -155,7 +155,7 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
         let cellAttributes = collectionView.layoutAttributesForItemAtIndexPath(indexPath)
         
         // Convert the selected cell's frame from the context of the collection to the context of the main view
-        var cellFrame = collectionView.convertRect(cellAttributes!.frame, toView: self.view)
+        let cellFrame = collectionView.convertRect(cellAttributes!.frame, toView: self.view)
         
         // Get the current selection from our night log array
         let nightEntry = entries![indexPath.row]
@@ -210,8 +210,8 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
         // Begin to animate the navigation bar
         UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.AllowUserInteraction, animations: {
             // Get a handle on the navContainer and its subview
-            var navContainer = self.parent!.navContainer!
-            var subNav = self.parent!.subNav!
+            let navContainer = self.parent!.navContainer!
+            let subNav = self.parent!.subNav!
             
             // Slide the nav subview down to hide it
             subNav.frame = CGRect(x: 0, y: navContainer.frame.height, width: navContainer.frame.width, height: 0)
@@ -231,8 +231,8 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
         // Animate the altered navigation bar back into view
         UIView.animateWithDuration(0.7, delay: 0.3, usingSpringWithDamping: 0.52, initialSpringVelocity: 0.0, options: UIViewAnimationOptions.AllowUserInteraction, animations: {
             // Get navigation bar handles from the container parent
-            var navContainer = self.parent!.navContainer!
-            var subNav = self.parent!.subNav!
+            let navContainer = self.parent!.navContainer!
+            let subNav = self.parent!.subNav!
             
             // Bring the navigation to its proper resting point
             subNav.frame = CGRect(x: 0, y: 0, width: navContainer.frame.width, height: navContainer.frame.height)
@@ -240,8 +240,6 @@ class LogViewController: UICollectionViewController, UICollectionViewDelegate, U
         
         // Loop through each of our newly generated boxes
         for x in 0...dreamBoxes.count - 1 {
-            var contextFrame = dreamBoxes[x].frame
-            
             var finalFrame = CGRect()
             
             // The first box stays the same - the night info box
@@ -311,7 +309,7 @@ class SpringyFlow: UICollectionViewFlowLayout {
         
         // Cast layout attributes as dynamic items
         let contentSize = collectionViewContentSize()
-        let items = super.layoutAttributesForElementsInRect(CGRect(x: 0, y: 0, width: contentSize.width, height: contentSize.height)) as? [UIDynamicItem]
+        let items = super.layoutAttributesForElementsInRect(CGRect(x: 0, y: 0, width: contentSize.width, height: contentSize.height))
         
         // Only configure these dynamic behaviors once
         if dynamicAnimator!.behaviors.count == 0 {
@@ -328,12 +326,19 @@ class SpringyFlow: UICollectionViewFlowLayout {
     }
     
     // Defer to the dynamic animator
-    override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
-        return dynamicAnimator?.itemsInRect(rect)
+    override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        let attributesToReturn: [UICollectionViewLayoutAttributes] = super.layoutAttributesForElementsInRect(rect)!
+        
+        for attributes in attributesToReturn {
+            let indexPath: NSIndexPath  = attributes.indexPath;
+            attributes.frame = self.layoutAttributesForItemAtIndexPath(indexPath)!.frame
+        }
+        
+        return attributesToReturn;
     }
     
     // Defer to the dynamic animator
-    override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes! {
+    override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
         return dynamicAnimator?.layoutAttributesForCellAtIndexPath(indexPath)
     }
     
@@ -471,7 +476,7 @@ class DreamSuperBox: UIView {
         audioDisplay?.oscillating = true
         
         // If the body text wasn't passed, hide the textfield
-        if let txt = body {
+        if body != nil {
             dreamView?.txtDescription.text = body
         }
         else {
@@ -518,7 +523,7 @@ class DreamSuperBox: UIView {
     
     // Fades in the title, description and date with a configurable delay
     func fadeInViews(wait: Double) {
-        delay(wait, {
+        delay(wait, closure: {
             UIView.animateWithDuration(0.5, animations: {
                 self.dreamView!.lblTitle.alpha = 1.0
                 self.dreamView!.txtDescription.alpha = 1.0
@@ -529,10 +534,10 @@ class DreamSuperBox: UIView {
     
     // Pops in the play button with a configurable delay
     func popInPlay(wait: Double) {
-        delay(wait, {
+        delay(wait, closure: {
             self.dreamView!.imgPlay.alpha = 1.0
             
-            UIView.animateWithDuration(0.9, delay: 0.0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0.0, options: UIViewAnimationOptions.CurveEaseOut | UIViewAnimationOptions.AllowUserInteraction, animations: {
+            UIView.animateWithDuration(0.9, delay: 0.0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0.0, options: [UIViewAnimationOptions.CurveEaseOut, UIViewAnimationOptions.AllowUserInteraction], animations: {
                 self.dreamView!.imgPlay.transform = CGAffineTransformMakeScale(1.0, 1.0)
             }, completion: nil)
         })
@@ -551,7 +556,7 @@ class DreamSuperBox: UIView {
             finalFrame = CGRect(x: containerFrame.width / 2, y: containerFrame.height - 30, width: 0, height: 0)
         }
         
-        UIView.animateWithDuration(0.25, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn | UIViewAnimationOptions.AllowAnimatedContent, animations: {
+        UIView.animateWithDuration(0.25, delay: 0.0, options: [UIViewAnimationOptions.CurveEaseIn, UIViewAnimationOptions.AllowAnimatedContent], animations: {
             self.parent!.parent!.audioDisplay!.frame = finalFrame
             }, completion: {
                 (value: Bool) in
@@ -573,7 +578,7 @@ class DreamSuperBox: UIView {
             newImage = DreamRightSK.imageOfStopUp(CGRect(origin: CGPointZero, size: dreamView!.imgPlay.frame.size))
         }
         
-        UIView.animateWithDuration(0.4, delay: 0.0, options: nil, animations: {
+        UIView.animateWithDuration(0.4, delay: 0.0, options: [], animations: {
             self.dreamView!.imgPlay.transform = CGAffineTransformMakeScale(0.1, 0.1)
             }, completion: {
                 (value: Bool) in
@@ -582,20 +587,20 @@ class DreamSuperBox: UIView {
         })
         
         if audioPlaying {
-            UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 0.76, initialSpringVelocity: 0.0, options: nil, animations: {
+            UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 0.76, initialSpringVelocity: 0.0, options: [], animations: {
                 self.frame = CGRect(x: 10, y: 10, width: self.parent!.parent!.dreamContainer.frame.width - 20, height: self.parent!.parent!.dreamContainer.frame.height - 20)
                 }, completion: nil)
             
-            delay(0.0, {
+            delay(0.0, closure: {
                 self.growVisualizer(false)
             })
         }
         else {
-            UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 0.76, initialSpringVelocity: 0.0, options: nil, animations: {
+            UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 0.76, initialSpringVelocity: 0.0, options: [], animations: {
                 self.frame = CGRect(x: 10, y: 10, width: self.parent!.parent!.dreamContainer.frame.width - 20, height: self.parent!.parent!.dreamContainer.frame.height - 70)
                 }, completion: nil)
             
-            delay(0.2, {
+            delay(0.2, closure: {
                 self.growVisualizer(true)
             })
         }
@@ -744,8 +749,8 @@ class LogContainer: UIViewController, EZOutputDataSource {
         
         singleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: navFrame.width, height: navFrame.height))
         
-        var textStyle = [NSObject : AnyObject]()
-        var paragraphStyle = NSMutableParagraphStyle()
+        var textStyle = [String : AnyObject]()
+        let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = NSTextAlignment.Center
         
         textStyle[NSForegroundColorAttributeName] = DreamRightSK.blue
@@ -821,8 +826,8 @@ class LogContainer: UIViewController, EZOutputDataSource {
                 self.divider?.hidden = true
                 
                 // Change the Done text back to Edit if needed
-                var textStyle = [NSObject : AnyObject]()
-                var paragraphStyle = NSMutableParagraphStyle()
+                var textStyle = [String : AnyObject]()
+                let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.alignment = NSTextAlignment.Center
                 
                 textStyle[NSForegroundColorAttributeName] = DreamRightSK.blue
@@ -852,8 +857,8 @@ class LogContainer: UIViewController, EZOutputDataSource {
                     self.rightLabel!.alpha = 0
                     }, completion: {
                         (value: Bool) in
-                        var textStyle = [NSObject : AnyObject]()
-                        var paragraphStyle = NSMutableParagraphStyle()
+                        var textStyle = [String : AnyObject]()
+                        let paragraphStyle = NSMutableParagraphStyle()
                         paragraphStyle.alignment = NSTextAlignment.Center
                         
                         textStyle[NSForegroundColorAttributeName] = DreamRightSK.blue
@@ -864,7 +869,7 @@ class LogContainer: UIViewController, EZOutputDataSource {
                         self.rightLabel!.attributedText = doneText
                 })
                 
-                UIView.animateWithDuration(0.2, delay: 0.2, options: nil, animations: {
+                UIView.animateWithDuration(0.2, delay: 0.2, options: [], animations: {
                     self.rightLabel!.alpha = 1
                     }, completion: nil)
             }
@@ -885,8 +890,8 @@ class LogContainer: UIViewController, EZOutputDataSource {
                     self.rightLabel!.alpha = 0
                     }, completion: {
                         (value: Bool) in
-                        var textStyle = [NSObject : AnyObject]()
-                        var paragraphStyle = NSMutableParagraphStyle()
+                        var textStyle = [String : AnyObject]()
+                        let paragraphStyle = NSMutableParagraphStyle()
                         paragraphStyle.alignment = NSTextAlignment.Center
                         
                         textStyle[NSForegroundColorAttributeName] = DreamRightSK.blue
@@ -897,7 +902,7 @@ class LogContainer: UIViewController, EZOutputDataSource {
                         self.rightLabel!.attributedText = doneText
                 })
                 
-                UIView.animateWithDuration(0.2, delay: 0.2, options: nil, animations: {
+                UIView.animateWithDuration(0.2, delay: 0.2, options: [], animations: {
                     self.rightLabel!.alpha = 1
                     }, completion: nil)
             }
@@ -984,7 +989,7 @@ class LogContainer: UIViewController, EZOutputDataSource {
             })
             
             // Another hacky fix for annoying night title bug
-            delay(0.01, {
+            delay(0.01, closure: {
                 for box in upperBoxes {
                     box.layoutSubviews()
                 }
@@ -1011,7 +1016,7 @@ class LogContainer: UIViewController, EZOutputDataSource {
             })
             
             // Another hacky fix for annoying night title bug
-            delay(0.01, {
+            delay(0.01, closure: {
                 for box in lowerBoxes {
                     box.layoutSubviews()
                 }
@@ -1028,7 +1033,7 @@ class LogContainer: UIViewController, EZOutputDataSource {
         let messageDisplay = UIAlertController(title: "Edit Night Name", message: "Rename the night", preferredStyle: UIAlertControllerStyle.Alert)
         
         messageDisplay.addTextFieldWithConfigurationHandler { textField in }
-        let messageTextField = messageDisplay.textFields![0] as! UITextField
+        let messageTextField = messageDisplay.textFields![0] as UITextField
         messageTextField.placeholder = "Night name"
         messageTextField.text = dreamBoxes![0].title!
         messageTextField.tag = 10
@@ -1067,14 +1072,14 @@ class LogContainer: UIViewController, EZOutputDataSource {
             current = 0
         }
         
-        if count(sender.text.utf16) >= 20 {
+        if sender.text!.utf16.count >= 20 {
             sender.text = self.dreamBoxes![current].dreamView!.lblTitle.text
             return
         }
         
         self.dreamBoxes![current].dreamView!.lblTitle.text = sender.text
         
-        delay(0.01, {
+        delay(0.01, closure: {
             self.dreamBoxes![current].dreamView!.layoutSubviews()
         })
     }
@@ -1160,7 +1165,7 @@ class LogContainer: UIViewController, EZOutputDataSource {
                 })
         }
         
-        UIView.animateWithDuration(0.6, delay: 0.0, usingSpringWithDamping: 0.76, initialSpringVelocity: 0.0, options: nil, animations: {
+        UIView.animateWithDuration(0.6, delay: 0.0, usingSpringWithDamping: 0.76, initialSpringVelocity: 0.0, options: [], animations: {
             mainBox.frame = CGRectMake(10, 10, self.dreamContainer.frame.width - 20, self.dreamContainer.frame.height - 20)
         }, completion: nil)
     }
@@ -1185,43 +1190,43 @@ class LogContainer: UIViewController, EZOutputDataSource {
             // Check if the tap came into the left rectangle (Back)
             if CGRectContainsPoint(leftRec, gesture.locationOfTouch(0, inView: subNav!)) {
                 if navState == 1 || navState == 2 {
-                    print("transitionToHome state: \(navState)\n")
+                    print("transitionToHome state: \(navState)\n", appendNewline: false)
                     transitionToHome()
-                    print("transitionToHome state: \(navState)\n")
+                    print("transitionToHome state: \(navState)\n", appendNewline: false)
                 }
                 else if navState == 3 {
-                    print("transitionFromDetailA state: \(navState)\n")
+                    print("transitionFromDetailA state: \(navState)\n", appendNewline: false)
                     transitionFromDetailA()
-                    print("transitionFromDetailA state: \(navState)\n")
+                    print("transitionFromDetailA state: \(navState)\n", appendNewline: false)
                 }
                 else if navState == 4 {
-                    print("transitionFromDetailB state: \(navState)\n")
+                    print("transitionFromDetailB state: \(navState)\n", appendNewline: false)
                     transitionFromDetailB()
-                    print("transitionFromDetailB state: \(navState)\n")
+                    print("transitionFromDetailB state: \(navState)\n", appendNewline: false)
                 }
             }
             // Otherwise we're on the right side (Edit)
             else if CGRectContainsPoint(rightRec, gesture.locationOfTouch(0, inView: subNav!)) {
                 if navState == 1 {
-                    print("transitionToEditA state: \(navState)\n")
+                    print("transitionToEditA state: \(navState)\n", appendNewline: false)
                     transitionToEditA()
-                    print("transitionToEditA state: \(navState)\n")
+                    print("transitionToEditA state: \(navState)\n", appendNewline: false)
                 }
                 // Transition from detail view (editing) back to detail view (not editing)
                 else if navState == 2 {
-                    print("transitionFromEditA state: \(navState)\n")
+                    print("transitionFromEditA state: \(navState)\n", appendNewline: false)
                     transitionFromEditA()
-                    print("transitionFromEditA state: \(navState)\n")
+                    print("transitionFromEditA state: \(navState)\n", appendNewline: false)
                 }
                 else if navState == 3 {
-                    print("transitionToEditB state: \(navState)\n")
+                    print("transitionToEditB state: \(navState)\n", appendNewline: false)
                     transitionToEditB()
-                    print("transitionToEditB state: \(navState)\n")
+                    print("transitionToEditB state: \(navState)\n", appendNewline: false)
                 }
                 else if navState == 4 {
-                    print("transitionFromEditB state: \(navState)\n")
+                    print("transitionFromEditB state: \(navState)\n", appendNewline: false)
                     transitionFromEditB()
-                    print("transitionFromEditB state: \(navState)\n")
+                    print("transitionFromEditB state: \(navState)\n", appendNewline: false)
                 }
             }
         }
@@ -1233,14 +1238,14 @@ class LogContainer: UIViewController, EZOutputDataSource {
             
             if CGRectContainsPoint(dreamBoxes![x].frame, currentLocation) {
                 if navState == 1 {
-                    print("transitionToDetailA state: \(navState)\n")
+                    print("transitionToDetailA state: \(navState)\n", appendNewline: false)
                     transitionToDetailA(x)
-                    print("transitionToDetailA state: \(navState)\n")
+                    print("transitionToDetailA state: \(navState)\n", appendNewline: false)
                 }
                 else if navState == 2 {
-                    print("transitionToDetailB state: \(navState)\n")
+                    print("transitionToDetailB state: \(navState)\n", appendNewline: false)
                     transitionToDetailB(x)
-                    print("transitionToDetailB state: \(navState)\n")
+                    print("transitionToDetailB state: \(navState)\n", appendNewline: false)
                 }
                 
             }
@@ -1256,7 +1261,7 @@ class LogContainer: UIViewController, EZOutputDataSource {
                     let messageDisplay = UIAlertController(title: "Edit Dream Name", message: "Rename the dream", preferredStyle: UIAlertControllerStyle.Alert)
                     
                     messageDisplay.addTextFieldWithConfigurationHandler { textField in }
-                    let messageTextField = messageDisplay.textFields![0] as! UITextField
+                    let messageTextField = messageDisplay.textFields![0] as UITextField
                     messageTextField.placeholder = "Dream name"
                     messageTextField.text = dreamBoxes![x].title!
                     messageTextField.tag = 20
@@ -1299,7 +1304,7 @@ class LogContainer: UIViewController, EZOutputDataSource {
             
             if CGRectContainsPoint(dreamBoxes![x].frame, currentLocation) {
                 if navState == 4 {
-                    print("Edit the description")
+                    print("Edit the description", appendNewline: false)
                 }
                 else {
                     dreamBoxTap(gesture)

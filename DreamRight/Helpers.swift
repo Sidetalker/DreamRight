@@ -7,6 +7,42 @@
 //
 
 import UIKit
+import CoreData
+
+let managedObjectContext: NSManagedObjectContext? = {
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    if let managedObjectContext = appDelegate.managedObjectContext { return managedObjectContext }
+    else { return nil } }()
+
+// Inserts an object into the CoreData stack and the new object
+func insertObject(name: String) -> AnyObject {
+    return NSEntityDescription.insertNewObjectForEntityForName(name, inManagedObjectContext: managedObjectContext!)
+}
+
+// Fetches all specified records from the CoreData stack
+func getObjects(name: String, predicate: NSPredicate?) -> [AnyObject] {
+    let fetchRequest = NSFetchRequest(entityName: name)
+    fetchRequest.predicate = predicate
+    
+    do {
+        return try managedObjectContext!.executeFetchRequest(fetchRequest)
+    }
+    catch {
+        print("Couldn't retrieve objects")
+    }
+    
+    return []
+}
+
+// Saves the CoreData stacks
+func save() {
+    do {
+        try managedObjectContext!.save()
+    }
+    catch {
+        print("Couldn't save m8, piss off")
+    }
+}
 
 extension String {
     var floatValue: CGFloat {
@@ -21,7 +57,7 @@ func randomFloatBetweenNumbers(firstNum: CGFloat, secondNum: CGFloat) -> CGFloat
 func randomIntBetweenNumbers(firstNum: Int, secondNum: Int) -> Int {
     let first = CGFloat(firstNum)
     let second = CGFloat(secondNum)
-    let random = randomFloatBetweenNumbers(first, second)
+    let random = randomFloatBetweenNumbers(first, secondNum: second)
     
     return Int(random)
 }
@@ -37,22 +73,15 @@ struct Star {
     var finalFrame: CGRect
     
     func transition(forward: Bool, twinkle: Bool) {
-        var displayFrame = self.finalFrame
-        let timing = Double(randomFloatBetweenNumbers(1.1, 1.5))
-        let delayMod = Double(randomFloatBetweenNumbers(0.5, 1.5))
-        let angle = Double(randomFloatBetweenNumbers(1, 5))
-        
-        if !forward {
-            displayFrame = self.baseFrame
-        }
+        let timing = Double(randomFloatBetweenNumbers(1.1, secondNum: 1.5))
+        let angle = Double(randomFloatBetweenNumbers(1, secondNum: 5))
         
         self.view.frame = CGRect(x: baseFrame.origin.x, y: baseFrame.origin.y, width: 0.1, height: 0.1)
         
         let rotation = -CGFloat(angle / 180 * M_PI)
         let scale = self.finalFrame.width * 10
-        let translation = (self.baseFrame.origin.x - self.finalFrame.origin.x) / 2
         
-        let bonusDelay = delay + delay * Double(randomFloatBetweenNumbers(0.3, 3))
+        let bonusDelay = delay + delay * Double(randomFloatBetweenNumbers(0.3, secondNum: 3))
         
         UIView.animateWithDuration(time, delay: bonusDelay, options: animationOptions, animations: {
             let rotationTransform = CGAffineTransformRotate(CGAffineTransformIdentity, rotation)
@@ -75,16 +104,16 @@ struct Star {
         let rotationFull = angle
         var rotationRightFull = CGFloat(rotationFull / 180 * M_PI)
         var rotationLeftFull = -rotationRightFull
-        let sizeMod = randomFloatBetweenNumbers(0.75, 1.25)
+        let sizeMod = randomFloatBetweenNumbers(0.75, secondNum: 1.25)
         
-        let returnChance = Int(randomFloatBetweenNumbers(1, chance))
+        let returnChance = Int(randomFloatBetweenNumbers(1, secondNum: chance))
         
         if returnChance != 1 {
             self.twinkle(false, timing: timing, angle: angle, chance: 3, scale: scale)
             return
         }
         
-        if Int(randomFloatBetweenNumbers(1, 2)) % 2 == 0 {
+        if Int(randomFloatBetweenNumbers(1, secondNum: 2)) % 2 == 0 {
             rotationLeftFull = -rotationLeftFull
             rotationRightFull = -rotationRightFull
         }
@@ -99,16 +128,12 @@ struct Star {
         
         UIView.animateWithDuration(fullDuration, delay: fullDuration, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
             let rotationTransform = CGAffineTransformRotate(CGAffineTransformIdentity, rotationRightFull)
-            let sizeTransform = CGAffineTransformScale(CGAffineTransformIdentity, CGFloat(scale * 10 * sizeMod), CGFloat(scale * 10 * sizeMod))
-            let bothTransforms = CGAffineTransformConcat(rotationTransform, sizeTransform)
             self.view.transform = rotationTransform
             
             }, completion: nil)
         
         UIView.animateWithDuration(fullDuration / 2, delay: fullDuration * 2, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
             let rotationTransform = CGAffineTransformRotate(CGAffineTransformIdentity, rotationLeftFull / 2)
-            let sizeTransform = CGAffineTransformScale(CGAffineTransformIdentity, CGFloat(scale * sizeMod), CGFloat(scale * sizeMod))
-            let bothTransforms = CGAffineTransformConcat(rotationTransform, sizeTransform)
             self.view.transform = rotationTransform
             
             }, completion: {
@@ -211,12 +236,11 @@ func createDrawableString(formattedString: NSAttributedString, frame: CGRect) ->
     let letters = CGPathCreateMutable()
     
     let line = CTLineCreateWithAttributedString(formattedString)
-    var runArrayCT = CTLineGetGlyphRuns(line)
+    let runArrayCT = CTLineGetGlyphRuns(line)
     var runArrayNS = runArrayCT as Array
     
     for var x = 0; x < runArrayNS.count; x++ {
         let runCT = runArrayNS[x] as! CTRunRef
-        let runPT = CFArrayGetValueAtIndex(runArrayCT, x)
         
         let attributesDict = CTRunGetAttributes(runCT) as Dictionary
         
@@ -231,7 +255,7 @@ func createDrawableString(formattedString: NSAttributedString, frame: CGRect) ->
             CTRunGetGlyphs(runCT, range, &glyph)
             CTRunGetPositions(runCT, range, &position)
             
-            var letter = CTFontCreatePathForGlyph(runFont, glyph, nil)
+            let letter = CTFontCreatePathForGlyph(runFont, glyph, nil)
             var transform = CGAffineTransformMakeTranslation(position.x, position.y)
             
             CGPathAddPath(letters, &transform, letter)
@@ -268,7 +292,7 @@ func delay(delay: Double, closure:()->()) {
 extension UIView {
     class func initWithNibName<T>(nibName: String) -> T {
         
-        var viewsInNib = NSBundle.mainBundle().loadNibNamed(nibName, owner: self, options: nil)
+        let viewsInNib = NSBundle.mainBundle().loadNibNamed(nibName, owner: self, options: nil)
         
         var returnView: T!
         for view in viewsInNib {

@@ -51,6 +51,11 @@ class BurstView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        animator = UIDynamicAnimator(referenceView: self)
+        
+        self.animator.addBehavior(gravity)
+        self.animator.addBehavior(velocityAndShit)
     }
     
     func addImage(image: UIImage, center: CGPoint) {
@@ -64,30 +69,29 @@ class BurstView: UIView {
         
         imageView.frame = CGRect(origin: location, size: CGSize(width: size, height: size))
         imageView.alpha = 0.0
-        animator = UIDynamicAnimator(referenceView: self)
-        
-        self.animator.addBehavior(gravity)
-        self.animator.addBehavior(velocityAndShit)
+//        animator = UIDynamicAnimator(referenceView: self)
+//        
+//        self.animator.addBehavior(gravity)
+//        self.animator.addBehavior(velocityAndShit)
     }
     
     func explode() {
         for star in stars {
-            let starLocation = star.frame.origin
+            let curDelay = Double(randomFloatBetweenNumbers(minAnimationDelay, secondNum: maxAnimationDelay))
+            var curAngularity = randomFloatBetweenNumbers(minAngularVelocity, secondNum: maxAngularVelocity)
+            let curHeight = -randomFloatBetweenNumbers(minHeight, secondNum: maxHeight)
+            var curLinearity = CGPoint(x: randomFloatBetweenNumbers(minDirection, secondNum: maxDirection), y: curHeight)
             
-            let curDelay = Double(randomFloatBetweenNumbers(minAnimationDelay, maxAnimationDelay))
-            var curAngularity = randomFloatBetweenNumbers(minAngularVelocity, maxAngularVelocity)
-            let curHeight = -randomFloatBetweenNumbers(minHeight, maxHeight)
-            var curLinearity = CGPoint(x: randomFloatBetweenNumbers(minDirection, maxDirection), y: curHeight)
-            
-            if randomIntBetweenNumbers(0, 10) % 2 == 1 {
+            if randomIntBetweenNumbers(0, secondNum: 10) % 2 == 1 {
                 curAngularity = -curAngularity
             }
             
-            if randomIntBetweenNumbers(0, 10) % 2 == 1 {
+            if randomIntBetweenNumbers(0, secondNum: 10) % 2 == 1 {
                 curLinearity = CGPoint(x: -curLinearity.x, y: curHeight)
             }
             
-            delay(curDelay, {
+            delay(curDelay, closure: {
+                // Set up the gravitronator
                 self.gravity.addItem(star)
                 self.velocityAndShit.addItem(star)
                 self.velocityAndShit.addAngularVelocity(curAngularity, forItem: star)
@@ -95,15 +99,15 @@ class BurstView: UIView {
                 
                 star.transform = CGAffineTransformIdentity
                 
-                UIView.animateWithDuration(growthTime, delay: 0.0, options: nil, animations: {
+                UIView.animateWithDuration(growthTime, delay: 0.0, options: [], animations: {
                     star.transform = CGAffineTransformMakeScale(scale, scale)
                     }, completion: nil)
                 
-                UIView.animateWithDuration(fadeInTime, delay: 0.0, options: nil, animations: {
+                UIView.animateWithDuration(fadeInTime, delay: 0.0, options: [], animations: {
                     star.alpha = 1.0
                     }, completion: {
                         (value: Bool) in
-                        UIView.animateWithDuration(fadeOutTime, delay: fadeDelay, options: nil, animations: {
+                        UIView.animateWithDuration(fadeOutTime, delay: fadeDelay, options: [], animations: {
                             star.alpha = 0.0
                             }, completion: nil)
                 })
@@ -111,7 +115,7 @@ class BurstView: UIView {
         }
         
         // Wait 2 seconds till we're sure the stars are offscreen
-        delay(2.0, {
+        delay(2.0, closure: {
             self.removeFromSuperview()
         })
     }
@@ -149,6 +153,8 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
     var recordingStart: NSDate?
     var savingDream = false
     
+    var theNight: Night!
+    
     // Lukas's unicorn
     @IBOutlet var imgUnicorn: UIImageView!
 
@@ -172,6 +178,64 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         
         self.view.addSubview(exitView)
         self.view.addSubview(detailView)
+        
+        // Create the current night object if needed
+        let nights = getObjects("Night", predicate: nil) as! [Night]
+        var recentNight = nights[0].date
+        
+        // Get the most recent night
+        for night in nights {
+            if night.date?.timeIntervalSinceDate(recentNight!) < 0 {
+                recentNight = night.date
+            }
+        }
+        
+        // Get time interval from previous 3 PM
+        let rightNow = NSDate()
+        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
+        let nowComponents = calendar?.component(NSCalendarUnit.Hour, fromDate: <#T##NSDate#>)
+        
+        
+        let dateComponents = NSDateComponents()
+        dateComponents.day
+        
+        NSDateComponents *comps = [[NSDateComponents alloc] init];
+        [comps setDay:6];
+        [comps setMonth:5];
+        [comps setYear:2004];
+        NSCalendar *gregorian = [[NSCalendar alloc]
+        initWithCalendarIdentifier:NSGregorianCalendar];
+        NSDate *date = [gregorian dateFromComponents:comps];
+        [comps release];
+        
+        NSCalendar *gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        
+        // Extract date components into components1
+        NSDateComponents *components1 = [gregorianCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit
+        fromDate:date1];
+        
+        // Extract time components into components2
+        NSDateComponents *components2 = [gregorianCalendar components:NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit
+        fromDate:date2];
+        
+        // Combine date and time into components3
+        NSDateComponents *components3 = [[NSDateComponents alloc] init];
+        
+        [components3 setYear:components1.year];
+        [components3 setMonth:components1.month];
+        [components3 setDay:components1.day];
+        
+        [components3 setHour:components2.hour];
+        [components3 setMinute:components2.minute];
+        [components3 setSecond:components2.second];
+        
+        // Generate a new NSDate from components3.
+        NSDate *combinedDate = [gregorianCalendar dateFromComponents:components3];
+        
+        if recentNight?.timeIntervalSinceDate(tonight) > (60 * 60 )
+        
+        
+        print(nights)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -223,13 +287,13 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
     }
     
     func showUnicorn() {
-        delay(0.5, {
+        delay(0.5, closure: {
             let size = self.imgUnicorn.frame.size
             let newY = self.view.frame.height - 178
             let sameX = self.view.frame.width / 2 - 89
             let newPoint = CGPoint(x: sameX, y: newY)
             
-            UIView.animateWithDuration(0.9, delay: 0.0, usingSpringWithDamping: 0.47, initialSpringVelocity: 0.0, options: nil, animations: {
+            UIView.animateWithDuration(0.9, delay: 0.0, usingSpringWithDamping: 0.47, initialSpringVelocity: 0.0, options: [], animations: {
                 self.imgUnicorn.frame = CGRect(origin: newPoint, size: size)
                 }, completion: nil)
         })
@@ -327,9 +391,9 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
                 let starView = BurstView(frame: self.view.frame)
                 
                 // Create each of the stars
-                for x in 0...randomIntBetweenNumbers(minStars, maxStars) {
+                for _ in 0...randomIntBetweenNumbers(minStars, secondNum: maxStars) {
                     // Calculate frame and generate star
-                    let curSize = randomFloatBetweenNumbers(minSize, maxSize)
+                    let curSize = randomFloatBetweenNumbers(minSize, secondNum: maxSize)
                     let curRect = CGRect(origin: CGPointZero, size: CGSize(width: curSize, height: curSize))
                     let curStar = DreamRightSK.imageOfLoneStar(curRect)
                     
@@ -343,14 +407,21 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
                 recordingStart = NSDate()
                 microphone.startFetchingAudio()
                 
-                delay(0.1, {
+                delay(0.1, closure: {
                     self.visualizerMask.frame.origin = CGPoint(x: -self.view.frame.width, y: 0)
                 })
+                
+                // Create persistent object
+                let test = Dream()
             }
             else {
                 stopMic()
             }
         }
+    }
+    
+    func beginSave() {
+        
     }
     
     func stopMic() {
@@ -411,24 +482,24 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         
         stopMic()
         
-        let starView = BurstView(frame: self.view.frame)
-        
-        for x in 0...randomIntBetweenNumbers(minStars, maxStars) {
-            // Calculate frame and generate star
-            let curSize = randomFloatBetweenNumbers(minSize, maxSize)
-            let curRect = CGRect(origin: CGPointZero, size: CGSize(width: curSize, height: curSize))
-            let curStar = DreamRightSK.imageOfLoneStar(curRect)
-            
-            starView.addImage(curStar, center: CGPoint(x: self.view.frame.width / 2, y: self.view.frame.height / 2))
-        }
-        
-        self.view.addSubview(starView)
-        
-        delay(0.3, {
-            starView.explode()
-        })
-        
-        delay(0.8, {
+//        let starView = BurstView(frame: self.view.frame)
+//        
+//        for _ in 0...randomIntBetweenNumbers(minStars, secondNum: maxStars) {
+//            // Calculate frame and generate star
+//            let curSize = randomFloatBetweenNumbers(minSize, secondNum: maxSize)
+//            let curRect = CGRect(origin: CGPointZero, size: CGSize(width: curSize, height: curSize))
+//            let curStar = DreamRightSK.imageOfLoneStar(curRect)
+//            
+//            starView.addImage(curStar, center: CGPoint(x: self.view.frame.width / 2, y: self.view.frame.height / 2))
+//        }
+//        
+//        self.view.addSubview(starView)
+//        
+//        delay(0.3, closure: {
+//            starView.explode()
+//        })
+//        
+        delay(0.8, closure: {
             self.dismissViewControllerAnimated(true, completion: nil)
         })
     }
@@ -490,7 +561,7 @@ class DetailView : UIView {
         NSBundle.mainBundle().loadNibNamed("DreamInstruction", owner: self, options: nil)
         
         detailView.frame = self.bounds
-        detailView.autoresizingMask = .FlexibleHeight | .FlexibleWidth
+        detailView.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
         
         self.addSubview(detailView)
     }
@@ -525,7 +596,7 @@ class DetailView : UIView {
                     }, completion: nil)})
         
         // Fade the text back in when the frame update is complete
-        UIView.animateWithDuration(fadeDuration, delay: fadeDuration + expandDuration, options: nil, animations: {
+        UIView.animateWithDuration(fadeDuration, delay: fadeDuration + expandDuration, options: [], animations: {
             fadeIn.alpha = 1
             }, completion: {
                 (value: Bool) in
@@ -542,7 +613,7 @@ class DetailView : UIView {
             self.lblQuestionMark.alpha = 0.0
             }, completion: {
                 (value: Bool) in
-                UIView.animateWithDuration(dismissDuration, delay: 0.0, usingSpringWithDamping: dismissDamping, initialSpringVelocity: dismissVelocity, options: nil, animations: {
+                UIView.animateWithDuration(dismissDuration, delay: 0.0, usingSpringWithDamping: dismissDamping, initialSpringVelocity: dismissVelocity, options: [], animations: {
                     self.frame = CGRect(x: superSize.width - 25, y: superSize.height - 25, width: 0, height: 0)
                     }, completion: nil)})
     }
@@ -639,12 +710,12 @@ class ExitView: UIView {
         NSBundle.mainBundle().loadNibNamed("DreamQuit", owner: self, options: nil)
         
         contentView.frame = self.bounds
-        contentView.autoresizingMask = .FlexibleHeight | .FlexibleWidth
+        contentView.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
         
         if masked {
             hasMask = true
             
-            var newFrame = CGRect(x: horizontalPadding, y: superSize.height / 2 - verticalHeight / 2, width: superSize.width - horizontalPadding * 2, height: verticalHeight)
+            let newFrame = CGRect(x: horizontalPadding, y: superSize.height / 2 - verticalHeight / 2, width: superSize.width - horizontalPadding * 2, height: verticalHeight)
             
             self.frame = newFrame
             contentView.frame = self.bounds
@@ -706,7 +777,7 @@ class ExitView: UIView {
                     }, completion: nil)})
         
         // Fade the text back in when the frame update is complete
-        UIView.animateWithDuration(fadeDuration, delay: fadeDuration + expandDuration, options: nil, animations: {
+        UIView.animateWithDuration(fadeDuration, delay: fadeDuration + expandDuration, options: [], animations: {
             fadeIn.alpha = 1
             }, completion: {
                 (value: Bool) in
@@ -719,7 +790,7 @@ class ExitView: UIView {
             return
         }
         
-        let curPosition = (mask!.presentationLayer().valueForKey("position") as! NSValue).CGPointValue()
+        let curPosition = (mask!.presentationLayer()!.valueForKey("position") as! NSValue).CGPointValue()
         var newPosition = CGPoint(x: self.frame.size.width / 3, y: 0)
         let fullLength = self.frame.size.width
         var transitionTime = showMask
@@ -737,7 +808,7 @@ class ExitView: UIView {
         revealAnimation.duration = NSTimeInterval(transitionTime)
         
         CATransaction.setCompletionBlock({
-            if !maskOn && (self.mask!.presentationLayer().valueForKey("position") as! NSValue).CGPointValue().x == self.frame.size.width / 3 {
+            if !maskOn && (self.mask!.presentationLayer()!.valueForKey("position") as! NSValue).CGPointValue().x == self.frame.size.width / 3 {
                 (self.superview! as! ExitSuperView).initiateExit()
             }
         })
@@ -758,7 +829,7 @@ class ExitView: UIView {
             self.lblPrompt.alpha = 0.0
             }, completion: {
                 (value: Bool) in
-                UIView.animateWithDuration(dismissDuration, delay: 0.0, usingSpringWithDamping: dismissDamping, initialSpringVelocity: dismissVelocity, options: nil, animations: {
+                UIView.animateWithDuration(dismissDuration, delay: 0.0, usingSpringWithDamping: dismissDamping, initialSpringVelocity: dismissVelocity, options: [], animations: {
                     self.frame = CGRect(x: superSize.width / 2, y: superSize.height / 2, width: 0, height: 0)
                     self.alpha = 0.0
                     }, completion: nil)})

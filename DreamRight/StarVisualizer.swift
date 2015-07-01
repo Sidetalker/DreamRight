@@ -18,6 +18,6 @@ class StarVisualizer: EZAudioPlot {
     }
     
     override func setSampleData(data: UnsafeMutablePointer<Float>, length: Int32) {
-        print("First data point: \(fabsf(data[0]))")
+        print("First data point: \(fabsf(data[0]))", appendNewline: false)
     }
 }

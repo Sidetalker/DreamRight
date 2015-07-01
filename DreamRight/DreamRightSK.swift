@@ -37,7 +37,7 @@ public class DreamRightSK : NSObject {
         
         //// Group
         //// Oval Drawing
-        var ovalPath = UIBezierPath()
+        let ovalPath = UIBezierPath()
         ovalPath.moveToPoint(CGPointMake(group.minX + 0.85355 * group.width, group.minY + 0.85355 * group.height))
         ovalPath.addCurveToPoint(CGPointMake(group.minX + 0.85355 * group.width, group.minY + 0.14645 * group.height), controlPoint1: CGPointMake(group.minX + 1.04882 * group.width, group.minY + 0.65829 * group.height), controlPoint2: CGPointMake(group.minX + 1.04882 * group.width, group.minY + 0.34171 * group.height))
         ovalPath.addCurveToPoint(CGPointMake(group.minX + 0.14645 * group.width, group.minY + 0.14645 * group.height), controlPoint1: CGPointMake(group.minX + 0.65829 * group.width, group.minY + -0.04882 * group.height), controlPoint2: CGPointMake(group.minX + 0.34171 * group.width, group.minY + -0.04882 * group.height))
@@ -50,7 +50,7 @@ public class DreamRightSK : NSObject {
         
         
         //// Bezier Drawing
-        var bezierPath = UIBezierPath()
+        let bezierPath = UIBezierPath()
         bezierPath.moveToPoint(CGPointMake(group.minX + 0.66667 * group.width, group.minY + 0.49629 * group.height))
         bezierPath.addLineToPoint(CGPointMake(group.minX + 0.37500 * group.width, group.minY + 0.35045 * group.height))
         bezierPath.addLineToPoint(CGPointMake(group.minX + 0.37500 * group.width, group.minY + 0.64212 * group.height))
@@ -69,7 +69,7 @@ public class DreamRightSK : NSObject {
         
         //// Group
         //// Oval Drawing
-        var ovalPath = UIBezierPath()
+        let ovalPath = UIBezierPath()
         ovalPath.moveToPoint(CGPointMake(group.minX + 0.85355 * group.width, group.minY + 0.85355 * group.height))
         ovalPath.addCurveToPoint(CGPointMake(group.minX + 0.85355 * group.width, group.minY + 0.14645 * group.height), controlPoint1: CGPointMake(group.minX + 1.04882 * group.width, group.minY + 0.65829 * group.height), controlPoint2: CGPointMake(group.minX + 1.04882 * group.width, group.minY + 0.34171 * group.height))
         ovalPath.addCurveToPoint(CGPointMake(group.minX + 0.14645 * group.width, group.minY + 0.14645 * group.height), controlPoint1: CGPointMake(group.minX + 0.65829 * group.width, group.minY + -0.04882 * group.height), controlPoint2: CGPointMake(group.minX + 0.34171 * group.width, group.minY + -0.04882 * group.height))
@@ -82,7 +82,7 @@ public class DreamRightSK : NSObject {
         
         
         //// Bezier Drawing
-        var bezierPath = UIBezierPath()
+        let bezierPath = UIBezierPath()
         bezierPath.moveToPoint(CGPointMake(group.minX + 0.64386 * group.width, group.minY + 0.64205 * group.height))
         bezierPath.addLineToPoint(CGPointMake(group.minX + 0.64386 * group.width, group.minY + 0.35045 * group.height))
         bezierPath.addLineToPoint(CGPointMake(group.minX + 0.35227 * group.width, group.minY + 0.35045 * group.height))
@@ -102,7 +102,7 @@ public class DreamRightSK : NSObject {
         
         //// Group
         //// Moon Drawing
-        var moonPath = UIBezierPath()
+        let moonPath = UIBezierPath()
         moonPath.moveToPoint(CGPointMake(group.minX + 1.00000 * group.width, group.minY + 0.71616 * group.height))
         moonPath.addCurveToPoint(CGPointMake(group.minX + 0.49340 * group.width, group.minY + 0.54028 * group.height), controlPoint1: CGPointMake(group.minX + 1.00000 * group.width, group.minY + 0.71616 * group.height), controlPoint2: CGPointMake(group.minX + 0.63746 * group.width, group.minY + 0.72511 * group.height))
         moonPath.addCurveToPoint(CGPointMake(group.minX + 0.48152 * group.width, group.minY + 0.00000 * group.height), controlPoint1: CGPointMake(group.minX + 0.34935 * group.width, group.minY + 0.35546 * group.height), controlPoint2: CGPointMake(group.minX + 0.48152 * group.width, group.minY + 0.00000 * group.height))
@@ -123,7 +123,7 @@ public class DreamRightSK : NSObject {
         
         
         //// StarBig Drawing
-        var starBigPath = UIBezierPath()
+        let starBigPath = UIBezierPath()
         starBigPath.moveToPoint(CGPointMake(group.minX + 0.17301 * group.width, group.minY + 0.24078 * group.height))
         starBigPath.addCurveToPoint(CGPointMake(group.minX + 0.19158 * group.width, group.minY + 0.29583 * group.height), controlPoint1: CGPointMake(group.minX + 0.17301 * group.width, group.minY + 0.24078 * group.height), controlPoint2: CGPointMake(group.minX + 0.17301 * group.width, group.minY + 0.27748 * group.height))
         starBigPath.addCurveToPoint(CGPointMake(group.minX + 0.24729 * group.width, group.minY + 0.31419 * group.height), controlPoint1: CGPointMake(group.minX + 0.21015 * group.width, group.minY + 0.31419 * group.height), controlPoint2: CGPointMake(group.minX + 0.24729 * group.width, group.minY + 0.31419 * group.height))
@@ -146,7 +146,7 @@ public class DreamRightSK : NSObject {
         
         
         //// StarMedium Drawing
-        var starMediumPath = UIBezierPath()
+        let starMediumPath = UIBezierPath()
         starMediumPath.moveToPoint(CGPointMake(group.minX + 0.23838 * group.width, group.minY + 0.39347 * group.height))
         starMediumPath.addCurveToPoint(CGPointMake(group.minX + 0.25249 * group.width, group.minY + 0.43531 * group.height), controlPoint1: CGPointMake(group.minX + 0.23838 * group.width, group.minY + 0.39347 * group.height), controlPoint2: CGPointMake(group.minX + 0.23838 * group.width, group.minY + 0.42136 * group.height))
         starMediumPath.addCurveToPoint(CGPointMake(group.minX + 0.29483 * group.width, group.minY + 0.44926 * group.height), controlPoint1: CGPointMake(group.minX + 0.26660 * group.width, group.minY + 0.44926 * group.height), controlPoint2: CGPointMake(group.minX + 0.29483 * group.width, group.minY + 0.44926 * group.height))
@@ -169,7 +169,7 @@ public class DreamRightSK : NSObject {
         
         
         //// StarSmall Drawing
-        var starSmallPath = UIBezierPath()
+        let starSmallPath = UIBezierPath()
         starSmallPath.moveToPoint(CGPointMake(group.minX + 0.10171 * group.width, group.minY + 0.38172 * group.height))
         starSmallPath.addCurveToPoint(CGPointMake(group.minX + 0.11136 * group.width, group.minY + 0.41035 * group.height), controlPoint1: CGPointMake(group.minX + 0.10171 * group.width, group.minY + 0.38172 * group.height), controlPoint2: CGPointMake(group.minX + 0.10171 * group.width, group.minY + 0.40081 * group.height))
         starSmallPath.addCurveToPoint(CGPointMake(group.minX + 0.14033 * group.width, group.minY + 0.41989 * group.height), controlPoint1: CGPointMake(group.minX + 0.12102 * group.width, group.minY + 0.41989 * group.height), controlPoint2: CGPointMake(group.minX + 0.14033 * group.width, group.minY + 0.41989 * group.height))
@@ -194,7 +194,7 @@ public class DreamRightSK : NSObject {
     public class func drawLoneStar(frame: CGRect) {
         
         //// StarBig Drawing
-        var starBigPath = UIBezierPath()
+        let starBigPath = UIBezierPath()
         starBigPath.moveToPoint(CGPointMake(frame.minX + 0.50000 * frame.width, frame.minY + 0.02941 * frame.height))
         starBigPath.addCurveToPoint(CGPointMake(frame.minX + 0.61765 * frame.width, frame.minY + 0.38235 * frame.height), controlPoint1: CGPointMake(frame.minX + 0.50000 * frame.width, frame.minY + 0.02941 * frame.height), controlPoint2: CGPointMake(frame.minX + 0.50000 * frame.width, frame.minY + 0.26471 * frame.height))
         starBigPath.addCurveToPoint(CGPointMake(frame.minX + 0.97059 * frame.width, frame.minY + 0.50000 * frame.height), controlPoint1: CGPointMake(frame.minX + 0.73529 * frame.width, frame.minY + 0.50000 * frame.height), controlPoint2: CGPointMake(frame.minX + 0.97059 * frame.width, frame.minY + 0.50000 * frame.height))
@@ -221,7 +221,7 @@ public class DreamRightSK : NSObject {
         let context = UIGraphicsGetCurrentContext()
         
         //// Polygon Drawing
-        var polygonPath = UIBezierPath()
+        let polygonPath = UIBezierPath()
         polygonPath.moveToPoint(CGPointMake(122, 8))
         polygonPath.addLineToPoint(CGPointMake(143.65, 45.5))
         polygonPath.addLineToPoint(CGPointMake(100.35, 45.5))
@@ -235,7 +235,7 @@ public class DreamRightSK : NSObject {
         CGContextTranslateCTM(context, 186, 24.64)
         CGContextRotateCTM(context, 45 * CGFloat(M_PI) / 180)
         
-        var polygon2Path = UIBezierPath()
+        let polygon2Path = UIBezierPath()
         polygon2Path.moveToPoint(CGPointMake(25, 0))
         polygon2Path.addLineToPoint(CGPointMake(46.65, 37.5))
         polygon2Path.addLineToPoint(CGPointMake(3.35, 37.5))
@@ -251,7 +251,7 @@ public class DreamRightSK : NSObject {
         CGContextTranslateCTM(context, 238, 99)
         CGContextRotateCTM(context, 90 * CGFloat(M_PI) / 180)
         
-        var polygon3Path = UIBezierPath()
+        let polygon3Path = UIBezierPath()
         polygon3Path.moveToPoint(CGPointMake(25, 0))
         polygon3Path.addLineToPoint(CGPointMake(46.65, 37.5))
         polygon3Path.addLineToPoint(CGPointMake(3.35, 37.5))
@@ -267,7 +267,7 @@ public class DreamRightSK : NSObject {
         CGContextTranslateCTM(context, 221.36, 186)
         CGContextRotateCTM(context, 135 * CGFloat(M_PI) / 180)
         
-        var polygon4Path = UIBezierPath()
+        let polygon4Path = UIBezierPath()
         polygon4Path.moveToPoint(CGPointMake(25, 0))
         polygon4Path.addLineToPoint(CGPointMake(46.65, 37.5))
         polygon4Path.addLineToPoint(CGPointMake(3.35, 37.5))
@@ -283,7 +283,7 @@ public class DreamRightSK : NSObject {
         CGContextTranslateCTM(context, 147, 240)
         CGContextRotateCTM(context, 180 * CGFloat(M_PI) / 180)
         
-        var polygon5Path = UIBezierPath()
+        let polygon5Path = UIBezierPath()
         polygon5Path.moveToPoint(CGPointMake(25, 0))
         polygon5Path.addLineToPoint(CGPointMake(46.65, 37.5))
         polygon5Path.addLineToPoint(CGPointMake(3.35, 37.5))
@@ -299,7 +299,7 @@ public class DreamRightSK : NSObject {
         CGContextTranslateCTM(context, 6, 149)
         CGContextRotateCTM(context, -90 * CGFloat(M_PI) / 180)
         
-        var polygon6Path = UIBezierPath()
+        let polygon6Path = UIBezierPath()
         polygon6Path.moveToPoint(CGPointMake(25, 0))
         polygon6Path.addLineToPoint(CGPointMake(46.65, 37.5))
         polygon6Path.addLineToPoint(CGPointMake(3.35, 37.5))
@@ -315,7 +315,7 @@ public class DreamRightSK : NSObject {
         CGContextTranslateCTM(context, 57, 221.36)
         CGContextRotateCTM(context, -135 * CGFloat(M_PI) / 180)
         
-        var polygon7Path = UIBezierPath()
+        let polygon7Path = UIBezierPath()
         polygon7Path.moveToPoint(CGPointMake(25, 0))
         polygon7Path.addLineToPoint(CGPointMake(46.65, 37.5))
         polygon7Path.addLineToPoint(CGPointMake(3.35, 37.5))
@@ -331,7 +331,7 @@ public class DreamRightSK : NSObject {
         CGContextTranslateCTM(context, 21.64, 60)
         CGContextRotateCTM(context, -45 * CGFloat(M_PI) / 180)
         
-        var polygon8Path = UIBezierPath()
+        let polygon8Path = UIBezierPath()
         polygon8Path.moveToPoint(CGPointMake(25, 0))
         polygon8Path.addLineToPoint(CGPointMake(46.65, 37.5))
         polygon8Path.addLineToPoint(CGPointMake(3.35, 37.5))
@@ -343,7 +343,7 @@ public class DreamRightSK : NSObject {
         
         
         //// Oval Drawing
-        var ovalPath = UIBezierPath(ovalInRect: CGRectMake(40, 42, 164, 164))
+        let ovalPath = UIBezierPath(ovalInRect: CGRectMake(40, 42, 164, 164))
         DreamRightSK.yellow.setFill()
         ovalPath.fill()
     }
@@ -353,37 +353,37 @@ public class DreamRightSK : NSObject {
     public class func imageOfPlayUp(frame: CGRect) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(frame.size, false, 0)
         DreamRightSK.drawPlayUp(frame)
-        var imageOfPlayUp = UIGraphicsGetImageFromCurrentImageContext()
+        let imageOfPlayUp = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return imageOfPlayUp!
+        return imageOfPlayUp
     }
     
     public class func imageOfStopUp(frame: CGRect) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(frame.size, false, 0)
         DreamRightSK.drawStopUp(frame)
-        var imageOfStopUp = UIGraphicsGetImageFromCurrentImageContext()
+        let imageOfStopUp = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return imageOfStopUp!
+        return imageOfStopUp
     }
     
     public class func imageOfIconCanvas(frame: CGRect) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(frame.size, false, 0)
         DreamRightSK.drawIconCanvas(frame)
-        var imageOfIconCanvas = UIGraphicsGetImageFromCurrentImageContext()
+        let imageOfIconCanvas = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return imageOfIconCanvas!
+        return imageOfIconCanvas
     }
     
     public class func imageOfLoneStar(frame: CGRect) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(frame.size, false, 0)
         DreamRightSK.drawLoneStar(frame)
-        var imageOfLoneStar = UIGraphicsGetImageFromCurrentImageContext()
+        let imageOfLoneStar = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return imageOfLoneStar!
+        return imageOfLoneStar
     }
     
 }

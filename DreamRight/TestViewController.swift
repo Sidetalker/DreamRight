@@ -48,7 +48,10 @@ class TestViewControllerA: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     @IBAction func recordPressed(sender: AnyObject) {
         if (!recorder!.recording) {
             let session = AVAudioSession.sharedInstance()
-            session.setActive(true, error: nil)
+            do {
+                try session.setActive(true)
+            } catch _ {
+            }
             
             recorder?.record()
             btnRecord.setTitle("Pause", forState: UIControlState.Normal)
@@ -63,17 +66,25 @@ class TestViewControllerA: UIViewController, AVAudioRecorderDelegate, AVAudioPla
         recorder?.stop()
         
         let session = AVAudioSession.sharedInstance()
-        session.setActive(false, error: nil)
+        do {
+            try session.setActive(false)
+        } catch _ {
+        }
     }
 
     @IBAction func playPressed(sender: AnyObject) {
         if (player == nil) {
             var er: NSError?
-            player = AVAudioPlayer(contentsOfURL: recorder!.url, error: &er)
+            do {
+                player = try AVAudioPlayer(contentsOfURL: recorder!.url)
+            } catch let error as NSError {
+                er = error
+                player = nil
+            }
             
             if (er != nil) {
-                print("Error: \(er.debugDescription)")
-                print("Recorder URL: \(recorder!.url)")
+                print("Error: \(er.debugDescription)", appendNewline: false)
+                print("Recorder URL: \(recorder!.url)", appendNewline: false)
             }
             
             player?.delegate = self
@@ -98,10 +109,10 @@ class TestViewControllerA: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     
     // Handle the taps with random jiggles
     func tapped(gesture: UITapGestureRecognizer) {
-        let count = Int(randomFloatBetweenNumbers(3, 8))
-        let distance = randomFloatBetweenNumbers(5, 25)
+        let count = Int(randomFloatBetweenNumbers(3, secondNum: 8))
+        let distance = randomFloatBetweenNumbers(5, secondNum: 25)
         
-        jiggle(gesture.view!, count, distance)
+        jiggle(gesture.view!, count: count, distance: distance)
     }
     
     
@@ -178,8 +189,8 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         let rightString = NSAttributedString(string: "Right", attributes: Dictionary(dictionaryLiteral: (NSForegroundColorAttributeName, DreamRightSK.yellow), (NSFontAttributeName, UIFont(name: "SavoyeLetPlain", size: 80)!)))
         let rightRect = CGRect(x: 0, y: 200, width: self.view.frame.width, height: 80)
         
-        let dreamLayer = createDrawableString(dreamString, dreamRect)
-        let rightLayer = createDrawableString(rightString, rightRect)
+        let dreamLayer = createDrawableString(dreamString, frame: dreamRect)
+        let rightLayer = createDrawableString(rightString, frame: rightRect)
         
         self.view.layer.addSublayer(dreamLayer)
         self.view.layer.addSublayer(rightLayer)
@@ -268,8 +279,8 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
             return
         }
         
-        starContainers[activeContainer].star.time = NSTimeInterval(txtAnimationLength.text.floatValue)
-        starContainers[activeContainer].star.delay = NSTimeInterval(txtDelay.text.floatValue)
+        starContainers[activeContainer].star.time = NSTimeInterval(txtAnimationLength.text!.floatValue)
+        starContainers[activeContainer].star.delay = NSTimeInterval(txtDelay.text!.floatValue)
     }
     
     override func prefersStatusBarHidden() -> Bool {
@@ -280,9 +291,6 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         for container in starContainers {
             let star = container.star
             let view = container.view
-            let startWidth = view.layer.borderWidth
-            
-//            view.layer.borderWidth = 0.0
             
             if forwardOrBack {
                 UIView.animateWithDuration(star.time, delay: star.delay, options: star.animationOptions, animations: {
@@ -290,12 +298,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
                     let fixedFrame = CGRect(x: view.frame.width / 2 - finalSize.width / 2, y: view.frame.height / 2 - finalSize.height / 2, width: finalSize.width, height: finalSize.height)
                     
                     star.view.frame = fixedFrame
-                    }, completion: {
-                        (value: Bool) in
-                        if (value) {
-//                            view.layer.borderWidth = startWidth
-                        }
-                })
+                    }, completion: nil)
             }
             else {
                 UIView.animateWithDuration(star.time, delay: star.delay, options: star.animationOptions, animations: {
@@ -303,12 +306,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
                     let fixedFrame = CGRect(x: view.frame.width / 2 - finalSize.width / 2, y: view.frame.height / 2 - finalSize.height / 2, width: finalSize.width, height: finalSize.height)
                     
                     star.view.frame = fixedFrame
-                    }, completion: {
-                        (value: Bool) in
-                        if (value) {
-//                            view.layer.borderWidth = startWidth
-                        }
-                })
+                    }, completion: nil)
             }
         }
         
@@ -317,15 +315,14 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
     
     @IBAction func rebuildTouchUp(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
-//        print("Our strings:\n\n\(dataDictToStrings(getDataDict()))")
     }
     
     func getDataDict() -> [[NSObject : AnyObject]] {
         var allData = [[NSObject : AnyObject]]()
         
         for container in starContainers {
-            var curStar = container.star
-            var curFrame = container.view.frame
+            let curStar = container.star
+            let curFrame = container.view.frame
             var curDict = [NSObject : AnyObject]()
             
             // STAR ORIGIN IS CENTER REFERENCED - USE THE CENTER OF THE UIIMAGEVIEW
@@ -445,15 +442,15 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         
         let loc = gesture.locationInView(self.view)
         
-        let maxA: CGFloat = txtMaxA.text.floatValue * 10
-        let maxB: CGFloat = txtMaxB.text.floatValue * 10
+        let maxA: CGFloat = txtMaxA.text!.floatValue * 10
+        let maxB: CGFloat = txtMaxB.text!.floatValue * 10
         let frameMax: CGFloat = max(maxA, maxB)
         
-        let minA = txtMinA.text.floatValue * 10
-        let minB = txtMinB.text.floatValue * 10
+        let minA = txtMinA.text!.floatValue * 10
+        let minB = txtMinB.text!.floatValue * 10
         
-        let delay = NSTimeInterval(txtDelay.text.floatValue)
-        let length = NSTimeInterval(txtAnimationLength.text.floatValue)
+        let delay = NSTimeInterval(txtDelay.text!.floatValue)
+        let length = NSTimeInterval(txtAnimationLength.text!.floatValue)
         
         let viewStartFrame = CGRect(x: loc.x, y: loc.y, width: 0, height: 0)
         let viewEndFrame = CGRect(x: loc.x - (frameMax / 2), y: loc.y - (frameMax / 2), width: frameMax, height: frameMax)
@@ -464,7 +461,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         let animationLength = [length]
         let animationOptions = [UIViewAnimationOptions.CurveEaseOut]
         
-        let starRequest = getStars([[starStartFrame, starEndFrame]], animationDelay, animationLength, animationOptions)
+        let starRequest = getStars([[starStartFrame, starEndFrame]], animationDelays: animationDelay, animationLengths: animationLength, animationOptions: animationOptions)
         
         if starRequest.count == 0 {
             return
@@ -560,7 +557,6 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         
         if let view = recognizer.view {
             let baseLoc = recognizer.locationInView(self.view)
-            let localLoc = recognizer.locationInView(view)
             
             let newCenterX = baseLoc.x - panBaseLoc!.x
             let newCenterY = baseLoc.y - panBaseLoc!.y
@@ -575,8 +571,8 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
         NSLog("Subview Tap")
         
         if activeContainer >= 0 {
-            starContainers[activeContainer].star.time = NSTimeInterval(txtAnimationLength.text.floatValue)
-            starContainers[activeContainer].star.delay = NSTimeInterval(txtDelay.text.floatValue)
+            starContainers[activeContainer].star.time = NSTimeInterval(txtAnimationLength.text!.floatValue)
+            starContainers[activeContainer].star.delay = NSTimeInterval(txtDelay.text!.floatValue)
         }
         
         for x in 0...starContainers.count - 1 {
@@ -618,7 +614,7 @@ class TestViewControllerB: UIViewController, UIGestureRecognizerDelegate, UIText
             return
         }
         
-        starContainers[activeContainer].star.time = NSTimeInterval(txtAnimationLength.text.floatValue)
-        starContainers[activeContainer].star.delay = NSTimeInterval(txtDelay.text.floatValue)
+        starContainers[activeContainer].star.time = NSTimeInterval(txtAnimationLength.text!.floatValue)
+        starContainers[activeContainer].star.delay = NSTimeInterval(txtDelay.text!.floatValue)
     }
 }

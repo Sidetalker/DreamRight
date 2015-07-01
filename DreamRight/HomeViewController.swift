@@ -91,7 +91,7 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         blowUpMoon()
         
         // Wait a bit for the moon to be totally out of sight
-        delay(0.72, {
+        delay(0.72, closure: {
             NSLog("Adding and Twinkling Stars")
             NSLog("That's right, fucking twinkling them")
             self.twinkleStars()
@@ -99,7 +99,7 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
             NSLog("Beginning Text Drawing")
             self.drawText()
             
-            delay(0.3, {
+            delay(0.3, closure: {
                 NSLog("Bring in the Buttons")
                 self.bringInButtons()
             })
@@ -118,9 +118,9 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
     func bringInButtons() {
         self.animator = UIDynamicAnimator(referenceView: self.view)
         
-        let myButtons = [UIButton](count: 2, repeatedValue: UIButton())
+//        let myButtons = [UIButton](count: 2, repeatedValue: UIButton())
         
-        UIView.animateWithDuration(1.7, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut | UIViewAnimationOptions.AllowUserInteraction, animations: {
+        UIView.animateWithDuration(1.7, delay: 0.0, options: [UIViewAnimationOptions.CurveEaseInOut, UIViewAnimationOptions.AllowUserInteraction], animations: {
             self.goToSleep.alpha = 1.0
             self.seeYourDreams.alpha = 1.0
             self.designTheStars.alpha = 1.0
@@ -143,8 +143,8 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         rightView!.backgroundColor = DreamRightSK.blue
         
         // Generate a layer containing beziers for drawing the strings
-        dreamLayer = createDrawableString(dreamString, dreamRect)
-        rightLayer = createDrawableString(rightString, rightRect)
+        dreamLayer = createDrawableString(dreamString, frame: dreamRect)
+        rightLayer = createDrawableString(rightString, frame: rightRect)
         
         // Add the string generation layers to the view\
         self.view.layer.addSublayer(dreamLayer!)
@@ -343,7 +343,7 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
         }
         
         // Get our star objects
-        stars = getStars(frames, delays, times, options)
+        stars = getStars(frames, animationDelays: delays, animationLengths: times, animationOptions: options)
         
         for star in stars {
             self.view.addSubview(star.view)

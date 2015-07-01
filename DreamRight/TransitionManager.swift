@@ -25,17 +25,17 @@ class TransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UIView
         let tempView = UIView(frame: CGRect(origin: fromView.frame.origin, size: fromView.frame.size))
         tempView.backgroundColor = DreamRightSK.blue
         
-        container.addSubview(tempView)
-        container.sendSubviewToBack(tempView)
-        container.addSubview(toView)
-        container.sendSubviewToBack(toView)
+        container!.addSubview(tempView)
+        container!.sendSubviewToBack(tempView)
+        container!.addSubview(toView)
+        container!.sendSubviewToBack(toView)
         
         let duration = self.transitionDuration(transitionContext)
         
         UIView.animateWithDuration(duration / 2, animations: {
             fromView.alpha = 0.0
             }, completion: { finished in
-                container.sendSubviewToBack(tempView)
+                container!.sendSubviewToBack(tempView)
                 UIView.animateWithDuration(duration / 2, animations: {
                     toView.alpha = 1.0
                     }, completion: { finished in
@@ -48,7 +48,7 @@ class TransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UIView
     }
     
     // return how many seconds the transiton animation will take
-    func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
+    func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
         return 1.2
     }
     
