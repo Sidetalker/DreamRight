@@ -9,7 +9,7 @@
 let starCount = 5
 
 class StarVisualizer: EZAudioPlot {
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     

@@ -134,9 +134,9 @@ public class DreamRightSK : NSObject {
         starBigPath.addCurveToPoint(CGPointMake(group.minX + 0.15444 * group.width, group.minY + 0.29583 * group.height), controlPoint1: CGPointMake(group.minX + 0.09873 * group.width, group.minY + 0.31419 * group.height), controlPoint2: CGPointMake(group.minX + 0.13587 * group.width, group.minY + 0.31419 * group.height))
         starBigPath.addCurveToPoint(CGPointMake(group.minX + 0.17301 * group.width, group.minY + 0.24078 * group.height), controlPoint1: CGPointMake(group.minX + 0.17301 * group.width, group.minY + 0.27748 * group.height), controlPoint2: CGPointMake(group.minX + 0.17301 * group.width, group.minY + 0.24078 * group.height))
         starBigPath.closePath()
-        starBigPath.lineCapStyle = kCGLineCapRound;
+//        starBigPath.lineCapStyle = kCGLineCapRound;
         
-        starBigPath.lineJoinStyle = kCGLineJoinBevel;
+//        starBigPath.lineJoinStyle = kCGLineJoinBevel;
         
         DreamRightSK.blue.setFill()
         starBigPath.fill()
@@ -157,9 +157,9 @@ public class DreamRightSK : NSObject {
         starMediumPath.addCurveToPoint(CGPointMake(group.minX + 0.22427 * group.width, group.minY + 0.43531 * group.height), controlPoint1: CGPointMake(group.minX + 0.18193 * group.width, group.minY + 0.44926 * group.height), controlPoint2: CGPointMake(group.minX + 0.21015 * group.width, group.minY + 0.44926 * group.height))
         starMediumPath.addCurveToPoint(CGPointMake(group.minX + 0.23838 * group.width, group.minY + 0.39347 * group.height), controlPoint1: CGPointMake(group.minX + 0.23838 * group.width, group.minY + 0.42136 * group.height), controlPoint2: CGPointMake(group.minX + 0.23838 * group.width, group.minY + 0.39347 * group.height))
         starMediumPath.closePath()
-        starMediumPath.lineCapStyle = kCGLineCapRound;
+//        starMediumPath.lineCapStyle = kCGLineCapRound;
         
-        starMediumPath.lineJoinStyle = kCGLineJoinBevel;
+//        starMediumPath.lineJoinStyle = kCGLineJoinBevel;
         
         DreamRightSK.blue.setFill()
         starMediumPath.fill()
@@ -180,9 +180,9 @@ public class DreamRightSK : NSObject {
         starSmallPath.addCurveToPoint(CGPointMake(group.minX + 0.09205 * group.width, group.minY + 0.41035 * group.height), controlPoint1: CGPointMake(group.minX + 0.06308 * group.width, group.minY + 0.41989 * group.height), controlPoint2: CGPointMake(group.minX + 0.08239 * group.width, group.minY + 0.41989 * group.height))
         starSmallPath.addCurveToPoint(CGPointMake(group.minX + 0.10171 * group.width, group.minY + 0.38172 * group.height), controlPoint1: CGPointMake(group.minX + 0.10171 * group.width, group.minY + 0.40081 * group.height), controlPoint2: CGPointMake(group.minX + 0.10171 * group.width, group.minY + 0.38172 * group.height))
         starSmallPath.closePath()
-        starSmallPath.lineCapStyle = kCGLineCapRound;
+//        starSmallPath.lineCapStyle = kCGLineCapRound;
         
-        starSmallPath.lineJoinStyle = kCGLineJoinBevel;
+//        starSmallPath.lineJoinStyle = kCGLineJoinBevel;
         
         DreamRightSK.blue.setFill()
         starSmallPath.fill()
@@ -205,9 +205,9 @@ public class DreamRightSK : NSObject {
         starBigPath.addCurveToPoint(CGPointMake(frame.minX + 0.38235 * frame.width, frame.minY + 0.38235 * frame.height), controlPoint1: CGPointMake(frame.minX + 0.02941 * frame.width, frame.minY + 0.50000 * frame.height), controlPoint2: CGPointMake(frame.minX + 0.26471 * frame.width, frame.minY + 0.50000 * frame.height))
         starBigPath.addCurveToPoint(CGPointMake(frame.minX + 0.50000 * frame.width, frame.minY + 0.02941 * frame.height), controlPoint1: CGPointMake(frame.minX + 0.50000 * frame.width, frame.minY + 0.26471 * frame.height), controlPoint2: CGPointMake(frame.minX + 0.50000 * frame.width, frame.minY + 0.02941 * frame.height))
         starBigPath.closePath()
-        starBigPath.lineCapStyle = kCGLineCapRound;
+//        starBigPath.lineCapStyle = kCGLineCapRound;
         
-        starBigPath.lineJoinStyle = kCGLineJoinBevel;
+//        starBigPath.lineJoinStyle = kCGLineJoinBevel;
         
         DreamRightSK.yellow.setFill()
         starBigPath.fill()

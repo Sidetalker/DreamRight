@@ -45,7 +45,7 @@ class BurstView: UIView {
     let gravity = UIGravityBehavior()
     let velocityAndShit = UIDynamicItemBehavior()
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -153,7 +153,9 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
     var recordingStart: NSDate?
     var savingDream = false
     
-    var theNight: Night!
+    var tonight: Night!
+    var dreams: NSSet?
+    var dreaming = false
     
     // Lukas's unicorn
     @IBOutlet var imgUnicorn: UIImageView!
@@ -180,62 +182,12 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         self.view.addSubview(detailView)
         
         // Create the current night object if needed
-        let nights = getObjects("Night", predicate: nil) as! [Night]
-        var recentNight = nights[0].date
-        
-        // Get the most recent night
-        for night in nights {
-            if night.date?.timeIntervalSinceDate(recentNight!) < 0 {
-                recentNight = night.date
-            }
+        if tonight == nil {
+            tonight = insertObject("Night") as? Night
+            
+            tonight.date = NSDate()
+            tonight.name = NSDateFormatter.localizedStringFromDate(NSDate(), dateStyle: .ShortStyle, timeStyle: .ShortStyle)
         }
-        
-        // Get time interval from previous 3 PM
-        let rightNow = NSDate()
-        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
-        let nowComponents = calendar?.component(NSCalendarUnit.Hour, fromDate: <#T##NSDate#>)
-        
-        
-        let dateComponents = NSDateComponents()
-        dateComponents.day
-        
-        NSDateComponents *comps = [[NSDateComponents alloc] init];
-        [comps setDay:6];
-        [comps setMonth:5];
-        [comps setYear:2004];
-        NSCalendar *gregorian = [[NSCalendar alloc]
-        initWithCalendarIdentifier:NSGregorianCalendar];
-        NSDate *date = [gregorian dateFromComponents:comps];
-        [comps release];
-        
-        NSCalendar *gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-        
-        // Extract date components into components1
-        NSDateComponents *components1 = [gregorianCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit
-        fromDate:date1];
-        
-        // Extract time components into components2
-        NSDateComponents *components2 = [gregorianCalendar components:NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit
-        fromDate:date2];
-        
-        // Combine date and time into components3
-        NSDateComponents *components3 = [[NSDateComponents alloc] init];
-        
-        [components3 setYear:components1.year];
-        [components3 setMonth:components1.month];
-        [components3 setDay:components1.day];
-        
-        [components3 setHour:components2.hour];
-        [components3 setMinute:components2.minute];
-        [components3 setSecond:components2.second];
-        
-        // Generate a new NSDate from components3.
-        NSDate *combinedDate = [gregorianCalendar dateFromComponents:components3];
-        
-        if recentNight?.timeIntervalSinceDate(tonight) > (60 * 60 )
-        
-        
-        print(nights)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -386,7 +338,7 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
             }
             
             // Switch the microphone on or off
-            if !microphone.microphoneOn {
+            if !dreaming {
                 // Create the new view
                 let starView = BurstView(frame: self.view.frame)
                 
@@ -408,24 +360,36 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
                 microphone.startFetchingAudio()
                 
                 delay(0.1, closure: {
-                    self.visualizerMask.frame.origin = CGPoint(x: -self.view.frame.width, y: 0)
+                    self.visualizerMask.frame.origin = CGPointZero
+                    
+                    UIView.animateWithDuration(0.8, animations: {
+                        self.visualizerMask.frame.origin = CGPoint(x: self.view.frame.width, y: 0)
+                    })
                 })
                 
                 // Create persistent object
-                let test = Dream()
+                let dream = insertObject("Dream") as? Dream
+                
+                dream?.time = NSDate()
+                dream?.name = "Tonight's First Dream"
+                dream?.text = "Placeholder text"
+                dream?.night = tonight
+                
+                dreaming = true
+                
+//                @NSManaged var recording: NSData?
+//                @NSManaged var night: Night?
             }
             else {
+                dreaming = false
                 stopMic()
             }
         }
     }
     
-    func beginSave() {
-        
-    }
-    
     func stopMic() {
         savingDream = true
+        self.microphone.stopFetchingAudio()
         
         let recordingEnd = NSDate()
         var recordLength: NSTimeInterval = 0
@@ -469,8 +433,7 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
             self.visualizerMask.frame.origin = CGPointZero
             }, completion: {
                 (value: Bool) in
-                self.microphone.stopFetchingAudio()
-                self.initVisualizer()
+//                self.initVisualizer()
         })
     }
     
@@ -543,7 +506,7 @@ class DetailView : UIView {
         self.commonInit()
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.commonInit()
     }
@@ -624,7 +587,7 @@ class ExitSuperView: UIView {
     var invertedView: ExitView!
     var parent: DreamViewController!
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -691,7 +654,7 @@ class ExitView: UIView {
     var detailShown = false
     var mask: CAGradientLayer?
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     

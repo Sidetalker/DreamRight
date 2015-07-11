@@ -1,14 +1,30 @@
 PODS:
-  - EZAudio (0.0.6)
+  - EZAudio (1.0.1):
+    - EZAudio/Full (= 1.0.1)
+  - EZAudio/Core (1.0.1)
+  - EZAudio/Full (1.0.1):
+    - EZAudio/Core
+    - TPCircularBuffer (~> 0.0)
+  - TPCircularBuffer (0.0.1)
   - ZLSinusWaveView (0.0.2):
     - EZAudio
 
 DEPENDENCIES:
-  - EZAudio
+  - EZAudio (from `https://github.com/syedhali/EZAudio`)
   - ZLSinusWaveView
 
+EXTERNAL SOURCES:
+  EZAudio:
+    :git: https://github.com/syedhali/EZAudio
+
+CHECKOUT OPTIONS:
+  EZAudio:
+    :commit: c148139fdd52c1e5244dd9f8cc8a370dc6ae98a5
+    :git: https://github.com/syedhali/EZAudio
+
 SPEC CHECKSUMS:
-  EZAudio: feb8e1c3ec17d8933bc2efc66b59ead1f2e79e54
+  EZAudio: 259bede441b09f2d4fec47beca29a01180407e37
+  TPCircularBuffer: 949e9632b9fb99b7274d7b2296ee22bff5841e35
   ZLSinusWaveView: 9cfe1b13804f2520ab2ac4bcc9371836a30e2a90
 
 COCOAPODS: 0.37.2

@@ -277,7 +277,7 @@ class LogViewController: UICollectionViewController {
 class SpringyFlow: UICollectionViewFlowLayout {
     var dynamicAnimator: UIDynamicAnimator?
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -403,7 +403,7 @@ class LogCell: UICollectionViewCell {
     var configured = false
     
     // IBOutlet is not yet connected in this init
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -430,7 +430,7 @@ class DreamSuperBox: UIView {
     var audioDisplay: ZLSinusWaveView?
     var audioPlaying = false
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -501,10 +501,10 @@ class DreamSuperBox: UIView {
             dreamView!.imgPlay.alpha = 0.0
             
             // Add the audioDisplay to our parent's parent's frame
-            self.parent!.parent!.audioDisplay = self.audioDisplay!
-            EZOutput.sharedOutput().outputDataSource = self.parent!.parent!
-            EZOutput.sharedOutput().startPlayback()
-            self.parent!.parent!.dreamContainer.addSubview(self.audioDisplay!)
+//            self.parent!.parent!.audioDisplay = self.audioDisplay!
+//            EZOutput.sharedOutput().outputDataSource = self.parent!.parent!
+//            EZOutput.sharedOutput().startPlayback()
+//            self.parent!.parent!.dreamContainer.addSubview(self.audioDisplay!)
         }
         else {
             dreamView!.imgPlay.hidden = true
@@ -673,7 +673,7 @@ class DreamBox: UIView {
     @IBOutlet var txtDescription: UITextView!
     @IBOutlet var imgPlay: UIImageView!
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -692,7 +692,7 @@ class LogNav: UIViewController {
 
 // MARK: - Log Container View
 
-class LogContainer: UIViewController, EZOutputDataSource {
+class LogContainer: UIViewController { //EZOutputDataSource {
     @IBOutlet var dreamContainer: UIView!
     @IBOutlet var navContainer: UIView!
     

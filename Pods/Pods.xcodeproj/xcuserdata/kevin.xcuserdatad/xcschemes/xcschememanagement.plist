@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-DreamRight-TPCircularBuffer.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-DreamRight-ZLSinusWaveView.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -22,17 +27,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0D6DA93A62CD73FD4118FC2D</key>
+		<key>145880CA42A6BCE48F90F9CD</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>75FB6C358355065E0D3395F4</key>
+		<key>158C8517E34C45FE25CFA4FA</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D80848C573704804D45DD0DA</key>
+		<key>5508A66CC71713E8302DE146</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D2CE6934005ABBC7FCAF28BE</key>
 		<dict>
 			<key>primary</key>
 			<true/>
