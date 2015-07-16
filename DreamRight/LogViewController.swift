@@ -427,7 +427,7 @@ class DreamSuperBox: UIView {
     var date: String?
     var body: String?
     
-    var audioDisplay: ZLSinusWaveView?
+    var audioDisplay: ZLSinusWaveView? = ZLSinusWaveView()
     var audioPlaying = false
     
     required init?(coder aDecoder: NSCoder) {
@@ -501,10 +501,10 @@ class DreamSuperBox: UIView {
             dreamView!.imgPlay.alpha = 0.0
             
             // Add the audioDisplay to our parent's parent's frame
-//            self.parent!.parent!.audioDisplay = self.audioDisplay!
-//            EZOutput.sharedOutput().outputDataSource = self.parent!.parent!
-//            EZOutput.sharedOutput().startPlayback()
-//            self.parent!.parent!.dreamContainer.addSubview(self.audioDisplay!)
+            self.parent!.parent!.audioDisplay = self.audioDisplay!
+            EZOutput.sharedOutput().dataSource = self.parent!.parent!
+            EZOutput.sharedOutput().startPlayback()
+            self.parent!.parent!.dreamContainer.addSubview(self.audioDisplay!)
         }
         else {
             dreamView!.imgPlay.hidden = true
@@ -692,7 +692,7 @@ class LogNav: UIViewController {
 
 // MARK: - Log Container View
 
-class LogContainer: UIViewController { //EZOutputDataSource {
+class LogContainer: UIViewController, EZOutputDataSource {
     @IBOutlet var dreamContainer: UIView!
     @IBOutlet var navContainer: UIView!
     
@@ -711,6 +711,18 @@ class LogContainer: UIViewController { //EZOutputDataSource {
     var detailFrame = CGRectZero
     var audioPlaying = false
     var audioDisplay: ZLSinusWaveView?
+    
+    func output(output: EZOutput!, shouldFillAudioBufferList audioBufferList: UnsafeMutablePointer<AudioBufferList>, withNumberOfFrames frames: UInt32, timestamp: UnsafePointer<AudioTimeStamp>) -> OSStatus {
+        dispatch_async(dispatch_get_main_queue()) {
+            // Update the main buffer
+            if let display = self.audioDisplay {
+                var bufferThing: [Float] = [0, 0, 0]
+                display.updateBuffer(&bufferThing, withBufferSize: 3)
+            }
+        }
+        
+        return OSStatus.allZeros
+    }
     
     func output(output: EZOutput!, callbackWithActionFlags ioActionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>, inTimeStamp: UnsafePointer<AudioTimeStamp>, inBusNumber: UInt32, inNumberFrames: UInt32, ioData: UnsafeMutablePointer<AudioBufferList>) {
         dispatch_async(dispatch_get_main_queue()) {

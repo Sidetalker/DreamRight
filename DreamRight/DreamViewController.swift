@@ -150,6 +150,7 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
     var visualizer: EZAudioPlotGL!
     var visualizerMask: UIView!
     var microphone: EZMicrophone!
+    var recorder: EZRecorder?
     var recordingStart: NSDate?
     var savingDream = false
     
@@ -339,57 +340,67 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
             
             // Switch the microphone on or off
             if !dreaming {
-                // Create the new view
-                let starView = BurstView(frame: self.view.frame)
-                
-                // Create each of the stars
-                for _ in 0...randomIntBetweenNumbers(minStars, secondNum: maxStars) {
-                    // Calculate frame and generate star
-                    let curSize = randomFloatBetweenNumbers(minSize, secondNum: maxSize)
-                    let curRect = CGRect(origin: CGPointZero, size: CGSize(width: curSize, height: curSize))
-                    let curStar = DreamRightSK.imageOfLoneStar(curRect)
-                    
-                    starView.addImage(curStar, center: gesturePoint)
-                }
-                
-                // Burst each of the stars out
-                self.view.addSubview(starView)
-                starView.explode()
-                
-                recordingStart = NSDate()
-                microphone.startFetchingAudio()
-                
-                delay(0.1, closure: {
-                    self.visualizerMask.frame.origin = CGPointZero
-                    
-                    UIView.animateWithDuration(0.8, animations: {
-                        self.visualizerMask.frame.origin = CGPoint(x: self.view.frame.width, y: 0)
-                    })
-                })
-                
-                // Create persistent object
-                let dream = insertObject("Dream") as? Dream
-                
-                dream?.time = NSDate()
-                dream?.name = "Tonight's First Dream"
-                dream?.text = "Placeholder text"
-                dream?.night = tonight
-                
-                dreaming = true
-                
-//                @NSManaged var recording: NSData?
-//                @NSManaged var night: Night?
+                startDreaming(gesturePoint)
             }
             else {
-                dreaming = false
-                stopMic()
+                stopDreaming()
             }
         }
     }
     
-    func stopMic() {
+    func startDreaming(fromPoint: CGPoint) {
+        dreaming = true
+        
+        // Create the new view
+        let starView = BurstView(frame: self.view.frame)
+        
+        // Create each of the stars
+        for _ in 0...randomIntBetweenNumbers(minStars, secondNum: maxStars) {
+            // Calculate frame and generate star
+            let curSize = randomFloatBetweenNumbers(minSize, secondNum: maxSize)
+            let curRect = CGRect(origin: CGPointZero, size: CGSize(width: curSize, height: curSize))
+            let curStar = DreamRightSK.imageOfLoneStar(curRect)
+            
+            starView.addImage(curStar, center: fromPoint)
+        }
+        
+        // Burst each of the stars out
+        self.view.addSubview(starView)
+        starView.explode()
+        
+        visualizer.clear()
+        recordingStart = NSDate()
+        microphone.startFetchingAudio()
+        
+        delay(0.1, closure: {
+            self.visualizerMask.frame.origin = CGPointZero
+            
+            UIView.animateWithDuration(0.8, animations: {
+                self.visualizerMask.frame.origin = CGPoint(x: self.view.frame.width, y: 0)
+            })
+        })
+        
+        // Initialize the recording
+        let tempDir = NSTemporaryDirectory()
+        let destFile = tempDir.stringByAppendingPathComponent("dream.m4a")
+        
+        recorder = EZRecorder(URL: NSURL(fileURLWithPath: destFile), clientFormat: microphone.audioStreamBasicDescription(), fileType: .M4A)
+        
+        // Create persistent object
+        let dream = insertObject("Dream") as? Dream
+        
+        dream?.time = NSDate()
+        dream?.name = "Tonight's First Dream"
+        dream?.text = "Placeholder text"
+        dream?.night = tonight
+    }
+    
+    func stopDreaming() {
+        dreaming = false
         savingDream = true
-        self.microphone.stopFetchingAudio()
+        
+        // Close the recording stream
+        recorder?.closeAudioFile()
         
         let recordingEnd = NSDate()
         var recordLength: NSTimeInterval = 0
@@ -426,14 +437,12 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
             }, completion: {
                 (value: Bool) in
                 infoLabel.removeFromSuperview()
+                self.microphone.stopFetchingAudio()
                 self.savingDream = false
         })
         
         UIView.animateWithDuration(0.8, animations: {
             self.visualizerMask.frame.origin = CGPointZero
-            }, completion: {
-                (value: Bool) in
-//                self.initVisualizer()
         })
     }
     
@@ -443,7 +452,7 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         detailView.dismiss()
         exitView.dismiss()
         
-        stopMic()
+        stopDreaming()
         
 //        let starView = BurstView(frame: self.view.frame)
 //        
@@ -471,6 +480,12 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         dispatch_async(dispatch_get_main_queue(), {
             self.visualizer.updateBuffer(buffer[0], withBufferSize: bufferSize)
         })
+    }
+    
+    func microphone(microphone: EZMicrophone!, hasBufferList bufferList: UnsafeMutablePointer<AudioBufferList>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
+        if dreaming {
+            recorder?.appendDataFromBufferList(bufferList, withBufferSize: bufferSize)
+        }
     }
 }
 
