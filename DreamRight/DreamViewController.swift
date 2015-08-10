@@ -265,91 +265,67 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
 
     // A single tap will start recording
     func longPress(gesture: UILongPressGestureRecognizer) {
+        // Exit States
+        // 0 - Standard state
+        // 1 - Touch down on exit detected, mask is moving
+        
         // Save the gesture point
         let gesturePoint = gesture.locationInView(self.view)
         
+        // True while the save/discarded label is being displayed after ending a recording
         if savingDream {
             return
         }
         
+        // Can be made true at any time to ignore the next gesture event
         if cancelGesture {
             cancelGesture = false
             return
         }
         
+        // Update the exit star anytime the gesture state is changed
         if gesture.state == UIGestureRecognizerState.Changed {
             if !exitStar.hidden {
                 exitStar.center = gesturePoint
             }
             
         }
-        if gesture.state == UIGestureRecognizerState.Ended {
-            print("Ended with exit state: \(exitState)")
-            self.cancelExit = true
-            
-            if exitState == 1 {
-                exitState = 0
-                exitView.transitionMask(true)
-            }
-            else if exitState == 2 {
-                exitState = 0
-                
-                self.exitStar.center = gesture.locationInView(self.view)
-                
-                UIView.animateWithDuration(1.0, animations: {
-                    self.exitStar.layer.transform = CATransform3DIdentity
-                    }, completion: { (Bool) in
-                        self.exitStar.hidden = true
-                })
-            }
-            else if exitState == 3 {
-                return
-            }
-            else {
-                if (!exitShown && !detailShown) {
-                    // Switch the microphone on or off
-                    if !dreaming {
-                        startDreaming(gesturePoint)
-                    }
-                    else {
-                        stopDreaming()
-                    }
-                }
-            }
-        }
-        
-        // If this is the first tap...
-        if gesture.state == UIGestureRecognizerState.Began {
+        // Called when a tap begins
+        else if gesture.state == UIGestureRecognizerState.Began {
             print("Began with exit state: \(exitState)")
             
+            // Standard state
             if exitState == 0 {
-                if detailShown {
-                    detailView.transition(false)
-                    detailShown = false
-                    
-                    if CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
+                // If neither the detail view or exit view are in frame, check for trigger
+                if (!detailShown && !exitShown) {
+                    if CGRectContainsPoint(detailView.frame, gesturePoint) {
+                        detailView.transition(true)
+                        detailShown = true
+                        
+                        return
+                    }
+                    else if CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
                         exitView.transition(true)
                         exitShown = true
                         
-                        unicornCount++
-                        
-                        if unicornCount == 4 {
-                            unicornCount = 0
-                            showUnicorn()
-                        }
+                        unicornCount = 0
                     }
-                    
+                }
+                // Either the detail view or exit view are in frame
+                else {
                     // Ignore the end gesture
                     cancelGesture = true
-                }
-                else if exitShown {
-                    if !CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
-                        exitView.transition(false)
-                        exitShown = false
+                    
+                    // If the detail view is blown up
+                    if detailShown {
+                        // Close it
+                        detailView.transition(false)
+                        detailShown = false
                         
-                        if CGRectContainsPoint(detailView.frame, gesturePoint) {
-                            detailView.transition(true)
-                            detailShown = true
+                        // Check if the tap was meant to open the exit view
+                        if CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
+                            exitView.transition(true)
+                            exitShown = true
                             
                             unicornCount++
                             
@@ -358,61 +334,121 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
                                 showUnicorn()
                             }
                         }
-                        
-                        // Ignore the end gesture
-                        cancelGesture = true
                     }
-                    
-                    exitState = 1
-                    exitView.transitionMask(false)
+                    // If the exit view is blown up
+                    else if exitShown {
+                        // If the tap was NOT inside the exit view
+                        if !CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
+                            // Close it
+                            exitView.transition(false)
+                            exitShown = false
+                            
+                            // Check if the tap was meant to open the detail view
+                            if CGRectContainsPoint(detailView.frame, gesturePoint) {
+                                detailView.transition(true)
+                                detailShown = true
+                                
+                                unicornCount++
+                                
+                                if unicornCount == 4 {
+                                    unicornCount = 0
+                                    showUnicorn()
+                                }
+                            }
+                        }
+                        // The tap WAS inside the exit view
+                        else {
+                            exitState = 1
+                            cancelGesture = false
+                            exitView.transitionMask(false)
+                        }
+                    }
                 }
             }
+        }
+        // Called when a tap ends
+        else if gesture.state == UIGestureRecognizerState.Ended {
+            print("Ended with exit state: \(exitState)")
             
-            if (exitState == 3 || exitState == 2) {
+            // If we were transitioning to an exit, cancel it
+            if exitState == 1 {
+                exitState = 0
+                exitView.transitionMask(true)
+                
                 return
             }
-            
-            if CGRectContainsPoint(detailView.frame, gesturePoint) {
-                detailView.transition(true)
-                detailShown = true
-                
-                return
-            }
-            else if CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
-                exitView.transition(true)
-                exitShown = true
-                
-                unicornCount = 0
-            }
-            else {
-                self.cancelExit = false
-                
-                delay(0.75, closure: {
-                    if self.cancelExit {
-                        self.cancelExit = false
-                        
-                        return
-                    }
-                    
-                    self.exitState = 2
-
-                    self.exitStar.hidden = false
-                    self.exitStar.frame = CGRectMake(0,0,1,1)
-                    self.exitStar.center = gesture.locationInView(self.view)
-                    
-                    UIView.animateWithDuration(1.5, animations: {
-                        self.exitStar.layer.transform = CATransform3DMakeScale(150, 150, 1)
-                        }, completion: { (Bool) in
-                            if !self.cancelExit {
-                                self.finishNight()
-                            }
-                            else {
-                                self.exitState = 0
-                            }
-                    })
-                })
+            // Normal state - make sure the displays are hidden as well
+            else if exitState == 0 && !detailShown && !exitShown {
+                // Start or stop dreamining
+                if !dreaming {
+                    startDreaming(gesturePoint)
+                }
+                else {
+                    stopDreaming()
+                }
             }
         }
+        
+            
+//            else if exitState == 2 {
+//                exitState = 0
+//                
+//                self.exitStar.center = gesture.locationInView(self.view)
+//                
+//                UIView.animateWithDuration(1.0, animations: {
+//                    self.exitStar.layer.transform = CATransform3DIdentity
+//                    }, completion: { (Bool) in
+//                        self.exitStar.hidden = true
+//                })
+//            }
+//            else if exitState == 3 {
+//                return
+//            }
+//            else {
+//                if (!exitShown && !detailShown) {
+//                    
+//                }
+//            }
+//        }
+//        
+//        // If this is the first tap...
+//        if gesture.state == UIGestureRecognizerState.Began {
+//            
+//            
+//            if (exitState == 3 || exitState == 2) {
+//                return
+//            }
+//            
+//            
+//            else {
+//                self.cancelExit = false
+//                
+//                delay(0.75, closure: {
+//                    if self.cancelExit {
+//                        self.cancelExit = false
+//                        
+//                        return
+//                    }
+//                    
+//                    self.exitState = 2
+//
+//                    self.exitStar.hidden = false
+//                    self.exitStar.frame = CGRectMake(0,0,1,1)
+//                    self.exitStar.center = gesture.locationInView(self.view)
+//                    
+//                    UIView.animateWithDuration(1.5, animations: {
+//                        self.exitStar.layer.transform = CATransform3DMakeScale(150, 150, 1)
+//                        }, completion: { (Bool) in
+//                            if !self.cancelExit {
+//                                self.finishNight()
+//                            }
+//                            else {
+//                                self.exitState = 0
+//                            }
+//                    })
+//                })
+//            }
+//        }
     }
     
     func finishNight() {
