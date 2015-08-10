@@ -44,6 +44,11 @@ func save() {
     }
 }
 
+// Rolls back the CoreData stack to the last save
+func rollback() {
+    managedObjectContext!.rollback()
+}
+
 extension String {
     var floatValue: CGFloat {
         return CGFloat((self as NSString).floatValue)

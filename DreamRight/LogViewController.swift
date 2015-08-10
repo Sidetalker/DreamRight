@@ -56,41 +56,24 @@ class LogViewController: UICollectionViewController {
         // Load dummy data
         entries = [LogEntry]()
         
-        for x in 0...10 {
-            let nightTime = NSDate(timeIntervalSinceReferenceDate: NSTimeInterval(250000 * x))
-            let nightName = "Original Name #\(x)"
-            var nightTags = [String]()
+        let nights = getObjects("Night", predicate: nil) as! [Night]
+        
+        for night in nights {
+            let nightTime = night.date
+            let nightName = night.name
             
-            if Int(randomFloatBetweenNumbers(1, secondNum: 2)) % 2 == 0 {
-                nightTags.append("tag4")
-            }
-            else {
-                nightTags.append("tag5")
-            }
+            let dreams = night.dream?.allObjects as! [Dream]
+            var logItems = [LogDream]()
             
-            var dreams = [LogDream]()
-            
-            for y in 0...Int(randomFloatBetweenNumbers(0, secondNum: 3)) {
-                let dreamTime = NSDate(timeInterval: NSTimeInterval(1000 * y), sinceDate: nightTime)
-                let dreamName = "Original Name #\(x * y)"
-                var dreamDescription = "Original Description #\(x * y)"
-                var dreamTags = ["tag2"]
+            for dream in dreams {
+                let dreamTime = dream.time
+                let dreamName = dream.name
+                let dreamDescription = dream.description
                 
-                for _ in 0...50 {
-                    dreamDescription += "MOARMOARMOAR"
-                }
-                
-                if Int(randomFloatBetweenNumbers(1, secondNum: 2)) % 2 == 0 {
-                    dreamTags.append("tag2")
-                }
-                else {
-                    dreamTags.append("tag5")
-                }
-                
-                dreams.append(LogDream(recording: nil, name: dreamName, description: dreamDescription, time: dreamTime, tags: dreamTags))
+                logItems.append(LogDream(recording: nil, name: dreamName!, description: dreamDescription, time: dreamTime!, tags: [String]()))
             }
             
-            entries!.append(LogEntry(date: nightTime, name: nightName, tags: nightTags, dreams: dreams, isHidden: 0))
+            entries!.append(LogEntry(date: nightTime!, name: nightName!, tags: [String](), dreams: logItems, isHidden: 0))
         }
     }
 
