@@ -58,7 +58,7 @@ class LogViewController: UICollectionViewController {
         
         let nights = getObjects("Night", predicate: nil) as! [Night]
         
-        for night in nights {
+        for night in nights.reverse() {
             let nightTime = night.date
             let nightName = night.name
             
@@ -80,8 +80,8 @@ class LogViewController: UICollectionViewController {
     // Don't present the layout until we are loaded - this allows for a nice fade
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-//        
-//        self.collectionView?.setCollectionViewLayout(SpringyFlow(), animated: false)
+        
+        self.collectionView?.setCollectionViewLayout(SpringyFlow(), animated: false)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -410,7 +410,7 @@ class DreamSuperBox: UIView {
     var date: String?
     var body: String?
     
-    var audioDisplay: ZLSinusWaveView? = ZLSinusWaveView()
+    var audioDisplay = ZLSinusWaveView()
     var audioPlaying = false
     
     required init?(coder aDecoder: NSCoder) {
@@ -449,14 +449,14 @@ class DreamSuperBox: UIView {
         let containerFrame = self.parent!.parent!.dreamContainer.frame
         
         self.audioDisplay = ZLSinusWaveView(frame: CGRect(x: containerFrame.width / 2, y: containerFrame.height - 25, width: 0, height: 0))
-        audioDisplay?.backgroundColor = DreamRightSK.blue
-        audioDisplay?.color = DreamRightSK.yellow
-        audioDisplay?.plotType = EZPlotType.Rolling
-        audioDisplay?.shouldFill = true
-        audioDisplay?.shouldMirror = true
-        audioDisplay?.idleAmplitude = 0.2
-        audioDisplay?.frequency = 1.5
-        audioDisplay?.oscillating = true
+        audioDisplay.backgroundColor = DreamRightSK.blue
+        audioDisplay.color = DreamRightSK.yellow
+        audioDisplay.plotType = EZPlotType.Rolling
+        audioDisplay.shouldFill = true
+        audioDisplay.shouldMirror = true
+        audioDisplay.idleAmplitude = 0.2
+        audioDisplay.frequency = 1.5
+        audioDisplay.oscillating = true
         
         // If the body text wasn't passed, hide the textfield
         if body != nil {
@@ -484,10 +484,10 @@ class DreamSuperBox: UIView {
             dreamView!.imgPlay.alpha = 0.0
             
             // Add the audioDisplay to our parent's parent's frame
-            self.parent!.parent!.audioDisplay = self.audioDisplay!
+            self.parent!.parent!.audioDisplay = self.audioDisplay
             EZOutput.sharedOutput().dataSource = self.parent!.parent!
             EZOutput.sharedOutput().startPlayback()
-            self.parent!.parent!.dreamContainer.addSubview(self.audioDisplay!)
+            self.parent!.parent!.dreamContainer.addSubview(self.audioDisplay)
         }
         else {
             dreamView!.imgPlay.hidden = true
@@ -695,12 +695,16 @@ class LogContainer: UIViewController, EZOutputDataSource {
     var audioPlaying = false
     var audioDisplay: ZLSinusWaveView?
     
+    var deadAir = true
+    
     func output(output: EZOutput!, shouldFillAudioBufferList audioBufferList: UnsafeMutablePointer<AudioBufferList>, withNumberOfFrames frames: UInt32, timestamp: UnsafePointer<AudioTimeStamp>) -> OSStatus {
         dispatch_async(dispatch_get_main_queue()) {
             // Update the main buffer
             if let display = self.audioDisplay {
-                var bufferThing: [Float] = [0, 0, 0]
-                display.updateBuffer(&bufferThing, withBufferSize: 3)
+                if self.deadAir {
+                    var bufferThing: [Float] = [0, 0, 0]
+                    display.updateBuffer(&bufferThing, withBufferSize: 3)
+                }
             }
         }
         
@@ -710,10 +714,10 @@ class LogContainer: UIViewController, EZOutputDataSource {
     func output(output: EZOutput!, callbackWithActionFlags ioActionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>, inTimeStamp: UnsafePointer<AudioTimeStamp>, inBusNumber: UInt32, inNumberFrames: UInt32, ioData: UnsafeMutablePointer<AudioBufferList>) {
         dispatch_async(dispatch_get_main_queue()) {
             // Update the main buffer
-            if let display = self.audioDisplay {
-                var bufferThing: [Float] = [0, 0, 0]
-                display.updateBuffer(&bufferThing, withBufferSize: 3)
-            }
+//            if let display = self.audioDisplay {
+//                var bufferThing: [Float] = [0, 0, 0]
+//                display.updateBuffer(&bufferThing, withBufferSize: 3)
+//            }
         }
     }
     
@@ -1174,7 +1178,8 @@ class LogContainer: UIViewController, EZOutputDataSource {
         
         // The default state - returns to the home screen
         if navState == 0 {
-            self.dismissViewControllerAnimated(true, completion: nil)
+//            self.dismissViewControllerAnimated(true, completion: nil)
+            self.performSegueWithIdentifier("unwindToHome", sender: self)
         }
         // Night view state - 1 is standard and 2 is editing
         else if navState == 1 || navState == 2 || navState == 3 || navState == 4 {
@@ -1304,17 +1309,6 @@ class LogContainer: UIViewController, EZOutputDataSource {
                 else {
                     dreamBoxTap(gesture)
                 }
-            }
-        }
-    }
-    
-    // MARK: - EZMicrophone Delegate Function
-    
-    func microphone(microphone: EZMicrophone!, hasAudioReceived buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
-        dispatch_async(dispatch_get_main_queue()) {
-            // Update the main buffer
-            if let display = self.audioDisplay {
-                display.updateBuffer(buffer[0], withBufferSize: bufferSize)
             }
         }
     }

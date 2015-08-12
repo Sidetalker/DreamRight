@@ -58,6 +58,10 @@ class HomeViewController: UIViewController, EZMicrophoneDelegate {
     
     // MARK: - UIViewController overrides
     
+    @IBAction func unwindSegue(segue: UIStoryboardSegue) {
+    
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

@@ -143,6 +143,7 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
     // Star container for initial burst
     var burstViews = [BurstView]()
     var exitStar: UIImageView = UIImageView(image: DreamRightSK.imageOfLoneStar(CGRectMake(0, 0, 250, 250)))
+    var exitDelay: NSTimeInterval = 0.5
     var cancelExit = false
     
     // Animator and gravity generator
@@ -205,15 +206,12 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         visualizerMask.frame.origin = CGPoint(x: -self.view.frame.width, y: 0)
         visualizerMask.backgroundColor = self.view.backgroundColor
         
-        microphone = EZMicrophone(delegate: self, startsImmediately: true)
+        microphone = EZMicrophone(delegate: self, startsImmediately: false)
         self.visualizerMask.frame.origin = CGPointZero
         
         self.view.addSubview(visualizerMask)
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        microphone.stopFetchingAudio()
         visualizer.clear()
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -244,6 +242,8 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         }
         
         self.view.sendSubviewToBack(visualizer)
+        
+        self.visualizer.pauseDrawing()
     }
     
     func showUnicorn() {
@@ -268,12 +268,11 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         // Exit States
         // 0 - Standard state
         // 1 - Touch down on exit detected, mask is moving
-        
-        // Save the gesture point
-        let gesturePoint = gesture.locationInView(self.view)
+        // 2 - Recording stopped/started and possibility of a tap and hold to complete
+        // 3 - Night completion has been triggered
         
         // True while the save/discarded label is being displayed after ending a recording
-        if savingDream {
+        if savingDream && exitState != 2 {
             return
         }
         
@@ -282,6 +281,14 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
             cancelGesture = false
             return
         }
+        
+        // Ignore any gestures once night completion is triggered
+        if exitState == 3 {
+            return
+        }
+        
+        // Save the gesture point
+        let gesturePoint = gesture.locationInView(self.view)
         
         // Update the exit star anytime the gesture state is changed
         if gesture.state == UIGestureRecognizerState.Changed {
@@ -310,12 +317,42 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
                         
                         unicornCount = 0
                     }
+                    else {
+                        // Start or stop dreaming
+                        if !dreaming {
+                            startDreaming(gesturePoint)
+                        }
+                        else {
+                            stopDreaming()
+                        }
+                        
+                        // Prepare for a possible tap and hold to finish the night
+                        exitState = 2
+                        
+                        delay(exitDelay, closure: {
+                            // If we're still in the exit state
+                            if self.exitState == 2 {
+                                self.exitStar.hidden = false
+                                self.exitStar.frame = CGRectMake(0,0,1,1)
+                                self.exitStar.center = gesture.locationInView(self.view)
+                                
+                                UIView.animateWithDuration(1.5, animations: {
+                                    self.exitStar.layer.transform = CATransform3DMakeScale(150, 150, 1)
+                                    }, completion: { (Bool) in
+                                        // If we're STILL in the exit state, finish the night
+                                        if self.exitState == 2 {
+                                            self.finishNight()
+                                        }
+                                        else {
+                                            self.exitState = 0
+                                        }
+                                })
+                            }
+                        })
+                    }
                 }
                 // Either the detail view or exit view are in frame
                 else {
-                    // Ignore the end gesture
-                    cancelGesture = true
-                    
                     // If the detail view is blown up
                     if detailShown {
                         // Close it
@@ -334,6 +371,9 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
                                 showUnicorn()
                             }
                         }
+                        
+                        // Ignore the end gesture
+                        cancelGesture = true
                     }
                     // If the exit view is blown up
                     else if exitShown {
@@ -355,6 +395,9 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
                                     showUnicorn()
                                 }
                             }
+                            
+                            // Ignore the end gesture
+                            cancelGesture = true
                         }
                         // The tap WAS inside the exit view
                         else {
@@ -374,85 +417,49 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
             if exitState == 1 {
                 exitState = 0
                 exitView.transitionMask(true)
+            }
+            else if exitState == 2 {
+                exitState = 0
                 
-                return
+                self.exitStar.center = gesture.locationInView(self.view)
+                
+                UIView.animateWithDuration(0.5, animations: {
+                    self.exitStar.layer.transform = CATransform3DIdentity
+                    }, completion: { (Bool) in
+                        self.exitStar.hidden = true
+                })
             }
-            // Normal state - make sure the displays are hidden as well
-            else if exitState == 0 && !detailShown && !exitShown {
-                // Start or stop dreamining
-                if !dreaming {
-                    startDreaming(gesturePoint)
-                }
-                else {
-                    stopDreaming()
-                }
-            }
-        }
-        
             
-//            else if exitState == 2 {
-//                exitState = 0
-//                
-//                self.exitStar.center = gesture.locationInView(self.view)
-//                
-//                UIView.animateWithDuration(1.0, animations: {
-//                    self.exitStar.layer.transform = CATransform3DIdentity
-//                    }, completion: { (Bool) in
-//                        self.exitStar.hidden = true
-//                })
-//            }
-//            else if exitState == 3 {
-//                return
-//            }
-//            else {
-//                if (!exitShown && !detailShown) {
-//                    
-//                }
-//            }
-//        }
-//        
-//        // If this is the first tap...
-//        if gesture.state == UIGestureRecognizerState.Began {
-//            
-//            
-//            if (exitState == 3 || exitState == 2) {
-//                return
-//            }
-//            
-//            
-//            else {
-//                self.cancelExit = false
-//                
-//                delay(0.75, closure: {
-//                    if self.cancelExit {
-//                        self.cancelExit = false
-//                        
-//                        return
-//                    }
-//                    
-//                    self.exitState = 2
-//
-//                    self.exitStar.hidden = false
-//                    self.exitStar.frame = CGRectMake(0,0,1,1)
-//                    self.exitStar.center = gesture.locationInView(self.view)
-//                    
-//                    UIView.animateWithDuration(1.5, animations: {
-//                        self.exitStar.layer.transform = CATransform3DMakeScale(150, 150, 1)
-//                        }, completion: { (Bool) in
-//                            if !self.cancelExit {
-//                                self.finishNight()
-//                            }
-//                            else {
-//                                self.exitState = 0
-//                            }
-//                    })
-//                })
-//            }
-//        }
+        }
     }
-    
+
     func finishNight() {
+        exitState = 3
         
+        let blockerView = UIView(frame: self.view.frame)
+        blockerView.backgroundColor = self.view.backgroundColor
+        blockerView.alpha = 0.0
+        
+        self.view.addSubview(blockerView)
+        
+        self.view.bringSubviewToFront(exitStar)
+        self.view.bringSubviewToFront(blockerView)
+        
+        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations: {
+            self.exitStar.layer.transform = CATransform3DMakeScale(40, 40, 1)
+            }, completion: { (Bool) in
+                UIView.animateWithDuration(0.8, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                    self.exitStar.layer.transform = CATransform3DMakeScale(400, 400, 1)
+                    blockerView.alpha = 1.0
+                    }, completion: { (Bool) in
+//                        self.dismissViewControllerAnimated(false, completion: nil)
+                        self.stopDreaming()
+                        self.visualizer.pauseDrawing()
+                        self.performSegueWithIdentifier("finishedDreaming", sender: self)
+                })
+        })
+        
+        save()
     }
     
     func startDreaming(fromPoint: CGPoint) {
@@ -500,6 +507,8 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         currentDream?.name = "Dream 1"
         currentDream?.text = "Placeholder text"
         currentDream?.night = tonight
+        
+        self.visualizer.resumeDrawing()
     }
     
     func stopDreaming() {
@@ -571,6 +580,9 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
             }
         }
         
+        // Persist our changes
+        save()
+        
         infoLabel.sizeToFit()
         
         let infoHeight = infoLabel.frame.height
@@ -595,6 +607,8 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         UIView.animateWithDuration(0.8, animations: {
             self.visualizerMask.frame.origin = CGPointZero
         })
+        
+        self.visualizer.pauseDrawing()
     }
     
     func initiateExit() {
