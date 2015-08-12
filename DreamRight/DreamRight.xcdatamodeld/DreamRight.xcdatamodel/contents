@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8154.4" systemVersion="15A216g" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8175.2" systemVersion="15A244d" minimumToolsVersion="Automatic">
     <entity name="Dream" representedClassName=".Dream" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="recording" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="recording" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="time" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="night" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Night" inverseName="dream" inverseEntity="Night" syncable="YES"/>
@@ -13,7 +13,7 @@
         <relationship name="dream" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Dream" inverseName="night" inverseEntity="Dream" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Dream" positionX="-63" positionY="0" width="128" height="30"/>
+        <element name="Dream" positionX="-63" positionY="0" width="128" height="120"/>
         <element name="Night" positionX="-63" positionY="-18" width="128" height="90"/>
     </elements>
 </model>

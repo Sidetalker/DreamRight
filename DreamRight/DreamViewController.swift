@@ -127,7 +127,7 @@ let roll: Int32 = 420
 let visualizerHeight: CGFloat = 120
 
 // Recording constants
-let minLength: NSTimeInterval = 10
+let minLength: NSTimeInterval = 0
 let recordTextAnimLength: NSTimeInterval = 1.3
 
 class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicrophoneDelegate {
@@ -137,10 +137,14 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
     var detailShown = false
     var exitShown = false
     var exitState = 0
+    var cancelGesture = false
     var unicornCount = 0
     
     // Star container for initial burst
     var burstViews = [BurstView]()
+    var exitStar: UIImageView = UIImageView(image: DreamRightSK.imageOfLoneStar(CGRectMake(0, 0, 250, 250)))
+    var exitDelay: NSTimeInterval = 0.5
+    var cancelExit = false
     
     // Animator and gravity generator
     var animator: UIDynamicAnimator!
@@ -150,12 +154,14 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
     var visualizer: EZAudioPlotGL!
     var visualizerMask: UIView!
     var microphone: EZMicrophone!
+    var recorder: EZRecorder?
     var recordingStart: NSDate?
     var savingDream = false
     
     var tonight: Night!
     var dreams: NSSet?
     var dreaming = false
+    var currentDream: Dream?
     
     // Lukas's unicorn
     @IBOutlet var imgUnicorn: UIImageView!
@@ -166,6 +172,9 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         for view in self.view.subviews {
             view.removeFromSuperview()
         }
+        
+        exitStar.hidden = true
+        self.view.addSubview(exitStar)
         
         let longPress = UILongPressGestureRecognizer(target: self, action: "longPress:")
         longPress.minimumPressDuration = 0.0
@@ -197,15 +206,12 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         visualizerMask.frame.origin = CGPoint(x: -self.view.frame.width, y: 0)
         visualizerMask.backgroundColor = self.view.backgroundColor
         
-        microphone = EZMicrophone(delegate: self, startsImmediately: true)
+        microphone = EZMicrophone(delegate: self, startsImmediately: false)
         self.visualizerMask.frame.origin = CGPointZero
         
         self.view.addSubview(visualizerMask)
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        microphone.stopFetchingAudio()
         visualizer.clear()
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -236,6 +242,8 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         }
         
         self.view.sendSubviewToBack(visualizer)
+        
+        self.visualizer.pauseDrawing()
     }
     
     func showUnicorn() {
@@ -257,139 +265,258 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
 
     // A single tap will start recording
     func longPress(gesture: UILongPressGestureRecognizer) {
-        // Save the gesture point
-        let gesturePoint = gesture.locationInView(self.view)
+        // Exit States
+        // 0 - Standard state
+        // 1 - Touch down on exit detected, mask is moving
+        // 2 - Recording stopped/started and possibility of a tap and hold to complete
+        // 3 - Night completion has been triggered
         
-        if savingDream {
+        // True while the save/discarded label is being displayed after ending a recording
+        if savingDream && exitState != 2 {
             return
         }
         
-        if gesture.state == UIGestureRecognizerState.Ended {
-            if exitState == 1 {
-                exitState = 0
-                exitView.transitionMask(true)
-                return
-            }
+        // Can be made true at any time to ignore the next gesture event
+        if cancelGesture {
+            cancelGesture = false
+            return
         }
         
-        // If this is the first tap...
-        if gesture.state == UIGestureRecognizerState.Began {
-            if detailShown {
-                detailView.transition(false)
-                detailShown = false
-                
-                if CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
-                    exitView.transition(true)
-                    exitShown = true
-                    
-                    unicornCount++
-                    
-                    if unicornCount == 4 {
-                        unicornCount = 0
-                        showUnicorn()
-                    }
-                }
-                
-                return
+        // Ignore any gestures once night completion is triggered
+        if exitState == 3 {
+            return
+        }
+        
+        // Save the gesture point
+        let gesturePoint = gesture.locationInView(self.view)
+        
+        // Update the exit star anytime the gesture state is changed
+        if gesture.state == UIGestureRecognizerState.Changed {
+            if !exitStar.hidden {
+                exitStar.center = gesturePoint
             }
             
-            if exitShown {
-                if !CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
-                    exitView.transition(false)
-                    exitShown = false
-                    
+        }
+        // Called when a tap begins
+        else if gesture.state == UIGestureRecognizerState.Began {
+            print("Began with exit state: \(exitState)")
+            
+            // Standard state
+            if exitState == 0 {
+                // If neither the detail view or exit view are in frame, check for trigger
+                if (!detailShown && !exitShown) {
                     if CGRectContainsPoint(detailView.frame, gesturePoint) {
                         detailView.transition(true)
                         detailShown = true
                         
-                        unicornCount++
+                        return
+                    }
+                    else if CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
+                        exitView.transition(true)
+                        exitShown = true
                         
-                        if unicornCount == 4 {
-                            unicornCount = 0
-                            showUnicorn()
+                        unicornCount = 0
+                    }
+                    else {
+                        // Start or stop dreaming
+                        if !dreaming {
+                            startDreaming(gesturePoint)
+                        }
+                        else {
+                            stopDreaming()
+                        }
+                        
+                        // Prepare for a possible tap and hold to finish the night
+                        exitState = 2
+                        
+                        delay(exitDelay, closure: {
+                            // If we're still in the exit state
+                            if self.exitState == 2 {
+                                self.exitStar.hidden = false
+                                self.exitStar.frame = CGRectMake(0,0,1,1)
+                                self.exitStar.center = gesture.locationInView(self.view)
+                                
+                                UIView.animateWithDuration(1.5, animations: {
+                                    self.exitStar.layer.transform = CATransform3DMakeScale(150, 150, 1)
+                                    }, completion: { (Bool) in
+                                        // If we're STILL in the exit state, finish the night
+                                        if self.exitState == 2 {
+                                            self.finishNight()
+                                        }
+                                        else {
+                                            self.exitState = 0
+                                        }
+                                })
+                            }
+                        })
+                    }
+                }
+                // Either the detail view or exit view are in frame
+                else {
+                    // If the detail view is blown up
+                    if detailShown {
+                        // Close it
+                        detailView.transition(false)
+                        detailShown = false
+                        
+                        // Check if the tap was meant to open the exit view
+                        if CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
+                            exitView.transition(true)
+                            exitShown = true
+                            
+                            unicornCount++
+                            
+                            if unicornCount == 4 {
+                                unicornCount = 0
+                                showUnicorn()
+                            }
+                        }
+                        
+                        // Ignore the end gesture
+                        cancelGesture = true
+                    }
+                    // If the exit view is blown up
+                    else if exitShown {
+                        // If the tap was NOT inside the exit view
+                        if !CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
+                            // Close it
+                            exitView.transition(false)
+                            exitShown = false
+                            
+                            // Check if the tap was meant to open the detail view
+                            if CGRectContainsPoint(detailView.frame, gesturePoint) {
+                                detailView.transition(true)
+                                detailShown = true
+                                
+                                unicornCount++
+                                
+                                if unicornCount == 4 {
+                                    unicornCount = 0
+                                    showUnicorn()
+                                }
+                            }
+                            
+                            // Ignore the end gesture
+                            cancelGesture = true
+                        }
+                        // The tap WAS inside the exit view
+                        else {
+                            exitState = 1
+                            cancelGesture = false
+                            exitView.transitionMask(false)
                         }
                     }
-                    
-                    return
                 }
-                
-                exitState = 1
-                exitView.transitionMask(false)
-                
-                return
-            }
-            
-            if CGRectContainsPoint(detailView.frame, gesturePoint) {
-                detailView.transition(true)
-                detailShown = true
-                
-                unicornCount = 0
-                
-                return
-            }
-            
-            if CGRectContainsPoint(exitView.normalView.frame, gesturePoint) {
-                exitView.transition(true)
-                exitShown = true
-                
-                unicornCount = 0
-                
-                return
-            }
-            
-            // Switch the microphone on or off
-            if !dreaming {
-                // Create the new view
-                let starView = BurstView(frame: self.view.frame)
-                
-                // Create each of the stars
-                for _ in 0...randomIntBetweenNumbers(minStars, secondNum: maxStars) {
-                    // Calculate frame and generate star
-                    let curSize = randomFloatBetweenNumbers(minSize, secondNum: maxSize)
-                    let curRect = CGRect(origin: CGPointZero, size: CGSize(width: curSize, height: curSize))
-                    let curStar = DreamRightSK.imageOfLoneStar(curRect)
-                    
-                    starView.addImage(curStar, center: gesturePoint)
-                }
-                
-                // Burst each of the stars out
-                self.view.addSubview(starView)
-                starView.explode()
-                
-                recordingStart = NSDate()
-                microphone.startFetchingAudio()
-                
-                delay(0.1, closure: {
-                    self.visualizerMask.frame.origin = CGPointZero
-                    
-                    UIView.animateWithDuration(0.8, animations: {
-                        self.visualizerMask.frame.origin = CGPoint(x: self.view.frame.width, y: 0)
-                    })
-                })
-                
-                // Create persistent object
-                let dream = insertObject("Dream") as? Dream
-                
-                dream?.time = NSDate()
-                dream?.name = "Tonight's First Dream"
-                dream?.text = "Placeholder text"
-                dream?.night = tonight
-                
-                dreaming = true
-                
-//                @NSManaged var recording: NSData?
-//                @NSManaged var night: Night?
-            }
-            else {
-                dreaming = false
-                stopMic()
             }
         }
+        // Called when a tap ends
+        else if gesture.state == UIGestureRecognizerState.Ended {
+            print("Ended with exit state: \(exitState)")
+            
+            // If we were transitioning to an exit, cancel it
+            if exitState == 1 {
+                exitState = 0
+                exitView.transitionMask(true)
+            }
+            else if exitState == 2 {
+                exitState = 0
+                
+                self.exitStar.center = gesture.locationInView(self.view)
+                
+                UIView.animateWithDuration(0.5, animations: {
+                    self.exitStar.layer.transform = CATransform3DIdentity
+                    }, completion: { (Bool) in
+                        self.exitStar.hidden = true
+                })
+            }
+            
+        }
+    }
+
+    func finishNight() {
+        exitState = 3
+        
+        let blockerView = UIView(frame: self.view.frame)
+        blockerView.backgroundColor = self.view.backgroundColor
+        blockerView.alpha = 0.0
+        
+        self.view.addSubview(blockerView)
+        
+        self.view.bringSubviewToFront(exitStar)
+        self.view.bringSubviewToFront(blockerView)
+        
+        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations: {
+            self.exitStar.layer.transform = CATransform3DMakeScale(40, 40, 1)
+            }, completion: { (Bool) in
+                UIView.animateWithDuration(0.8, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                    self.exitStar.layer.transform = CATransform3DMakeScale(400, 400, 1)
+                    blockerView.alpha = 1.0
+                    }, completion: { (Bool) in
+//                        self.dismissViewControllerAnimated(false, completion: nil)
+                        self.stopDreaming()
+                        self.visualizer.pauseDrawing()
+                        self.performSegueWithIdentifier("finishedDreaming", sender: self)
+                })
+        })
+        
+        save()
     }
     
-    func stopMic() {
+    func startDreaming(fromPoint: CGPoint) {
+        dreaming = true
+        
+        // Create the new view
+        let starView = BurstView(frame: self.view.frame)
+        
+        // Create each of the stars
+        for _ in 0...randomIntBetweenNumbers(minStars, secondNum: maxStars) {
+            // Calculate frame and generate star
+            let curSize = randomFloatBetweenNumbers(minSize, secondNum: maxSize)
+            let curRect = CGRect(origin: CGPointZero, size: CGSize(width: curSize, height: curSize))
+            let curStar = DreamRightSK.imageOfLoneStar(curRect)
+            
+            starView.addImage(curStar, center: fromPoint)
+        }
+        
+        // Burst each of the stars out
+        self.view.addSubview(starView)
+        starView.explode()
+        
+        visualizer.clear()
+        recordingStart = NSDate()
+        microphone.startFetchingAudio()
+        
+        delay(0.1, closure: {
+            self.visualizerMask.frame.origin = CGPointZero
+            
+            UIView.animateWithDuration(0.8, animations: {
+                self.visualizerMask.frame.origin = CGPoint(x: self.view.frame.width, y: 0)
+            })
+        })
+        
+        // Initialize the recording
+        let tempDir: NSString = NSTemporaryDirectory()
+        let destFile = tempDir.stringByAppendingPathComponent("dream.m4a")
+        
+        recorder = EZRecorder(URL: NSURL(fileURLWithPath: destFile), clientFormat: microphone.audioStreamBasicDescription(), fileType: .M4A)
+        
+        // Create persistent object
+        currentDream = insertObject("Dream") as? Dream
+        
+        currentDream?.time = NSDate()
+        currentDream?.name = "Dream 1"
+        currentDream?.text = "Placeholder text"
+        currentDream?.night = tonight
+        
+        self.visualizer.resumeDrawing()
+    }
+    
+    func stopDreaming() {
+        dreaming = false
         savingDream = true
-        self.microphone.stopFetchingAudio()
+        
+        // Close the recording stream
+        recorder?.closeAudioFile()
         
         let recordingEnd = NSDate()
         var recordLength: NSTimeInterval = 0
@@ -407,7 +534,55 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         }
         else {
             infoLabel.text = "Dream Saved"
+            
+            // Get the path to the current dream
+            let tempDir: NSString = NSTemporaryDirectory()
+            let curDream = tempDir.stringByAppendingPathComponent("dream.m4a")
+            
+            // Create a permanent path for this dream
+            let unique = NSUUID().UUIDString + ".m4a"
+            let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as NSString
+            let permanentDream = docDir.stringByAppendingPathComponent(unique)
+            
+            // Create a file manager
+            let fileManager = NSFileManager.defaultManager()
+            
+            // Make sure the current dream exists
+            if !fileManager.fileExistsAtPath(curDream) {
+                print("Error: Could not find original dream file")
+                
+                infoLabel.text = "Error Saving Dream"
+            }
+            
+            // Make sure the destination does not exist
+            if fileManager.fileExistsAtPath(permanentDream) {
+                print("Error: Generated a non-unique dream destination")
+                
+                infoLabel.text = "Error Saving Dream"
+            }
+            
+            do {
+                // Copy the file
+                try fileManager.copyItemAtPath(curDream, toPath: permanentDream)
+
+                print("Successfully copied temporary dream to permanent location")
+                
+                // Delete the old file
+                try fileManager.removeItemAtPath(curDream)
+                
+                print("Deleted temporary dream")
+                
+                currentDream?.recording = unique
+            }
+            catch _ {
+                print("Error: Could not copy current dream from temporary directory")
+                
+                infoLabel.text = "Error Saving Dream"
+            }
         }
+        
+        // Persist our changes
+        save()
         
         infoLabel.sizeToFit()
         
@@ -426,15 +601,15 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
             }, completion: {
                 (value: Bool) in
                 infoLabel.removeFromSuperview()
+                self.microphone.stopFetchingAudio()
                 self.savingDream = false
         })
         
         UIView.animateWithDuration(0.8, animations: {
             self.visualizerMask.frame.origin = CGPointZero
-            }, completion: {
-                (value: Bool) in
-//                self.initVisualizer()
         })
+        
+        self.visualizer.pauseDrawing()
     }
     
     func initiateExit() {
@@ -443,34 +618,25 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         detailView.dismiss()
         exitView.dismiss()
         
-        stopMic()
+        // Close the recording stream
+        recorder?.closeAudioFile()
         
-//        let starView = BurstView(frame: self.view.frame)
-//        
-//        for _ in 0...randomIntBetweenNumbers(minStars, secondNum: maxStars) {
-//            // Calculate frame and generate star
-//            let curSize = randomFloatBetweenNumbers(minSize, secondNum: maxSize)
-//            let curRect = CGRect(origin: CGPointZero, size: CGSize(width: curSize, height: curSize))
-//            let curStar = DreamRightSK.imageOfLoneStar(curRect)
-//            
-//            starView.addImage(curStar, center: CGPoint(x: self.view.frame.width / 2, y: self.view.frame.height / 2))
-//        }
-//        
-//        self.view.addSubview(starView)
-//        
-//        delay(0.3, closure: {
-//            starView.explode()
-//        })
-//        
-        delay(0.8, closure: {
-            self.dismissViewControllerAnimated(true, completion: nil)
-        })
+        // Discard database shiet
+        rollback()
+        
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func microphone(microphone: EZMicrophone!, hasAudioReceived buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
         dispatch_async(dispatch_get_main_queue(), {
             self.visualizer.updateBuffer(buffer[0], withBufferSize: bufferSize)
         })
+    }
+    
+    func microphone(microphone: EZMicrophone!, hasBufferList bufferList: UnsafeMutablePointer<AudioBufferList>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32) {
+        if dreaming {
+            recorder?.appendDataFromBufferList(bufferList, withBufferSize: bufferSize)
+        }
     }
 }
 

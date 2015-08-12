@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8121.17" systemVersion="15A204h" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="i1N-6C-WDZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8173.3" systemVersion="15A244d" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="i1N-6C-WDZ">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8101.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8142"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -48,11 +47,12 @@
                     </view>
                     <connections>
                         <outlet property="imgUnicorn" destination="4YI-K3-iFZ" id="jzW-zD-rWB"/>
+                        <segue destination="fkb-eh-Ab0" kind="show" identifier="finishedDreaming" id="F1X-pB-qwE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AMN-Ei-0Rb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1560" y="-728"/>
+            <point key="canvasLocation" x="1560" y="-774"/>
         </scene>
         <!--Home View Controller-->
         <scene sceneID="Wus-DA-DS1">
@@ -161,7 +161,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NUN-21-PO2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2270" y="-51"/>
+            <point key="canvasLocation" x="2276" y="-51"/>
         </scene>
         <!--Log Container-->
         <scene sceneID="U9d-BJ-HjP">
@@ -187,18 +187,7 @@
                                 <animations/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="DAz-sg-Ujb"/>
-                                    <constraint firstAttribute="height" constant="38" id="HVH-fm-gdO"/>
                                 </constraints>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="HVH-fm-gdO"/>
-                                    </mask>
-                                </variation>
-                                <variation key="widthClass=compact">
-                                    <mask key="constraints">
-                                        <include reference="HVH-fm-gdO"/>
-                                    </mask>
-                                </variation>
                                 <connections>
                                     <segue destination="ITx-ZC-vZ0" kind="embed" identifier="logNavSegue" id="GSH-BA-Lii"/>
                                 </connections>
@@ -219,9 +208,11 @@
                     <connections>
                         <outlet property="dreamContainer" destination="yaq-7n-LSd" id="eWJ-GM-X2r"/>
                         <outlet property="navContainer" destination="cc6-u2-eji" id="fjD-os-4z7"/>
+                        <segue destination="F4e-ld-tpF" kind="unwind" identifier="unwindToHome" unwindAction="unwindSegue:" id="OPg-0d-3Cw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eLW-84-2gd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="F4e-ld-tpF" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1560" y="-51"/>
         </scene>
@@ -281,14 +272,14 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MaxA" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XnO-JC-bfk">
-                                <rect key="frame" x="91.5" y="525" width="36.5" height="17"/>
+                                <rect key="frame" x="91" y="525" width="36.5" height="17"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.98039215690000003" green="0.98039215690000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MinB" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NPE-aN-oYx">
-                                <rect key="frame" x="472.5" y="525" width="33" height="17"/>
+                                <rect key="frame" x="473" y="525" width="32.5" height="17"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.98039215690000003" green="0.98039215690000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -302,7 +293,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZJw-as-aY3">
-                                <rect key="frame" x="269" y="487" width="62" height="30"/>
+                                <rect key="frame" x="269.5" y="487" width="61" height="30"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Animate">
@@ -366,7 +357,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Length" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mKc-oZ-t31">
-                                <rect key="frame" x="518.5" y="462" width="45.5" height="17"/>
+                                <rect key="frame" x="519" y="462" width="45" height="17"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.98039215690000003" green="0.98039215690000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -483,4 +474,7 @@
     <resources>
         <image name="unicornHead.png" width="178" height="178"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="F1X-pB-qwE"/>
+    </inferredMetricsTieBreakers>
 </document>

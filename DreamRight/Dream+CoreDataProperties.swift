@@ -2,7 +2,7 @@
 //  Dream+CoreDataProperties.swift
 //  
 //
-//  Created by Kevin Sullivan on 6/28/15.
+//  Created by Kevin Sullivan on 8/8/15.
 //
 //
 //  Delete this file and regenerate it using "Create NSManagedObject Subclass…"
@@ -14,10 +14,10 @@ import CoreData
 
 extension Dream {
 
-    @NSManaged var time: NSDate?
     @NSManaged var name: String?
+    @NSManaged var recording: String?
     @NSManaged var text: String?
-    @NSManaged var recording: NSData?
+    @NSManaged var time: NSDate?
     @NSManaged var night: Night?
 
 }
