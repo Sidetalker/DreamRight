@@ -31,7 +31,7 @@ struct LogEntry {
 
 // Provides the structure for a single dream
 struct LogDream {
-    var recording: NSData?
+    var audioFile: String?
     var name: String
     var description: String
     var time: NSDate
@@ -69,8 +69,17 @@ class LogViewController: UICollectionViewController {
                 let dreamTime = dream.time
                 let dreamName = dream.name
                 let dreamDescription = dream.description
+                let dreamAudio = dream.recording
                 
-                logItems.append(LogDream(recording: nil, name: dreamName!, description: dreamDescription, time: dreamTime!, tags: [String]()))
+                if dreamAudio == nil {
+                    continue
+                }
+                
+                logItems.append(LogDream(audioFile: dreamAudio, name: dreamName!, description: dreamDescription, time: dreamTime!, tags: [String]()))
+            }
+            
+            if logItems.count == 0 {
+                continue
             }
             
             entries!.append(LogEntry(date: nightTime!, name: nightName!, tags: [String](), dreams: logItems, isHidden: 0))
@@ -156,15 +165,16 @@ class LogViewController: UICollectionViewController {
                 let title = nightEntry.name
                 let date = dateToNightText(nightEntry.date)
                 
-                box = DreamSuperBox(frame: cellFrame, title: title, date: date, body: nil, parent: self)
+                box = DreamSuperBox(frame: cellFrame, title: title, date: date, body: nil, audioFile: nil, parent: self)
                 box?.fadeInViews(0)
             }
             else {
                 let dreamName = dreams[x - 1].name
                 let dreamTime = dateToDreamText(dreams[x - 1].time)
                 let dreamBody = dreams[x - 1].description
+                let audioFile = dreams[x - 1].audioFile
                 
-                box = DreamSuperBox(frame: cellFrame, title: dreamName, date: dreamTime, body: dreamBody, parent: self)
+                box = DreamSuperBox(frame: cellFrame, title: dreamName, date: dreamTime, body: dreamBody, audioFile: audioFile, parent: self)
             }
             
             // Add a gesture recognizer to the box
@@ -410,6 +420,8 @@ class DreamSuperBox: UIView {
     var date: String?
     var body: String?
     
+    var audioPlayer: EZAudioPlayer?
+    var audioFile: String?
     var audioDisplay = ZLSinusWaveView()
     var audioPlaying = false
     
@@ -417,7 +429,7 @@ class DreamSuperBox: UIView {
         super.init(coder: aDecoder)
     }
     
-    init(frame: CGRect, title: String, date: String, body: String?, parent: LogViewController) {
+    init(frame: CGRect, title: String, date: String, body: String?, audioFile: String?, parent: LogViewController) {
         super.init(frame: frame)
         
         // Needed so that the DreamBox subview doesn't bleed out of this container
@@ -432,6 +444,7 @@ class DreamSuperBox: UIView {
         self.title = title
         self.date = date
         self.body = body
+        self.audioFile = audioFile
         self.parent = parent
         
         // Load our nib
@@ -485,8 +498,6 @@ class DreamSuperBox: UIView {
             
             // Add the audioDisplay to our parent's parent's frame
             self.parent!.parent!.audioDisplay = self.audioDisplay
-            EZOutput.sharedOutput().dataSource = self.parent!.parent!
-            EZOutput.sharedOutput().startPlayback()
             self.parent!.parent!.dreamContainer.addSubview(self.audioDisplay)
         }
         else {
@@ -576,6 +587,11 @@ class DreamSuperBox: UIView {
             
             delay(0.0, closure: {
                 self.growVisualizer(false)
+                
+                // End audio playback
+                print("Stopping audio playback")
+                self.audioPlayer!.pause()
+                self.parent!.parent!.audioPlaying = false
             })
         }
         else {
@@ -585,6 +601,20 @@ class DreamSuperBox: UIView {
             
             delay(0.2, closure: {
                 self.growVisualizer(true)
+                
+                // Audio is not yet playing, set it up here
+                print("Starting audio playback")
+                
+                // Retrieve the absolute file path
+                let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as NSString
+                let path = docDir.stringByAppendingPathComponent(self.audioFile!)
+                let loc = NSURL(fileURLWithPath: path)
+                
+                print("Audio File Location - \(loc): \(loc.checkResourceIsReachableAndReturnError(nil))")
+                
+                self.audioPlayer = EZAudioPlayer(audioFile: EZAudioFile(URL: loc), delegate: self.parent!.parent!)
+                self.audioPlayer?.play()
+                self.parent!.parent!.audioPlaying = true
             })
         }
         
@@ -675,7 +705,7 @@ class LogNav: UIViewController {
 
 // MARK: - Log Container View
 
-class LogContainer: UIViewController, EZOutputDataSource {
+class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate {
     @IBOutlet var dreamContainer: UIView!
     @IBOutlet var navContainer: UIView!
     
@@ -695,13 +725,11 @@ class LogContainer: UIViewController, EZOutputDataSource {
     var audioPlaying = false
     var audioDisplay: ZLSinusWaveView?
     
-    var deadAir = true
-    
     func output(output: EZOutput!, shouldFillAudioBufferList audioBufferList: UnsafeMutablePointer<AudioBufferList>, withNumberOfFrames frames: UInt32, timestamp: UnsafePointer<AudioTimeStamp>) -> OSStatus {
         dispatch_async(dispatch_get_main_queue()) {
             // Update the main buffer
             if let display = self.audioDisplay {
-                if self.deadAir {
+                if !self.audioPlaying {
                     var bufferThing: [Float] = [0, 0, 0]
                     display.updateBuffer(&bufferThing, withBufferSize: 3)
                 }
@@ -719,6 +747,29 @@ class LogContainer: UIViewController, EZOutputDataSource {
 //                display.updateBuffer(&bufferThing, withBufferSize: 3)
 //            }
         }
+    }
+    
+    func audioPlayer(audioPlayer: EZAudioPlayer!, playedAudio buffer: UnsafeMutablePointer<UnsafeMutablePointer<Float>>, withBufferSize bufferSize: UInt32, withNumberOfChannels numberOfChannels: UInt32, inAudioFile audioFile: EZAudioFile!) {
+        // Update the main buffer
+        dispatch_async(dispatch_get_main_queue()) {
+            // Update the main buffer
+            if let display = self.audioDisplay {
+                if self.audioPlaying {
+                    display.updateBuffer(buffer[0], withBufferSize: bufferSize)
+                }
+            }
+        }
+    }
+    
+    func audioPlayer(audioPlayer: EZAudioPlayer!, updatedPosition framePosition: Int64, inAudioFile audioFile: EZAudioFile!) {
+        return
+    }
+    
+    func audioPlayer(audioPlayer: EZAudioPlayer!, reachedEndOfAudioFile audioFile: EZAudioFile!) {
+        self.audioPlaying = false
+        self.dreamBoxes![detailBox].dreamPlayTap(UITapGestureRecognizer())
+        
+        print("End of audio file reached")
     }
     
     override func viewDidAppear(animated: Bool) {

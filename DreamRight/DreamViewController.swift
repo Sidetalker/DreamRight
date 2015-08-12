@@ -540,8 +540,9 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
             let curDream = tempDir.stringByAppendingPathComponent("dream.m4a")
             
             // Create a permanent path for this dream
+            let unique = NSUUID().UUIDString + ".m4a"
             let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as NSString
-            let permanentDream = docDir.stringByAppendingPathComponent(NSUUID().UUIDString + ".m4a")
+            let permanentDream = docDir.stringByAppendingPathComponent(unique)
             
             // Create a file manager
             let fileManager = NSFileManager.defaultManager()
@@ -571,7 +572,7 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
                 
                 print("Deleted temporary dream")
                 
-                currentDream?.recording = permanentDream
+                currentDream?.recording = unique
             }
             catch _ {
                 print("Error: Could not copy current dream from temporary directory")
