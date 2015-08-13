@@ -323,7 +323,7 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
                             startDreaming(gesturePoint)
                         }
                         else {
-                            stopDreaming()
+                            stopDreaming(true, showLabel: true)
                         }
                         
                         // Prepare for a possible tap and hold to finish the night
@@ -452,8 +452,7 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
                     self.exitStar.layer.transform = CATransform3DMakeScale(400, 400, 1)
                     blockerView.alpha = 1.0
                     }, completion: { (Bool) in
-//                        self.dismissViewControllerAnimated(false, completion: nil)
-                        self.stopDreaming()
+                        self.stopDreaming(false, showLabel: false)
                         self.visualizer.pauseDrawing()
                         self.performSegueWithIdentifier("finishedDreaming", sender: self)
                 })
@@ -511,13 +510,15 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         self.visualizer.resumeDrawing()
     }
     
-    func stopDreaming() {
+    func stopDreaming(shouldSave: Bool, showLabel: Bool) {
+        // Flip them flags like a honky tonk
         dreaming = false
         savingDream = true
         
         // Close the recording stream
         recorder?.closeAudioFile()
         
+        // Obtain the length of the recording
         let recordingEnd = NSDate()
         var recordLength: NSTimeInterval = 0
         
@@ -525,13 +526,16 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
             recordLength = recordingEnd.timeIntervalSinceDate(recordingStart!)
         }
         
+        // Prepare label for display
         let infoLabel = UILabel()
         infoLabel.textColor = DreamRightSK.yellow
         infoLabel.font = UIFont.systemFontOfSize(25)
         
+        // Make sure the recording is long enough before saving
         if recordLength < minLength {
-            infoLabel.text = "Dream Discarded"
+            infoLabel.text = "Dream Discarded (too short)"
         }
+            // If the recording is long enough...
         else {
             infoLabel.text = "Dream Saved"
             
@@ -564,7 +568,7 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
             do {
                 // Copy the file
                 try fileManager.copyItemAtPath(curDream, toPath: permanentDream)
-
+                
                 print("Successfully copied temporary dream to permanent location")
                 
                 // Delete the old file
@@ -581,20 +585,26 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
             }
         }
         
-        // Persist our changes
-        save()
+        // Persist or rollback our changes
+        if shouldSave { save() }
+        else { rollback() }
         
+        // Adjust the infoLabel to hug its text
         infoLabel.sizeToFit()
         
+        // Center the label
         let infoHeight = infoLabel.frame.height
         let infoWidth = infoLabel.frame.width
         let newFrame = CGRect(x: self.view.frame.width / 2 - infoWidth / 2, y: self.view.frame.height / 2 - infoHeight / 2, width: infoWidth, height: infoHeight)
         
+        // Start at 50% size
         infoLabel.frame = newFrame
         infoLabel.transform = CGAffineTransformMakeScale(0.5, 0.5)
         
-        self.view.addSubview(infoLabel)
+        // Add the label to the view if requested
+        if showLabel { self.view.addSubview(infoLabel) }
         
+        // Animate the completion
         UIView.animateWithDuration(recordTextAnimLength, animations: {
             infoLabel.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.5, 1.5)
             infoLabel.alpha = 0.0
@@ -606,10 +616,12 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         })
         
         UIView.animateWithDuration(0.8, animations: {
+            // Mask that visualizer son
             self.visualizerMask.frame.origin = CGPointZero
+            }, completion: { (value: Bool) in
+                // Stop the visualizer from drawing once it has been fully masked
+                self.visualizer.pauseDrawing()
         })
-        
-        self.visualizer.pauseDrawing()
     }
     
     func initiateExit() {
