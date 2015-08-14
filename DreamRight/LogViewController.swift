@@ -68,14 +68,14 @@ class LogViewController: UICollectionViewController {
             for dream in dreams {
                 let dreamTime = dream.time
                 let dreamName = dream.name
-                let dreamDescription = dream.description
+                let dreamDescription = dream.text
                 let dreamAudio = dream.recording
                 
                 if dreamAudio == nil {
                     continue
                 }
                 
-                logItems.append(LogDream(audioFile: dreamAudio, name: dreamName!, description: dreamDescription, time: dreamTime!, tags: [String]()))
+                logItems.append(LogDream(audioFile: dreamAudio, name: dreamName!, description: dreamDescription!, time: dreamTime!, tags: [String]()))
             }
             
             if logItems.count == 0 {
@@ -84,18 +84,6 @@ class LogViewController: UICollectionViewController {
             
             entries!.append(LogEntry(date: nightTime!, name: nightName!, tags: [String](), dreams: logItems, isHidden: 0))
         }
-    }
-
-    // Don't present the layout until we are loaded - this allows for a nice fade
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        self.collectionView?.setCollectionViewLayout(SpringyFlow(), animated: false)
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        self.collectionView?.setCollectionViewLayout(SpringyFlow(), animated: false)
     }
 
     override func didReceiveMemoryWarning() {
@@ -336,6 +324,7 @@ class SpringyFlow: UICollectionViewFlowLayout {
     }
     
     // Configure this directly
+    // WARNING: I don't think the attributes should be modified directly, could address down the road
     override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
         // Detect the location of the touch, the item being touched and the speed of the drag
         let scrollView = self.collectionView
@@ -461,7 +450,7 @@ class DreamSuperBox: UIView {
         // Make the audioView whether or not we'll use it
         let containerFrame = self.parent!.parent!.dreamContainer.frame
         
-        self.audioDisplay = ZLSinusWaveView(frame: CGRect(x: containerFrame.width / 2, y: containerFrame.height - 25, width: 0, height: 0))
+        audioDisplay = ZLSinusWaveView(frame: CGRect(x: containerFrame.width / 2, y: containerFrame.height - 25, width: 0, height: 0))
         audioDisplay.backgroundColor = DreamRightSK.blue
         audioDisplay.color = DreamRightSK.yellow
         audioDisplay.plotType = EZPlotType.Rolling
