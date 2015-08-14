@@ -336,8 +336,12 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
                                 self.exitStar.frame = CGRectMake(0,0,1,1)
                                 self.exitStar.center = gesture.locationInView(self.view)
                                 
+                                let rotationTransform = CGAffineTransformRotate(CGAffineTransformIdentity, -CGFloat(M_PI / 2))
+                                let sizeTransform = CGAffineTransformScale(CGAffineTransformIdentity, 110, 110)
+                                let bothTransforms = CGAffineTransformConcat(rotationTransform, sizeTransform)
+                                
                                 UIView.animateWithDuration(1.5, animations: {
-                                    self.exitStar.layer.transform = CATransform3DMakeScale(150, 150, 1)
+                                    self.exitStar.transform = bothTransforms
                                     }, completion: { (Bool) in
                                         // If we're STILL in the exit state, finish the night
                                         if self.exitState == 2 {
@@ -421,6 +425,7 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
             else if exitState == 2 {
                 exitState = 0
                 
+                // Keep the star centered under the finger
                 self.exitStar.center = gesture.locationInView(self.view)
                 
                 UIView.animateWithDuration(0.5, animations: {
@@ -445,11 +450,17 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         self.view.bringSubviewToFront(exitStar)
         self.view.bringSubviewToFront(blockerView)
         
-        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations: {
-            self.exitStar.layer.transform = CATransform3DMakeScale(40, 40, 1)
+        let rotationTransform = CGAffineTransformRotate(CGAffineTransformIdentity, -CGFloat(M_PI))
+        let sizeTransform = CGAffineTransformScale(CGAffineTransformIdentity, 400, 400)
+        let bothTransforms = CGAffineTransformConcat(rotationTransform, sizeTransform)
+        
+        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+//            self.exitStar.layer.transform = CATransform3DMakeScale(40, 40, 1)
+            self.exitStar.transform = CGAffineTransformScale(CGAffineTransformIdentity, 40, 40)
             }, completion: { (Bool) in
-                UIView.animateWithDuration(0.8, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                    self.exitStar.layer.transform = CATransform3DMakeScale(400, 400, 1)
+                UIView.animateWithDuration(0.8, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations: {
+//                    self.exitStar.layer.transform = CATransform3DMakeScale(400, 400, 1)
+                    self.exitStar.transform = bothTransforms
                     blockerView.alpha = 1.0
                     }, completion: { (Bool) in
                         self.stopDreaming(false, showLabel: false)
