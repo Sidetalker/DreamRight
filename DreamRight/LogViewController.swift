@@ -1344,7 +1344,7 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate 
             
             if CGRectContainsPoint(dreamBoxes![x].frame, currentLocation) {
                 if navState == 4 {
-                    print("Edit the description", appendNewline: false)
+                    print("Edit the description")
                 }
                 else {
                     dreamBoxTap(gesture)
