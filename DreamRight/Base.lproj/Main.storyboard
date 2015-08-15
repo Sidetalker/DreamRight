@@ -454,7 +454,7 @@
         <!--Log Nav-->
         <scene sceneID="ype-M5-Ah0">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="ITx-ZC-vZ0" customClass="LogNav" customModule="DreamRight" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="ITx-ZC-vZ0" customClass="LogNav" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="CLY-hu-fkP"/>
                         <viewControllerLayoutGuide type="bottom" id="g24-tn-NaM"/>

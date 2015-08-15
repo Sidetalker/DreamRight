@@ -35,6 +35,7 @@ struct LogDream {
     var name: String
     var description: String
     var time: NSDate
+    var dream: Dream?
     var tags: [String]
 }
 
@@ -75,7 +76,7 @@ class LogViewController: UICollectionViewController {
                     continue
                 }
                 
-                logItems.append(LogDream(audioFile: dreamAudio, name: dreamName!, description: dreamDescription!, time: dreamTime!, tags: [String]()))
+                logItems.append(LogDream(audioFile: dreamAudio, name: dreamName!, description: dreamDescription!, time: dreamTime!, dream: dream, tags: [String]()))
             }
             
             if logItems.count == 0 {
@@ -153,7 +154,7 @@ class LogViewController: UICollectionViewController {
                 let title = nightEntry.name
                 let date = dateToNightText(nightEntry.date)
                 
-                box = DreamSuperBox(frame: cellFrame, title: title, date: date, body: nil, audioFile: nil, parent: self)
+                box = DreamSuperBox(frame: cellFrame, title: title, date: date, body: nil, audioFile: nil, dream: nil, parent: self)
                 box?.fadeInViews(0)
             }
             else {
@@ -161,8 +162,9 @@ class LogViewController: UICollectionViewController {
                 let dreamTime = dateToDreamText(dreams[x - 1].time)
                 let dreamBody = dreams[x - 1].description
                 let audioFile = dreams[x - 1].audioFile
+                let dream = dreams[x - 1].dream
                 
-                box = DreamSuperBox(frame: cellFrame, title: dreamName, date: dreamTime, body: dreamBody, audioFile: audioFile, parent: self)
+                box = DreamSuperBox(frame: cellFrame, title: dreamName, date: dreamTime, body: dreamBody, audioFile: audioFile, dream: dream, parent: self)
             }
             
             // Add a gesture recognizer to the box
@@ -408,6 +410,7 @@ class DreamSuperBox: UIView {
     var title: String?
     var date: String?
     var body: String?
+    var dream: Dream?
     
     var audioPlayer: EZAudioPlayer?
     var audioFile: String?
@@ -418,7 +421,7 @@ class DreamSuperBox: UIView {
         super.init(coder: aDecoder)
     }
     
-    init(frame: CGRect, title: String, date: String, body: String?, audioFile: String?, parent: LogViewController) {
+    init(frame: CGRect, title: String, date: String, body: String?, audioFile: String?, dream: Dream?, parent: LogViewController) {
         super.init(frame: frame)
         
         // Needed so that the DreamBox subview doesn't bleed out of this container
@@ -435,10 +438,12 @@ class DreamSuperBox: UIView {
         self.body = body
         self.audioFile = audioFile
         self.parent = parent
+        self.dream = dream
         
         // Load our nib
         dreamView = UIView.initWithNibName("DreamView") as DreamBox
         dreamView?.frame = self.bounds
+        dreamView?.dream = dream
         
         // Add the DreamView
         self.addSubview(dreamView!)
@@ -680,6 +685,7 @@ class DreamBox: UIView {
     @IBOutlet var imgPlay: UIImageView!
     @IBOutlet weak var btnFinishedEditing: UIButton!
     
+    var dream: Dream?
     var delegate: DreamBoxDelegate?
     
     required init?(coder aDecoder: NSCoder) {
@@ -705,19 +711,42 @@ class DreamBox: UIView {
     
     // Can be called to transition the title of the box to a finished button
     func startEditingDescription() {
-        self.btnFinishedEditing.enabled = true
-        self.bringSubviewToFront(self.btnFinishedEditing)
+        txtDescription.editable = true             // Enable editing
+        txtDescription.becomeFirstResponder()      // Start editing
         
-        UIView.animateWithDuration(0.8, animations: {
+        // Select all if the text is default
+        if (txtDescription.text == "Tap to enter a description for your dream.") {
+            txtDescription.selectAll(self)
+        }
+        
+        btnFinishedEditing.enabled = true
+        bringSubviewToFront(self.btnFinishedEditing)
+        
+        UIView.animateWithDuration(0.4, animations: {
             self.btnFinishedEditing.alpha = 1.0
         })
     }
     
     // Fires delegate indicating end of editing
     @IBAction func finishedEditingDescription(sender: AnyObject) {
-        delegate?.finishedEditing(self)
+        
+        txtDescription.editable = false             // Disable editing
+        txtDescription.resignFirstResponder()       // Stop editing
+        btnFinishedEditing.enabled = false          // Disable editing button
+        
+        UIView.animateWithDuration(0.4, animations: {
+            self.btnFinishedEditing.alpha = 0.0
+            }, completion: { (value: Bool) in
+                self.sendSubviewToBack(self.btnFinishedEditing)
+        })
+        
+        // Save changes
+        dream!.setValue(txtDescription.text, forKey: "text")
+        save()
+        
+        // Let the deli know what's good
+        delegate?.finishedEditingDescription(self)
     }
-    
 }
 
 // MARK: - Custom Navigation Bar
@@ -1345,6 +1374,7 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate,
         
         if navState != 5 {
             print("navState is not equal to 5 (\(navState)) - ignoring keyboard movement")
+            return
         }
         
         if let
@@ -1419,7 +1449,10 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate,
     }
     
     func finishedEditingDescription(view: DreamBox) {
-        <#code#>
+        let dreamBox = self.dreamBoxes![detailBox]
+        
+        navState = 4                    // Update navState
+        dreamBox.editInnerJiggle(true)  // Start up the jiggles
     }
     
     func dreamDescriptionTap(gesture: UITapGestureRecognizer) {
@@ -1433,28 +1466,16 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate,
             if CGRectContainsPoint(dreamBoxes![x].frame, currentLocation) {
                 // If we're in the inner edit
                 if navState == 4 {
-                    // Identify the enclosing box and the text box itself
+                    // Identify the enclosing box
                     let dreamBox = self.dreamBoxes![x]
-                    let textBox = dreamBox.dreamView!.txtDescription
                     
                     navState = 5                        // Update nav state
                     detailBox = x                       // Update detail box
                     dreamBox.editInnerJiggle(false)     // Stop Jiggling
-                    textBox.editable = true             // Enable editing
-                    textBox.becomeFirstResponder()      // Start editing
-                    
-                    // Select all if the text is default
-                    if (textBox.text == "Tap to enter a description for your dream.") {
-                        textBox.selectAll(self)
-                    }
                     
                     // Initiate editing and take on delegation responsibilities
                     dreamBox.dreamView?.startEditingDescription()
                     dreamBox.dreamView?.delegate = self
-                    
-//                    UIView.animateWithDuration(0.6, delay: 0.0, usingSpringWithDamping: 0.76, initialSpringVelocity: 0.0, options: [], animations: {
-//                        mainBox.frame = CGRectMake(10, 10, self.dreamContainer.frame.width - 20, self.dreamContainer.frame.height - 20)
-//                        }, completion: nil)
                 }
                 else {
                     dreamBoxTap(gesture)
