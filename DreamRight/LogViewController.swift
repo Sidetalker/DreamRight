@@ -669,11 +669,18 @@ class DreamSuperBox: UIView {
     }
 }
 
+protocol DreamBoxDelegate {
+    func finishedEditing(view: DreamBox)
+}
+
 class DreamBox: UIView {
     @IBOutlet var lblTitle: UILabel!
     @IBOutlet var lblDate: UILabel!
     @IBOutlet var txtDescription: UITextView!
     @IBOutlet var imgPlay: UIImageView!
+    @IBOutlet weak var btnFinishedEditing: UIButton!
+    
+    var delegate: DreamBoxDelegate?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -681,8 +688,34 @@ class DreamBox: UIView {
     
     // Called after the IBOutlets have been hooked up
     override func awakeFromNib() {
+        // Nib background might be colored for testing purposes
+        self.backgroundColor = UIColor.clearColor()
+        
+        // Configure the text box
         self.txtDescription.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
         self.txtDescription.selectable = false
+        
+        // Configure the hidden button used to finish description editing
+        self.btnFinishedEditing.backgroundColor = DreamRightSK.blue
+        self.btnFinishedEditing.alpha = 0.0
+        self.btnFinishedEditing.enabled = false
+        
+        self.sendSubviewToBack(self.btnFinishedEditing)
+    }
+    
+    // Can be called to transition the title of the box to a finished button
+    func startEditing() {
+        self.btnFinishedEditing.enabled = true
+        self.bringSubviewToFront(self.btnFinishedEditing)
+        
+        UIView.animateWithDuration(0.8, animations: {
+            self.btnFinishedEditing.alpha = 1.0
+        })
+    }
+    
+    // Fires delegate indicating end of editing
+    @IBAction func finishedEditingTapped(sender: AnyObject) {
+        delegate?.finishedEditing(self)
     }
 }
 
@@ -714,9 +747,17 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate 
     var audioPlaying = false
     var audioDisplay: ZLSinusWaveView?
     
+    // navState view status and button display
+    // 0: Night list view (single nav button)
+    // 1: Single night view (Back + Edit buttons)
+    // 2: Single night view editing (Back + Done buttons)
+    // 3: Detail night view (Back + Edit buttons)
+    // 4: Detail night view editing (Back + Done buttons)
+    // 5: Detail night view editing text field (buttons hidden by keyboard - title replaced by done trigger)
+    
     func output(output: EZOutput!, shouldFillAudioBufferList audioBufferList: UnsafeMutablePointer<AudioBufferList>, withNumberOfFrames frames: UInt32, timestamp: UnsafePointer<AudioTimeStamp>) -> OSStatus {
         dispatch_async(dispatch_get_main_queue()) {
-            // Update the main buffer
+            // Update the main audio buffer
             if let display = self.audioDisplay {
                 if !self.audioPlaying {
                     var bufferThing: [Float] = [0, 0, 0]
@@ -759,6 +800,11 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate 
         self.dreamBoxes![detailBox].dreamPlayTap(UITapGestureRecognizer())
         
         print("End of audio file reached")
+    }
+    
+    override func viewDidLoad() {
+        // Register for keyboard frame change updates
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardMoved:", name: UIKeyboardWillChangeFrameNotification, object: nil)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -1215,6 +1261,7 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate 
         // 2: Single night view editing (Back + Done buttons)
         // 3: Detail night view (Back + Edit buttons)
         // 4: Detail night view editing (Back + Done buttons)
+        // 5: Detail night view editing text field (buttons hidden by keyboard - title replaced by done trigger)
         
         // The default state - returns to the home screen
         if navState == 0 {
@@ -1292,6 +1339,38 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate 
         }
     }
     
+    func keyboardMoved(notification: NSNotification) {
+        print("Keyboard moved")
+        
+        if navState != 5 {
+            print("navState is not equal to 5 (\(navState)) - ignoring keyboard movement")
+        }
+        
+        if let
+            info = notification.userInfo,
+            kbStartFrame = info[UIKeyboardFrameBeginUserInfoKey]?.CGRectValue,
+            kbEndFrame = info[UIKeyboardFrameEndUserInfoKey]?.CGRectValue,
+            curveVal = info[UIKeyboardAnimationCurveUserInfoKey]?.integerValue,
+            animationCurve = UIViewAnimationCurve(rawValue: curveVal),
+            animationDuration = info[UIKeyboardAnimationDurationUserInfoKey]?.doubleValue,
+            box = dreamBoxes?[detailBox]
+        {
+            UIView.beginAnimations(nil, context: nil)
+            UIView.setAnimationCurve(animationCurve)
+            UIView.setAnimationDuration(animationDuration)
+            
+            var newFrame = box.frame
+            var difference = kbStartFrame.origin.y - kbEndFrame.origin.y
+            
+            difference += difference < 0 ? 40 : -40
+            
+            newFrame.size.height -= difference
+            box.frame = newFrame
+            
+            UIView.commitAnimations()
+        }
+    }
+    
     func dreamTitleTap(gesture: UITapGestureRecognizer) {
         for x in 0...dreamBoxes!.count - 1 {
             let currentLocation = gesture.locationInView(self.dreamContainer)
@@ -1339,12 +1418,34 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate 
     }
     
     func dreamDescriptionTap(gesture: UITapGestureRecognizer) {
+        // Get the location of the tap
+        let currentLocation = gesture.locationInView(self.dreamContainer)
+        
+        // Loop through all dream boxes
         for x in 0...dreamBoxes!.count - 1 {
-            let currentLocation = gesture.locationInView(self.dreamContainer)
             
+            // If the tap is within the current dream box...
             if CGRectContainsPoint(dreamBoxes![x].frame, currentLocation) {
+                // If we're in the inner edit
                 if navState == 4 {
-                    print("Edit the description")
+                    // Identify the enclosing box and the text box itself
+                    let dreamBox = self.dreamBoxes![x]
+                    let textBox = dreamBox.dreamView!.txtDescription
+                    
+                    navState = 5                        // Update nav state
+                    detailBox = x                       // Update detail box
+                    dreamBox.editInnerJiggle(false)     // Stop Jiggling
+                    textBox.editable = true             // Enable editing
+                    textBox.becomeFirstResponder()      // Start editing
+                    
+                    // Select all if the text is default
+                    if (textBox.text == "Tap to enter a description for your dream.") {
+                        textBox.selectAll(self)
+                    }
+                    
+//                    UIView.animateWithDuration(0.6, delay: 0.0, usingSpringWithDamping: 0.76, initialSpringVelocity: 0.0, options: [], animations: {
+//                        mainBox.frame = CGRectMake(10, 10, self.dreamContainer.frame.width - 20, self.dreamContainer.frame.height - 20)
+//                        }, completion: nil)
                 }
                 else {
                     dreamBoxTap(gesture)
