@@ -670,7 +670,7 @@ class DreamSuperBox: UIView {
 }
 
 protocol DreamBoxDelegate {
-    func finishedEditing(view: DreamBox)
+    func finishedEditingDescription(view: DreamBox)
 }
 
 class DreamBox: UIView {
@@ -704,7 +704,7 @@ class DreamBox: UIView {
     }
     
     // Can be called to transition the title of the box to a finished button
-    func startEditing() {
+    func startEditingDescription() {
         self.btnFinishedEditing.enabled = true
         self.bringSubviewToFront(self.btnFinishedEditing)
         
@@ -714,9 +714,10 @@ class DreamBox: UIView {
     }
     
     // Fires delegate indicating end of editing
-    @IBAction func finishedEditingTapped(sender: AnyObject) {
+    @IBAction func finishedEditingDescription(sender: AnyObject) {
         delegate?.finishedEditing(self)
     }
+    
 }
 
 // MARK: - Custom Navigation Bar
@@ -727,7 +728,7 @@ class LogNav: UIViewController {
 
 // MARK: - Log Container View
 
-class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate {
+class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate, DreamBoxDelegate {
     @IBOutlet var dreamContainer: UIView!
     @IBOutlet var navContainer: UIView!
     
@@ -1417,6 +1418,10 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate 
         }
     }
     
+    func finishedEditingDescription(view: DreamBox) {
+        <#code#>
+    }
+    
     func dreamDescriptionTap(gesture: UITapGestureRecognizer) {
         // Get the location of the tap
         let currentLocation = gesture.locationInView(self.dreamContainer)
@@ -1442,6 +1447,10 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate 
                     if (textBox.text == "Tap to enter a description for your dream.") {
                         textBox.selectAll(self)
                     }
+                    
+                    // Initiate editing and take on delegation responsibilities
+                    dreamBox.dreamView?.startEditingDescription()
+                    dreamBox.dreamView?.delegate = self
                     
 //                    UIView.animateWithDuration(0.6, delay: 0.0, usingSpringWithDamping: 0.76, initialSpringVelocity: 0.0, options: [], animations: {
 //                        mainBox.frame = CGRectMake(10, 10, self.dreamContainer.frame.width - 20, self.dreamContainer.frame.height - 20)
