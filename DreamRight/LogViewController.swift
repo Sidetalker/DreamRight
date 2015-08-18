@@ -1171,10 +1171,11 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate,
         
         messageDisplay.addAction(UIAlertAction(title: "Done", style: UIAlertActionStyle.Default, handler: {
             (alert: UIAlertAction!) in
+            // Update display
             self.dreamBoxes![0].title = messageTextField.text
             self.dreamBoxes![0].dreamView!.lblTitle.text = messageTextField.text
             
-            // Edit Core Data
+            // Save the changes
             self.dreamBoxes![0].night?.setValue(messageTextField.text, forKey: "name")
             save()
         }))
