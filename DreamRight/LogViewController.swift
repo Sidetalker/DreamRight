@@ -448,8 +448,6 @@ class DreamSuperBox: UIView {
         // Load our nib
         dreamView = UIView.initWithNibName("DreamView") as DreamBox
         
-        var newFrame = self.bounds
-        
         dreamView?.frame = self.bounds
         dreamView?.dream = dream
         
@@ -478,7 +476,7 @@ class DreamSuperBox: UIView {
             dreamView?.txtDescription.text = body
         }
         else {
-//            dreamView?.txtDescription.hidden = true
+            dreamView?.txtDescription.hidden = true
         }
         
         if dreamView?.txtDescription.hidden != true {
