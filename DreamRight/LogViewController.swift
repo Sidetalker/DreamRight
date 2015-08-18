@@ -54,7 +54,11 @@ class LogViewController: UICollectionViewController {
         // Register the custom cell xib file
         self.collectionView?.registerNib(UINib(nibName: "LogCell", bundle: nil), forCellWithReuseIdentifier: "logCell")
         
-        // Load dummy data
+        // Load our data from the Core Data stack
+        populate()
+    }
+    
+    func populate() {
         entries = [LogEntry]()
         
         let nights = getObjects("Night", predicate: nil) as! [Night]
@@ -184,6 +188,7 @@ class LogViewController: UICollectionViewController {
         
         // Save a reference to the UICollectionView so that we can show it again later
         self.parent!.dreamCollection = self.collectionView
+        self.parent!.dreamController = self
         
         // Fade away the UICollectionView
         UIView.animateWithDuration(0.5, animations: {
@@ -442,6 +447,9 @@ class DreamSuperBox: UIView {
         
         // Load our nib
         dreamView = UIView.initWithNibName("DreamView") as DreamBox
+        
+        var newFrame = self.bounds
+        
         dreamView?.frame = self.bounds
         dreamView?.dream = dream
         
@@ -470,7 +478,7 @@ class DreamSuperBox: UIView {
             dreamView?.txtDescription.text = body
         }
         else {
-            dreamView?.txtDescription.hidden = true
+//            dreamView?.txtDescription.hidden = true
         }
         
         if dreamView?.txtDescription.hidden != true {
@@ -497,13 +505,11 @@ class DreamSuperBox: UIView {
         else {
             dreamView!.imgPlay.hidden = true
         }
+        
+        self.updateConstraints()
     }
     
     override func layoutSubviews() {
-        // This hardcoded hackiness is required due to some weird storyboard bug
-        dreamView!.lblTitle.frame = titleCellFrame
-        dreamView!.lblDate.frame = dateCellFrame
-        
         // Update the bounds with the frame changes and keep the textfield at the top
         dreamView!.bounds = self.bounds
         dreamView!.txtDescription.setContentOffset(CGPointZero, animated: true)
@@ -761,6 +767,7 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate,
     @IBOutlet var dreamContainer: UIView!
     @IBOutlet var navContainer: UIView!
     
+    var dreamController: LogViewController!
     var dreamCollection: UICollectionView!
     var dreamBoxes: [DreamSuperBox]?
     
@@ -922,6 +929,10 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate,
                 box.removeFromSuperview()
             }
         }
+        
+        // Reload data from the Core Data stack
+        dreamController.populate()
+        dreamCollection.reloadData()
         
         // Fade the collectionView back into reality
         UIView.animateWithDuration(0.9, delay: 0.0, options: UIViewAnimationOptions.AllowUserInteraction, animations: {

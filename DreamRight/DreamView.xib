@@ -10,15 +10,33 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0o0-99-35Z">
+                    <rect key="frame" x="12" y="8" width="576" height="49"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="49" id="a8W-62-Rxz"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="25"/>
+                    <state key="normal" title="Finish Editing">
+                        <color key="titleColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="finishedEditingDescription:" destination="iN0-l3-epB" eventType="touchUpInside" id="7jH-NX-cOZ"/>
+                    </connections>
+                </button>
                 <label opaque="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A Delicious Night of fun" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8ji-nx-jZ3">
                     <rect key="frame" x="12" y="8" width="210.5" height="24"/>
                     <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="YLA-Zj-JyL"/>
+                    </constraints>
                     <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="20"/>
                     <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thursday, October 30th 2014" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wMS-aJ-zhO">
-                    <rect key="frame" x="12" y="38" width="177" height="17"/>
+                    <rect key="frame" x="12" y="40" width="177" height="17"/>
                     <animations/>
                     <constraints>
                         <constraint firstAttribute="height" constant="17" id="VXh-g3-n8B"/>
@@ -28,7 +46,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.0" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rr3-k9-fem">
-                    <rect key="frame" x="8" y="63" width="584" height="529"/>
+                    <rect key="frame" x="8" y="65" width="584" height="527"/>
                     <animations/>
                     <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                     <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -43,18 +61,6 @@
                         <constraint firstAttribute="width" constant="34" id="saF-wg-T2h"/>
                     </constraints>
                 </imageView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0o0-99-35Z">
-                    <rect key="frame" x="12" y="8" width="576" height="47"/>
-                    <animations/>
-                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="25"/>
-                    <state key="normal" title="Finish Editing">
-                        <color key="titleColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
-                    </state>
-                    <connections>
-                        <action selector="finishedEditingDescription:" destination="iN0-l3-epB" eventType="touchUpInside" id="7jH-NX-cOZ"/>
-                    </connections>
-                </button>
             </subviews>
             <animations/>
             <color key="backgroundColor" red="0.98594826459999996" green="0.0" blue="0.026950567960000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -66,9 +72,8 @@
                 <constraint firstItem="XGT-Si-S9c" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="CO7-Mc-P06"/>
                 <constraint firstItem="0o0-99-35Z" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="12" id="HMV-Gf-XxC"/>
                 <constraint firstAttribute="trailing" secondItem="XGT-Si-S9c" secondAttribute="trailing" constant="15" id="Hs2-W2-65t"/>
-                <constraint firstItem="rr3-k9-fem" firstAttribute="top" secondItem="0o0-99-35Z" secondAttribute="bottom" constant="8" id="R6Z-n3-yoB"/>
-                <constraint firstItem="wMS-aJ-zhO" firstAttribute="top" secondItem="8ji-nx-jZ3" secondAttribute="bottom" constant="6" id="Smr-9t-10a"/>
-                <constraint firstAttribute="bottom" secondItem="rr3-k9-fem" secondAttribute="bottom" constant="8" id="VFS-An-AHJ"/>
+                <constraint firstItem="wMS-aJ-zhO" firstAttribute="top" secondItem="8ji-nx-jZ3" secondAttribute="bottom" constant="8" id="Smr-9t-10a"/>
+                <constraint firstAttribute="bottom" secondItem="rr3-k9-fem" secondAttribute="bottom" priority="500" constant="8" id="VFS-An-AHJ"/>
                 <constraint firstAttribute="trailing" secondItem="0o0-99-35Z" secondAttribute="trailing" constant="12" id="kZd-eP-xNh"/>
                 <constraint firstItem="0o0-99-35Z" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="oN2-VP-hjq"/>
                 <constraint firstItem="rr3-k9-fem" firstAttribute="top" secondItem="wMS-aJ-zhO" secondAttribute="bottom" constant="8" id="x7K-nc-Tlt"/>
