@@ -26,6 +26,7 @@ struct LogEntry {
     var name: String
     var tags: [String]
     var dreams: [LogDream]
+    var night: Night?
     var isHidden: Int
 }
 
@@ -36,6 +37,7 @@ struct LogDream {
     var description: String
     var time: NSDate
     var dream: Dream?
+    var night: Night?
     var tags: [String]
 }
 
@@ -80,14 +82,14 @@ class LogViewController: UICollectionViewController {
                     continue
                 }
                 
-                logItems.append(LogDream(audioFile: dreamAudio, name: dreamName!, description: dreamDescription!, time: dreamTime!, dream: dream, tags: [String]()))
+                logItems.append(LogDream(audioFile: dreamAudio, name: dreamName!, description: dreamDescription!, time: dreamTime!, dream: dream, night: night, tags: [String]()))
             }
             
             if logItems.count == 0 {
                 continue
             }
             
-            entries!.append(LogEntry(date: nightTime!, name: nightName!, tags: [String](), dreams: logItems, isHidden: 0))
+            entries!.append(LogEntry(date: nightTime!, name: nightName!, tags: [String](), dreams: logItems, night: night, isHidden: 0))
         }
     }
 
@@ -156,9 +158,10 @@ class LogViewController: UICollectionViewController {
             
             if x == 0 {
                 let title = nightEntry.name
+                let night = nightEntry.night
                 let date = dateToNightText(nightEntry.date)
                 
-                box = DreamSuperBox(frame: cellFrame, title: title, date: date, body: nil, audioFile: nil, dream: nil, parent: self)
+                box = DreamSuperBox(frame: cellFrame, title: title, date: date, body: nil, audioFile: nil, dream: nil, night: night, parent: self)
                 box?.fadeInViews(0)
             }
             else {
@@ -167,8 +170,9 @@ class LogViewController: UICollectionViewController {
                 let dreamBody = dreams[x - 1].description
                 let audioFile = dreams[x - 1].audioFile
                 let dream = dreams[x - 1].dream
+                let night = dreams[x - 1].night
                 
-                box = DreamSuperBox(frame: cellFrame, title: dreamName, date: dreamTime, body: dreamBody, audioFile: audioFile, dream: dream, parent: self)
+                box = DreamSuperBox(frame: cellFrame, title: dreamName, date: dreamTime, body: dreamBody, audioFile: audioFile, dream: dream, night: night, parent: self)
             }
             
             // Add a gesture recognizer to the box
@@ -416,6 +420,7 @@ class DreamSuperBox: UIView {
     var date: String?
     var body: String?
     var dream: Dream?
+    var night: Night?
     
     var audioPlayer: EZAudioPlayer?
     var audioFile: String?
@@ -426,7 +431,7 @@ class DreamSuperBox: UIView {
         super.init(coder: aDecoder)
     }
     
-    init(frame: CGRect, title: String, date: String, body: String?, audioFile: String?, dream: Dream?, parent: LogViewController) {
+    init(frame: CGRect, title: String, date: String, body: String?, audioFile: String?, dream: Dream?, night: Night?, parent: LogViewController) {
         super.init(frame: frame)
         
         // Needed so that the DreamBox subview doesn't bleed out of this container
@@ -444,6 +449,7 @@ class DreamSuperBox: UIView {
         self.audioFile = audioFile
         self.parent = parent
         self.dream = dream
+        self.night = night
         
         // Load our nib
         dreamView = UIView.initWithNibName("DreamView") as DreamBox
@@ -690,6 +696,7 @@ class DreamBox: UIView {
     @IBOutlet weak var btnFinishedEditing: UIButton!
     
     var dream: Dream?
+    var night: Night?
     var delegate: DreamBoxDelegate?
     
     required init?(coder aDecoder: NSCoder) {
@@ -733,7 +740,6 @@ class DreamBox: UIView {
     
     // Fires delegate indicating end of editing
     @IBAction func finishedEditingDescription(sender: AnyObject) {
-        
         txtDescription.editable = false             // Disable editing
         txtDescription.resignFirstResponder()       // Stop editing
         btnFinishedEditing.enabled = false          // Disable editing button
@@ -1167,6 +1173,10 @@ class LogContainer: UIViewController, EZOutputDataSource, EZAudioPlayerDelegate,
             (alert: UIAlertAction!) in
             self.dreamBoxes![0].title = messageTextField.text
             self.dreamBoxes![0].dreamView!.lblTitle.text = messageTextField.text
+            
+            // Edit Core Data
+            self.dreamBoxes![0].night?.setValue(messageTextField.text, forKey: "name")
+            save()
         }))
         
         messageDisplay.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {
