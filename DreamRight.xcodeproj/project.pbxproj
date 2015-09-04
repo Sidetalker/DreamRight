@@ -11,6 +11,7 @@
 		0A3240561B4072E5002E3155 /* Dream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3240521B4072E5002E3155 /* Dream.swift */; };
 		0A3240571B4072E5002E3155 /* Night+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3240531B4072E5002E3155 /* Night+CoreDataProperties.swift */; };
 		0A3240581B4072E5002E3155 /* Night.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3240541B4072E5002E3155 /* Night.swift */; };
+		0A64D95B1B83DD8F00C53C67 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A64D95A1B83DD8F00C53C67 /* SettingsTableViewController.swift */; };
 		5106BE751A0AD69C00304C5F /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5106BE741A0AD69C00304C5F /* Helpers.swift */; };
 		510C30CB1A091307005D92E3 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C30CA1A091307005D92E3 /* HomeViewController.swift */; };
 		510C30D01A091991005D92E3 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C30CF1A091991005D92E3 /* TestViewController.swift */; };
@@ -50,6 +51,7 @@
 		0A3240521B4072E5002E3155 /* Dream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dream.swift; sourceTree = "<group>"; };
 		0A3240531B4072E5002E3155 /* Night+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Night+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0A3240541B4072E5002E3155 /* Night.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Night.swift; sourceTree = "<group>"; };
+		0A64D95A1B83DD8F00C53C67 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		2ED8EA416B0D4CFC988E3C33 /* Pods-DreamRight.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DreamRight.release.xcconfig"; path = "Pods/Target Support Files/Pods-DreamRight/Pods-DreamRight.release.xcconfig"; sourceTree = "<group>"; };
 		5106BE741A0AD69C00304C5F /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		510AA56D1A1A83980017DDDE /* DreamRight.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = DreamRight.playground; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				517AF2F71A13297A00169C82 /* User Interface */,
 				5164A2231A04334F003BAB76 /* Images */,
 				5164A1FC1A042DE8003BAB76 /* Supporting Files */,
+				0A64D95A1B83DD8F00C53C67 /* SettingsTableViewController.swift */,
 			);
 			path = DreamRight;
 			sourceTree = "<group>";
@@ -203,10 +206,10 @@
 		517AF2F71A13297A00169C82 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
+				5164A2051A042DE8003BAB76 /* Main.storyboard */,
 				5164A22E1A045FF3003BAB76 /* LaunchScreen.xib */,
 				517091461A0EFF9000DB1DC8 /* LogCell.xib */,
 				517AF2F51A13296300169C82 /* DreamView.xib */,
-				5164A2051A042DE8003BAB76 /* Main.storyboard */,
 				5155E7921A25A6D900EA2402 /* DreamInstruction.xib */,
 				51CA6C3A1A25EC470036C6CD /* DreamQuit.xib */,
 			);
@@ -376,6 +379,7 @@
 				51FEEFB91A0EF1D10079919D /* DreamViewController.swift in Sources */,
 				51E491ED1A06C0E500C39495 /* DreamRightSK.swift in Sources */,
 				51CA6C3D1A26570E0036C6CD /* StarVisualizer.swift in Sources */,
+				0A64D95B1B83DD8F00C53C67 /* SettingsTableViewController.swift in Sources */,
 				5164A1FF1A042DE8003BAB76 /* AppDelegate.swift in Sources */,
 				510C30CB1A091307005D92E3 /* HomeViewController.swift in Sources */,
 				0A3240561B4072E5002E3155 /* Dream.swift in Sources */,

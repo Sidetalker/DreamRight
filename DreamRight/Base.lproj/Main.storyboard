@@ -9,6 +9,9 @@
             <string>HelveticaNeue-UltraLight</string>
             <string>HelveticaNeue-UltraLight</string>
             <string>HelveticaNeue-UltraLight</string>
+            <string>HelveticaNeue-Light</string>
+            <string>HelveticaNeue-Light</string>
+            <string>HelveticaNeue-UltraLight</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -79,19 +82,19 @@
                                 </connections>
                             </button>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oPc-ni-p8O">
-                                <rect key="frame" x="196.5" y="523" width="207" height="47"/>
+                                <rect key="frame" x="251" y="523" width="97" height="47"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-UltraLight" family="Helvetica Neue" pointSize="30"/>
-                                <state key="normal" title="Design The Stars">
+                                <state key="normal" title="Settings">
                                     <color key="titleColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="pVH-c7-Zye" kind="show" identifier="designSegue" id="Axw-pe-VSC"/>
+                                    <segue destination="dYy-wt-2Yb" kind="presentation" id="pU4-29-o4A"/>
                                 </connections>
                             </button>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fqj-Rv-3w7">
-                                <rect key="frame" x="224.5" y="413" width="151" height="47"/>
+                                <rect key="frame" x="224" y="413" width="151" height="47"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-UltraLight" family="Helvetica Neue" pointSize="30"/>
                                 <state key="normal" title="Go To Sleep">
@@ -449,12 +452,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ysw-aM-eFL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="797" y="699"/>
+            <point key="canvasLocation" x="272" y="699"/>
         </scene>
-        <!--Log Nav-->
+        <!--View Controller-->
         <scene sceneID="ype-M5-Ah0">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="ITx-ZC-vZ0" customClass="LogNav" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="ITx-ZC-vZ0" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="CLY-hu-fkP"/>
                         <viewControllerLayoutGuide type="bottom" id="g24-tn-NaM"/>
@@ -470,11 +473,93 @@
             </objects>
             <point key="canvasLocation" x="1561" y="419"/>
         </scene>
+        <!--Settings Table View Controller-->
+        <scene sceneID="0Ah-5P-7m1">
+            <objects>
+                <tableViewController id="dYy-wt-2Yb" customClass="SettingsTableViewController" customModule="DreamRight" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="m6Y-xz-eaQ">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" red="2.556946122e-08" green="0.1999999583" blue="0.39999994639999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="separatorColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="header" rowHeight="60" id="Wh7-sO-R05">
+                                <rect key="frame" x="0.0" y="28" width="600" height="60"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Wh7-sO-R05" id="LDO-Va-3Pb">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="60"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Df3-iT-DIc">
+                                            <rect key="frame" x="211" y="6" width="178" height="47"/>
+                                            <animations/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-UltraLight" family="Helvetica Neue" pointSize="30"/>
+                                            <state key="normal" title="Save Changes">
+                                                <color key="titleColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                    </subviews>
+                                    <animations/>
+                                    <color key="backgroundColor" red="2.556946122e-08" green="0.1999999583" blue="0.39999994639999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstItem="Df3-iT-DIc" firstAttribute="centerX" secondItem="LDO-Va-3Pb" secondAttribute="centerX" id="eoV-C9-PIr"/>
+                                        <constraint firstItem="Df3-iT-DIc" firstAttribute="centerY" secondItem="LDO-Va-3Pb" secondAttribute="centerY" id="qfN-EL-x51"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <animations/>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="silenceTimeout" id="JHW-c6-3cR">
+                                <rect key="frame" x="0.0" y="88" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JHW-c6-3cR" id="Hto-uJ-Qt6">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Silence Timeout" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tbf-hr-c7q">
+                                            <rect key="frame" x="20" y="9" width="138" height="24"/>
+                                            <animations/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
+                                            <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 Seconds" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ngx-uq-lF2">
+                                            <rect key="frame" x="475.5" y="9.5" width="104.5" height="24"/>
+                                            <animations/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
+                                            <color key="textColor" red="0.99215686270000003" green="0.90196078430000004" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <animations/>
+                                    <color key="backgroundColor" red="2.556946122e-08" green="0.1999999583" blue="0.39999994639999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstItem="Tbf-hr-c7q" firstAttribute="leading" secondItem="Hto-uJ-Qt6" secondAttribute="leadingMargin" constant="12" id="7Xu-kv-9Um"/>
+                                        <constraint firstItem="Tbf-hr-c7q" firstAttribute="centerY" secondItem="Hto-uJ-Qt6" secondAttribute="centerY" id="Fef-wi-9Il"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="ngx-uq-lF2" secondAttribute="trailing" constant="12" id="N5b-la-Awk"/>
+                                        <constraint firstItem="ngx-uq-lF2" firstAttribute="centerY" secondItem="Hto-uJ-Qt6" secondAttribute="centerY" id="pYu-Sm-GQE"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <animations/>
+                            </tableViewCell>
+                        </prototypes>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="dYy-wt-2Yb" id="dgv-mg-vX9"/>
+                            <outlet property="delegate" destination="dYy-wt-2Yb" id="gh6-1O-LRn"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gMp-x2-Ta8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="923" y="699"/>
+        </scene>
     </scenes>
     <resources>
         <image name="unicornHead.png" width="178" height="178"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="F1X-pB-qwE"/>
+        <segue reference="CYf-pr-fdE"/>
     </inferredMetricsTieBreakers>
 </document>

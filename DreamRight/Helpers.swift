@@ -9,6 +9,61 @@
 import UIKit
 import CoreData
 
+// NSUserDefaults
+struct Settings {
+    var previousAppVersion: String?
+    var currentAppVersion: String?
+    
+    var silenceTimeout: Int?
+}
+
+func writeDefaults(data: Settings) -> Bool {
+    let defaults = NSUserDefaults.standardUserDefaults()
+    
+    defaults.setObject(data.previousAppVersion, forKey: "previousAppVersion")
+    defaults.setObject(data.currentAppVersion, forKey: "currentAppVersion")
+    
+    defaults.setObject(data.silenceTimeout, forKey: "silenceTimeout")
+    
+    return true
+}
+
+func readDefaults() -> Settings {
+    let defaults = NSUserDefaults.standardUserDefaults()
+    var save = Settings()
+    
+    save.previousAppVersion = defaults.stringForKey("previousAppVersion")
+    save.currentAppVersion = defaults.stringForKey("currentAppVersion")
+    
+    save.silenceTimeout = defaults.integerForKey("silenceTimeout")
+
+    return save
+}
+
+func validateDefaults(save: Settings) -> Settings {
+    var newSave = save
+    
+    let version = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
+    newSave.currentAppVersion = version
+    
+    // New Install
+    if save.previousAppVersion == nil {
+        print("First install - loading default settings")
+    }
+    // New Update
+    else if save.previousAppVersion! != save.currentAppVersion! {
+        print("App already exists (update) and we got our settings!")
+    }
+    
+    newSave.previousAppVersion = version
+    
+    if newSave.silenceTimeout == nil {
+        newSave.silenceTimeout = 10
+    }
+    
+    return newSave
+}
+
 let managedObjectContext: NSManagedObjectContext? = {
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     if let managedObjectContext = appDelegate.managedObjectContext { return managedObjectContext }
