@@ -514,8 +514,8 @@ class DreamViewController: UIViewController, UIGestureRecognizerDelegate, EZMicr
         currentDream = insertObject("Dream") as? Dream
         
         currentDream?.time = NSDate()
-        currentDream?.name = "Dream 1"
-        currentDream?.text = "Placeholder text"
+        currentDream?.name = "Dream \(tonight.dream!.count + 1)"
+        currentDream?.text = "Tap to enter a description for your dream."
         currentDream?.night = tonight
         
         self.visualizer.resumeDrawing()
